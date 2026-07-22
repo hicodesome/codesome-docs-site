@@ -1,0 +1,65 @@
+.home-tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 36px;
+  margin: 18px 0 30px;
+  padding: 22px 0;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.home-tutorial-group {
+  min-width: 0;
+}
+
+.home-tutorial-group h3 {
+  margin: 0;
+  padding: 0 0 9px;
+  border-bottom: 2px solid rgba(66, 185, 131, 0.45);
+  color: #2f3b46;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+.home-tutorial-group__items {
+  margin-top: 3px;
+}
+
+.home-tutorial-group__items > p {
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #edf0f2;
+  color: #59636e;
+  line-height: 1.55;
+}
+
+.home-tutorial-group__items > p:last-child {
+  border-bottom: 0;
+}
+
+.home-tutorial-group__items > p > a {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.home-tutorial-group__items > ol {
+  margin: 0;
+  padding: 7px 0 0 1.35rem;
+}
+
+.home-tutorial-group__items > ol li {
+  margin: 0;
+  padding: 3px 0;
+  line-height: 1.55;
+}
+
+@media screen and (max-width: 720px) {
+  .home-tutorial-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    margin: 14px 0 24px;
+    padding: 18px 0;
+  }
+}
