@@ -1,0 +1,537 @@
+> 这篇只适用于 V3 + Claude Code。不要拿这篇配置 Codex，也不要拿这篇配置二合一。
+
+## 适合谁读
+
+* 你要使用 Claude Code。
+
+* 你买的是 V3 / 普通 Codesome API / V3 月卡或按量。
+
+* 你已经完成兑换，并创建了 V3 API Key。
+
+* 你的 key 常见形态是 `sk-...`。
+
+## 不适合谁读
+
+| 你的情况                   | 应该看                                                                                       |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
+| 要配置 V3 Codex           | [V3 Codex 安装与配置指南](https://zvgmnl1sw58.feishu.cn/wiki/O13Yw8j1kiseS4k2TC0c2Qp8nug)        |
+| 使用二合一月卡，key 是 `cr-...` | [二合一 Claude Code 安装与配置指南](https://oxv18tgb72z.feishu.cn/docx/GRTgdoyi9olkeLxv6TBcpc47nPg) |
+| 要配置二合一 Codex           | [二合一 Codex 安装与配置指南](https://oxv18tgb72z.feishu.cn/docx/STgaddmS6o5FTNxdm6Yc83tAnud)       |
+| 已经报错                   | [使用问题速查](https://zvgmnl1sw58.feishu.cn/wiki/UU8Uw09k3itFOzkfj88ceSfenfg)                  |
+
+## 配置前确认
+
+1. 已经在 V3 后台完成兑换。
+
+2. 已经创建 `sk-...` API Key。
+
+3. API Key 分组选对：月卡选月卡/订阅分组，按量选按量分组。
+
+4. 你正在配置的是 Claude Code，不是 Codex。
+
+5. 如果以前配置过其他 Claude / Anthropic 地址，建议先清理旧环境变量。
+
+> **切换到 Max 分组后要新开窗口：**&#x5982;果你是从其他分组切换到 `Max` 分组，请关闭当前 Claude Code 窗口，重新打开一个新窗口再测试。旧窗口可能沿用旧会话或旧进程状态，继续测试容易误以为 Codesome API 出问题。
+
+## 大扫除：先清理残留配置
+
+### Windows 清理环境变量和旧配置
+
+> **重要：**&#x5982;果你以前配置过其他 Claude / Anthropic 地址、其他中转站，或者从别的分组切换过来，先做这一步。很多配置失败不是新 key 有问题，而是旧环境变量还在生效。
+>
+> 下面命令执行时如果出现红字报错，通常说明对应变量本来不存在，可以继续下一步。
+
+在 PowerShell 里执行，先清理当前用户级环境变量：
+
+```powershell
+$vars = @(
+  'ANTHROPIC_BASE_URL',
+  'ANTHROPIC_AUTH_TOKEN',
+  'ANTHROPIC_MODEL',
+  'ANTHROPIC_DEFAULT_OPUS_MODEL',
+  'ANTHROPIC_DEFAULT_SONNET_MODEL',
+  'ANTHROPIC_DEFAULT_HAIKU_MODEL',
+  'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC',
+  'CLAUDE_CODE_SUBAGENT_MODEL',
+  'CLAUDE_CODE_EFFORT_LEVEL'
+)
+
+foreach ($var in $vars) {
+  reg delete HKCU\Environment /V $var /F 2>$null
+  Remove-Item "Env:$var" -ErrorAction SilentlyContinue
+}
+
+Get-ChildItem Env: |
+  Where-Object {
+    $_.Name -like 'ANTHROPIC_*' -or
+    $_.Name -like 'CLAUDE_CODE_*'
+  }
+
+Get-ItemProperty HKCU:\Environment |
+  Select-Object *ANTHROPIC*, *CLAUDE_CODE*
+```
+
+如果你以前用管理员权限配置过，还需要用“管理员身份运行”的 PowerShell 清理系统级环境变量：
+
+```powershell
+$machineEnvPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+
+Get-ItemProperty -Path $machineEnvPath |
+  Get-Member -MemberType NoteProperty |
+  Where-Object {
+    $_.Name -like 'ANTHROPIC_*' -or
+    $_.Name -like 'CLAUDE_CODE_*'
+  } |
+  ForEach-Object {
+    Remove-ItemProperty -Path $machineEnvPath -Name $_.Name -ErrorAction SilentlyContinue
+    Write-Host "Removed machine env:" $_.Name
+  }
+```
+
+### macOS / Linux 清理环境变量和旧配置
+
+如果你在 macOS、Linux 或 WSL 里配置过 Claude Code，也要清理当前 Session、shell 配置文件和旧的 `settings.json`。
+
+```bash
+# 临时清除当前 Session 环境变量
+unset ANTHROPIC_BASE_URL
+unset ANTHROPIC_AUTH_TOKEN
+unset ANTHROPIC_MODEL
+unset ANTHROPIC_DEFAULT_OPUS_MODEL
+unset ANTHROPIC_DEFAULT_SONNET_MODEL
+unset ANTHROPIC_DEFAULT_HAIKU_MODEL
+unset CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+unset CLAUDE_CODE_SUBAGENT_MODEL
+unset CLAUDE_CODE_EFFORT_LEVEL
+unset OPENAI_API_KEY
+unset CODESOME_API_KEY
+unset SUB2API_API_KEY
+unset http_proxy
+unset https_proxy
+unset HTTP_PROXY
+unset HTTPS_PROXY
+unset ALL_PROXY
+
+# 清理 shell 配置文件里的旧变量
+cleanup_file() {
+  file="$1"
+  [ -f "$file" ] || return 0
+  tmp="$(mktemp)"
+  grep -Ev 'ANTHROPIC|CLAUDE|OPENAI|CODESOME|SUB2API|proxy|PROXY' "$file" > "$tmp"
+  cat "$tmp" > "$file"
+  rm -f "$tmp"
+}
+
+cleanup_file ~/.zshrc
+cleanup_file ~/.bashrc
+cleanup_file ~/.bash_profile
+cleanup_file ~/.profile
+
+# 删除 Claude Code 旧配置文件
+rm -f ~/.claude/settings.json
+
+# 重新加载 shell 配置
+source ~/.zshrc 2>/dev/null
+source ~/.bashrc 2>/dev/null
+
+# 检查是否还有残留
+env | grep -E 'ANTHROPIC|CLAUDE|OPENAI|CODESOME|SUB2API|proxy|PROXY'
+
+echo ""
+echo "如果没有任何输出，说明环境变量已基本清理完成。"
+```
+
+macOS / Linux 清理完成后，关闭当前终端，重新打开一个新终端，再继续写入本篇 V3 配置。
+
+最后检查并删除旧配置文件：
+
+```text
+C:\Users\你的用户名\.claude\settings.json
+```
+
+如果这个文件存在，先删除它；如果不存在，直接继续。完成后关闭当前终端，重新打开一个新 PowerShell，再继续写入本篇 V3 配置：`ANTHROPIC_BASE_URL=https://cc.codesome.ai`，`ANTHROPIC_AUTH_TOKEN=你的 sk-... 开头 API Key`。
+
+V3 Claude Code 核心配置：
+
+```text
+ANTHROPIC_BASE_URL=https://cc.codesome.ai
+ANTHROPIC_AUTH_TOKEN=你的 sk-... 开头 API Key
+CLAUDE_CODE_ATTRIBUTION_HEADER=0
+```
+
+# 方法 1（推荐）：用 ccswitch 配置
+
+### 下载 ccswitch
+
+> ccswitch 不是 Claude Code 本体，而是用来管理 Claude Code 接入地址、API Key、模型和本地代理的配置工具。请先完成 Claude Code 安装，再下载并打开 ccswitch。
+
+1. 打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
+
+2. 在页面的 Assets 区域下载对应系统的安装包：Windows 用户下载 Windows 版本；macOS 用户按自己的芯片选择 Apple Silicon 或 Intel 版本。
+
+3. 如果 GitHub 无法打开，或不确定该下载哪个文件，再在 Codesome 用户群 / 客服群里说明“需要 ccswitch 安装包”，让客服或管理员发最新版。
+
+4. 安装完成后打开 ccswitch，再按照下面的字段填写 Codesome 配置。
+
+ccswitch 下载页里，macOS 用户选择 `.dmg` 安装包，Windows 用户选择 `.msi` 安装包。
+
+![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png>)
+
+![ccswitch Windows 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-windows-download.png>)
+
+macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
+
+![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png>)
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。配置工具会接触 API Key，优先使用 GitHub Releases 或客服提供的版本。
+
+如果使用 ccswitch 管理 Claude Code 配置，核心填写：
+
+```text
+供应商名称：codesome-v3
+请求地址：https://cc.codesome.ai
+API Key：你的 sk-... 开头 API Key
+```
+
+### 按图填写基础配置
+
+打开 ccswitch 后，新建自定义配置。
+
+注意勾选最左侧的这个claude图标（不要选第二个带电脑标志的）
+
+![](<images/V3 Claude Code 安装与配置指南-image.png>)
+
+下图用于确认字段位置，实际填写值以本小节文字为准。
+
+![](<images/V3 Claude Code 安装与配置指南-image-1.png>)
+
+* 供应商名称填：`codesome-v3`
+
+* 请求地址填：`https://cc.codesome.ai`
+
+* API Key 填你的 `sk-...` 开头 API Key
+
+如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
+
+# 方法 2：使用环境变量配置
+
+## Windows 推荐路径
+
+### 1. 安装 Git for Windows
+
+打开：
+
+```text
+https://git-scm.com/download/win
+```
+
+安装完成后，在 PowerShell 验证：
+
+```powershell
+git --version
+```
+
+### 2. 打开 PowerShell
+
+按 `Win` 键，输入 `PowerShell`，打开 Windows PowerShell。不要用 CMD。
+
+### 3. 安装 Claude Code
+
+推荐使用官方 Windows 安装器：
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+安装完成后验证：
+
+```powershell
+claude --version
+```
+
+### 4. 写入 V3 配置
+
+把 `你的 sk-... 开头 API Key` 替换成真实 key：
+
+```powershell
+setx ANTHROPIC_BASE_URL "https://cc.codesome.ai"
+setx ANTHROPIC_AUTH_TOKEN "你的 sk-... 开头 API Key"
+setx CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC "1"
+setx CLAUDE_CODE_ATTRIBUTION_HEADER "0"
+```
+
+关闭当前 PowerShell，重新打开一个新 PowerShell。
+
+### 5. 验证
+
+```powershell
+claude
+```
+
+如果 Windows 安装后输入 `claude` 仍提示找不到命令，可以用管理员身份打开 PowerShell，并执行：
+
+```powershell
+Set-ExecutionPolicy Unrestricted
+```
+
+出现确认提示后输入 `y` 并回车，再重新打开 PowerShell 输入 `claude` 验证。
+
+![PowerShell 执行策略确认](<images/V3 Claude Code 安装与配置指南-windows-execution-policy.png>)
+
+![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png>)
+
+能进入 Claude Code 并正常回复，就配置完成。
+
+## macOS 推荐路径
+
+### 1. 安装 Node.js
+
+打开：
+
+```text
+https://nodejs.org/en/download
+```
+
+安装 macOS Installer 后验证：
+
+```bash
+node -v
+npm -v
+```
+
+Node.js 下载页用于确认 macOS Installer 的位置。
+
+![macOS Node.js 安装页](<images/V3 Claude Code 安装与配置指南-macos-node-installer.png>)
+
+打开终端：按 `Command + 空格`，搜索“终端”，回车。后面的安装和验证都在这个窗口里完成。
+
+![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif>)
+
+### 2. 安装 Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+如果下载慢，可以使用镜像：
+
+```bash
+npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
+```
+
+验证：
+
+```bash
+claude --version
+```
+
+### 3. 写入 V3 配置
+
+```bash
+echo 'export ANTHROPIC_BASE_URL="https://cc.codesome.ai"' >> ~/.zshrc
+echo 'export ANTHROPIC_AUTH_TOKEN="你的 sk-... 开头 API Key"' >> ~/.zshrc
+echo 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1' >> ~/.zshrc
+echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 4. 验证
+
+新开终端：
+
+```bash
+claude
+```
+
+看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
+
+![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png>)
+
+## Linux 推荐路径
+
+### 1. 安装 Node.js 和 npm
+
+先检查：
+
+```bash
+node -v
+npm -v
+```
+
+如果没有安装，Ubuntu / Debian 可以先执行：
+
+```bash
+sudo apt update
+sudo apt install -y nodejs npm
+```
+
+### 2. 安装 Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+如果权限不足，可以加 `sudo`。
+
+### 3. 写入 V3 配置
+
+Bash 用户：
+
+```bash
+echo 'export ANTHROPIC_BASE_URL="https://cc.codesome.ai"' >> ~/.bashrc
+echo 'export ANTHROPIC_AUTH_TOKEN="你的 sk-... 开头 API Key"' >> ~/.bashrc
+echo 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1' >> ~/.bashrc
+echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Zsh 用户：
+
+```bash
+echo 'export ANTHROPIC_BASE_URL="https://cc.codesome.ai"' >> ~/.zshrc
+echo 'export ANTHROPIC_AUTH_TOKEN="你的 sk-... 开头 API Key"' >> ~/.zshrc
+echo 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1' >> ~/.zshrc
+echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 4. 验证
+
+```bash
+claude
+```
+
+
+
+# VSCode 等 IDE 插件
+
+### 3.1 最省事的做法
+
+在 `~/.claude/settings.json` 里粘贴。Windows 用户则在用户目录下的 `.claude` 文件夹里操作：
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://cc.codesome.ai",
+    "ANTHROPIC_AUTH_TOKEN": "你的 sk-... 开头 API Key",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
+  }
+}
+```
+
+然后重启 VSCode 即可使用。
+
+### 3.2 两种常见用法
+
+1. 通过官方的 Claude Code 插件使用。你可以在侧边栏打开插件市场，搜索 Anthropic 公司的 Claude Code 插件；如果你本地的 `claude` 命令已经配置完成，一般可以直接使用。注意：默认最好装好 git-bash 工具。
+
+2. 使用第三方更完善的 Claude Code 开发插件。这是一个更完整的替代方案，界面示意如下。
+
+![图17](<images/V3 Claude Code 安装与配置指南-image-017.png>)
+
+![图18](<images/V3 Claude Code 安装与配置指南-image-018.png>)
+
+### 3.3 使用前建议检查
+
+* 先确认本地 `claude` 命令已经能在终端正常启动。
+
+![图18](<images/V3 Claude Code 安装与配置指南-image-018-1.png>)
+
+* 如果 IDE 里不生效，优先检查 IDE 是否读取到了 `~/.claude/settings.json` 或对应环境变量。
+
+* Windows 环境里，如果插件依赖 shell，记得确认 `git-bash` 已安装。
+
+* 如果你使用 ccswitch 管理 GUI 配置，先确认命令行里的 `claude` 已经能正常回复；IDE 插件不一定能读取 ccswitch 的 GUI 状态。
+
+## 常见错误
+
+1. 把兑换码当成 API Key。
+
+2. 用 Codex 的配置方式配置 Claude Code。
+
+3. `ANTHROPIC_AUTH_TOKEN` 没有替换成真实 key。
+
+4. 配完没有重开终端。
+
+5. 月卡用户没有选择月卡/订阅分组。
+
+6. 用二合一的 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
+
+1) `CLAUDE_CODE_ATTRIBUTION_HEADER` 没有设置为 `0`。
+
+遇到报错，去看：
+
+[使用问题速查：报错、账单与配置排查](https://zvgmnl1sw58.feishu.cn/wiki/UU8Uw09k3itFOzkfj88ceSfenfg)
+
+## 在 Claude Code 里使用 GPT-5.6
+
+### 4.4 在 ccswitch 里配置 gpt-5.6-terra
+
+如图，重点核对这几项：
+
+![](<images/V3 Claude Code 安装与配置指南-test.jpg>)
+
+* 提供商名称填 `codesome`
+
+* 请求地址填 `https://cc.codesome.ai`
+
+* API Key 填你在 Codesome 里设置的 key
+
+* 分组选择 `codex月卡` 或 `codex分组`
+
+* 模型映射填入 `gpt-5.6-terra`
+
+日常任务推荐 Terra；高难度任务可改为 `gpt-5.6-sol`，简单任务可改为 `gpt-5.6-luna`。不要直接填写裸 `gpt-5.6`，否则会默认指向更贵的 Sol。
+
+### 4.5 配置高级选项
+
+![](<images/V3 Claude Code 安装与配置指南-test-1.jpg>)
+
+### 4.6 打开 ccswitch 的代理开关
+
+请务必开启这个开关，否则无法连接到 Codex。
+
+![](<images/V3 Claude Code 安装与配置指南-test-2.jpg>)
+
+如果找不到开关，就点击设置齿轮按钮进入设置页，再找到“代理”。
+
+进入代理页面后，找到“在主页面显示本地代理开关”。
+
+![](<images/V3 Claude Code 安装与配置指南-test-3.jpg>)
+
+![](<images/V3 Claude Code 安装与配置指南-test-4.jpg>)
+
+打开后即可在主页看到这个开关。
+
+### 4.7 验证
+
+新开一个终端窗口，输入：
+
+```bash
+claude
+
+
+```
+
+![](<images/V3 Claude Code 安装与配置指南-test-5.jpg>)
+
+看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
+
+### 4.8 常见问题
+
+#### 4.8.1 询问模型，发现是claude模型
+
+原理是ccs的代理进行了转换，claude客户端误以为自己是claude模型，是正常的，无需担忧，下图都是正常的
+
+![](<images/V3 Claude Code 安装与配置指南-test-6.jpg>)
+
+![](<images/V3 Claude Code 安装与配置指南-test-7.jpg>)
+
+#### 4.8.2 模型不回复
+
+1. 看一下ccswitch的代理开关是不是关闭，需要保持开启
+
+2. 新开一个窗口进行测试
+
+3. 如果还是不回复，请在群里反馈，我们会第一时间帮您排查
