@@ -6,38 +6,13 @@
 
 ## 配置方式
 
-### 方式一：如果您是通过环境变量方式配置的
+### 方式一（推荐）：如果您是使用 CC switch 配置的
 
-如果您按照配置教程使用环境变量方式配置 Claude Code，需要将自动压缩配置持久化写入配置文件。
+CC switch 只负责管理 Claude Code 配置，不负责安装 Claude Code CLI。如果还没有安装 CLI，请先按对应产品线教程中的 CLI 方法完成安装，再回到本节设置自动压缩。
 
-#### Windows 配置
+* [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md)
 
-在 PowerShell 中执行：
-
-```plain&#x20;text
-setx CLAUDE_AUTO_COMPACT_ENABLED "true"
-setx CLAUDE_AUTO_COMPACT_WINDOW "150000"
-
-```
-
-关闭当前 PowerShell，重新打开一个新 PowerShell，然后启动 `claude` 即可生效。
-
-#### macOS / Linux 配置
-
-将环境变量写入 shell 配置文件：
-
-```bash
-echo 'export CLAUDE_AUTO_COMPACT_ENABLED=true' >> ~/.zshrc
-echo 'export CLAUDE_AUTO_COMPACT_WINDOW=150000' >> ~/.zshrc
-
-source ~/.zshrc
-claude
-
-```
-
-如果你使用的是 Bash，将 `~/.zshrc` 替换为 `~/.bashrc`。
-
-### 方式二：如果您是使用 ccswitch 配置的
+* [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md)
 
 如果您按照配置教程使用 ccswitch 配置 Claude Code：
 
@@ -67,6 +42,37 @@ claude
 **提示**：如果您不知道怎么修改这个 JSON 文件，可以直接让 AI（如 Claude、ChatGPT）帮您配置，把当前配置文件内容发给 AI，告诉它需要添加自动压缩配置即可。
 
 保存后重启 Claude Code 生效。
+
+### 方式二：如果您是通过环境变量方式配置的
+
+如果您按照配置教程使用环境变量方式配置 Claude Code，需要将自动压缩配置持久化写入配置文件。
+
+#### Windows 配置
+
+在 PowerShell 中执行：
+
+```plain&#x20;text
+setx CLAUDE_AUTO_COMPACT_ENABLED "true"
+setx CLAUDE_AUTO_COMPACT_WINDOW "150000"
+
+```
+
+关闭当前 PowerShell，重新打开一个新 PowerShell，然后启动 `claude` 即可生效。
+
+#### macOS / Linux 配置
+
+将环境变量写入 shell 配置文件：
+
+```bash
+echo 'export CLAUDE_AUTO_COMPACT_ENABLED=true' >> ~/.zshrc
+echo 'export CLAUDE_AUTO_COMPACT_WINDOW=150000' >> ~/.zshrc
+
+source ~/.zshrc
+claude
+
+```
+
+如果你使用的是 Bash，将 `~/.zshrc` 替换为 `~/.bashrc`。
 
 ## 参数说明
 

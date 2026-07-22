@@ -46,9 +46,11 @@ base_url=https://cc.codesome.ai/v1
 env_key=CODESOME_API_KEY
 ```
 
-## Windows 用户
+## 方法 1（推荐）：使用 CC switch 配置
 
-### 步骤 1：用 ccswitch 配置
+CC switch 负责管理请求地址、API Key、模型和本地代理配置，不负责安装 Claude Code 或 Codex CLI。完成本方法后，请继续方法 2 安装并配置 CLI。
+
+### Windows
 
 前往 `https://github.com/farion1231/cc-switch/releases` 下载最新版本，选择对应的 `.msi` 安装包。
 
@@ -74,7 +76,54 @@ env_key=CODESOME_API_KEY
 
 ![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
 
-### 步骤 2：安装 Codex CLI
+### macOS
+
+macOS 用户可以先执行：
+
+```bash
+brew tap farion1231/ccswitch
+brew install --cask cc-switch
+```
+
+如果命令运行失败，前往 `https://github.com/farion1231/cc-switch/releases`，下载后缀是 `.dmg`的版本。
+
+![](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
+
+![](<images/V3 Codex 安装与配置指南-image-010.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
+
+macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
+
+![macOS 允许打开 cc-switch](<images/V3 Codex 安装与配置指南-image-011.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
+
+安装完成后，登录 Codesome V3 后台，打开 `https://v3.codesome.cn/keys` 获取对应 key。月卡订阅要切换到月卡分组；按量额度要切换到 Codex 分组。
+
+![V3 后台创建或复制 key](<images/V3 Codex 安装与配置指南-image-2.png?v=0e891fddd0eba743244e85f24ab4207f1746ad791ae24cff0efc746a0b538281>)
+
+打开 ccswitch 主界面，点击右上角加号，创建供应商：
+
+* 供应商名称填 `codesome`
+
+* API Key 填你在 V3 后台获得的 `sk-...` key
+
+* 请求地址填 https://cc.codesome.ai/v1
+
+* 模型名称填 `gpt-5.5`
+
+![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
+
+![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
+
+### WSL
+
+CC switch 运行在 Windows/macOS；WSL 请直接跳到方法 2。
+
+## 方法 2：安装 CLI 并配置
+
+下面保留原有 CLI 安装、验证和手动配置步骤。
+
+### Windows
+
+#### 安装 Codex CLI
 
 安装 Node.js：
 
@@ -165,46 +214,9 @@ if ($env:CODESOME_API_KEY) { "CODESOME_API_KEY 已生效" } else { "CODESOME_API
 codex
 ```
 
-## macOS 用户
+### macOS
 
-### 步骤 1：用 ccswitch 配置
-
-macOS 用户可以先执行：
-
-```bash
-brew tap farion1231/ccswitch
-brew install --cask cc-switch
-```
-
-如果命令运行失败，前往 `https://github.com/farion1231/cc-switch/releases`，下载后缀是 `.dmg`的版本。
-
-![](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
-
-![](<images/V3 Codex 安装与配置指南-image-010.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
-
-macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
-
-![macOS 允许打开 cc-switch](<images/V3 Codex 安装与配置指南-image-011.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
-
-安装完成后，登录 Codesome V3 后台，打开 `https://v3.codesome.cn/keys` 获取对应 key。月卡订阅要切换到月卡分组；按量额度要切换到 Codex 分组。
-
-![V3 后台创建或复制 key](<images/V3 Codex 安装与配置指南-image-2.png?v=0e891fddd0eba743244e85f24ab4207f1746ad791ae24cff0efc746a0b538281>)
-
-打开 ccswitch 主界面，点击右上角加号，创建供应商：
-
-* 供应商名称填 `codesome`
-
-* API Key 填你在 V3 后台获得的 `sk-...` key
-
-* 请求地址填 https://cc.codesome.ai/v1
-
-* 模型名称填 `gpt-5.5`
-
-![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
-
-![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
-
-### 步骤 2：安装 Codex CLI
+#### 安装 Codex CLI
 
 安装 Node.js：
 
@@ -306,11 +318,11 @@ test -n "$CODESOME_API_KEY" && echo "CODESOME_API_KEY 已生效" || echo "CODESO
 codex
 ```
 
-## WSL 用户
+### WSL
 
 WSL 环境没有 ccswitch 图形界面，直接安装 CLI。
 
-### 1. 进入 WSL
+#### 1. 进入 WSL
 
 在 Windows PowerShell 输入：
 
@@ -318,7 +330,7 @@ WSL 环境没有 ccswitch 图形界面，直接安装 CLI。
 wsl
 ```
 
-### 2. 安装 Node.js
+#### 2. 安装 Node.js
 
 ```bash
 sudo apt update
@@ -336,13 +348,13 @@ node -v
 npm -v
 ```
 
-### 3. 安装 Codex
+#### 3. 安装 Codex
 
 ```bash
 npm i -g @openai/codex
 ```
 
-### 4. 配置
+#### 4. 配置
 
 WSL 里的配置方式和 macOS/Linux 一样，使用 `~/.codex/config.toml`，`base_url` 必须是：
 
@@ -352,11 +364,11 @@ https://cc.codesome.ai/v1
 
 可以直接复用上一节 macOS 的配置命令。需要 ccswitch 的话，回到 Windows 系统里操作即可。
 
-## Codex 桌面版
+### Codex 桌面版
 
 **Codex 桌面版通常依赖 CLI 配置。先把 CLI 配好，再安装并打开桌面客户端。**
 
-### 下载地址
+#### 下载地址
 
 打开官方 Codex 桌面客户端下载页：
 
@@ -370,7 +382,7 @@ CLI 配置完成后，打开 Codex 桌面客户端会看到类似界面。
 
 ![Codex 桌面客户端界面](<images/V3 Codex 安装与配置指南-image.png?v=7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45>)
 
-### 使用顺序
+#### 使用顺序
 
 1. **先按本文完成 Codex CLI 安装与配置。**
 
@@ -382,7 +394,7 @@ CLI 配置完成后，打开 Codex 桌面客户端会看到类似界面。
 
 5. 如果桌面版没有生效，退出后台进程后重新打开。
 
-### 注意事项
+#### 注意事项
 
 * 桌面版不是单独配置一套 Codesome；它通常读取本机 CLI 相关配置。
 

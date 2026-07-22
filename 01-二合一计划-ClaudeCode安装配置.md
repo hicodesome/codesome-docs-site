@@ -137,9 +137,11 @@ echo "如果没有任何输出，说明环境变量已基本清理完成。"
 
 清理完成后，关闭当前终端，重新打开一个新终端。
 
-## Windows 用户
+## 方法 1（推荐）：使用 CC switch 配置
 
-### 步骤 1：用 ccswitch 配置
+CC switch 负责管理请求地址、API Key、模型和本地代理配置，不负责安装 Claude Code 或 Codex CLI。完成本方法后，请继续方法 2 安装并配置 CLI。
+
+### Windows
 
 打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>，下载 Windows 版本的 `.msi` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
 
@@ -155,7 +157,95 @@ echo "如果没有任何输出，说明环境变量已基本清理完成。"
 
 ![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
 
-### 步骤 2：安装 Claude Code CLI
+### macOS
+
+打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>，下载对应系统的 `.dmg` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。
+
+macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
+
+安装完成后打开 ccswitch，新建或编辑供应商配置。填写以下信息：
+
+* 供应商名称填：`codesome-v5`
+
+* 请求地址填：`https://v5.codesome.cn/api`
+
+* API Key 填你的 `cr-...` 开头 API Key
+
+![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
+
+### Linux
+
+CC switch 暂无 Linux 图形客户端，请直接跳到方法 2。
+
+### 在 Claude Code 里使用 gpt-5.5
+
+#### 在 ccswitch 里配置 gpt-5.5
+
+如图，重点核对这几项：
+
+![ccswitch gpt-5.5 配置](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
+
+* 提供商名称填 `codesome`
+
+* 请求地址填 `https://v5.codesome.cn/openai`
+
+* API Key 填 cr 开头的 key
+
+* 模型映射填入 `gpt-5.5`
+
+#### 打开 ccswitch 的代理开关
+
+请务必开启这个开关，否则无法连接到 Codex。
+
+![ccswitch 代理开关](<images/二合一 Claude Code 安装与配置指南-test-5.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
+
+如果找不到开关，就点击设置齿轮按钮进入设置页，再找到"代理"。
+
+进入代理页面后，找到"在主页面显示本地代理开关"。
+
+![ccswitch 代理设置](<images/二合一 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
+
+![ccswitch 代理设置](<images/二合一 Claude Code 安装与配置指南-test-4.jpg?v=af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46>)
+
+打开后即可在主页看到这个开关。
+
+#### 验证
+
+新开一个终端窗口，输入：
+
+```bash
+claude
+```
+
+看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
+
+#### 常见问题
+
+##### 询问模型，发现是 claude 模型
+
+原理是 ccs 的代理进行了转换，claude 客户端误以为自己是 claude 模型，是正常的，无需担忧，下图都是正常的
+
+![正常现象](<images/二合一 Claude Code 安装与配置指南-test-1.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
+
+![正常现象](<images/二合一 Claude Code 安装与配置指南-test.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
+
+##### 模型不回复
+
+1. 看一下 ccswitch 的代理开关是不是关闭，需要保持开启
+
+2. 新开一个窗口进行测试
+
+3. 如果还是不回复，请在群里反馈，我们会第一时间帮您排查
+
+## 方法 2：安装 CLI 并配置
+
+下面保留原有 CLI 安装、验证和手动配置步骤。
+
+### Windows
+
+#### 安装 Claude Code CLI
 
 安装 Git for Windows：
 
@@ -181,7 +271,7 @@ irm https://claude.ai/install.ps1 | iex
 claude --version
 ```
 
-### 步骤 3：（备选）手动配置环境变量
+#### 手动配置环境变量
 
 如果你不想用 ccswitch，可以通过环境变量直接配置。
 
@@ -202,27 +292,9 @@ setx CLAUDE_CODE_ATTRIBUTION_HEADER "0"
 claude
 ```
 
-## macOS 用户
+### macOS
 
-### 步骤 1：用 ccswitch 配置
-
-打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>，下载对应系统的 `.dmg` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
-
-> 不要从第三方网盘或来路不明的页面下载 ccswitch。
-
-macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
-
-安装完成后打开 ccswitch，新建或编辑供应商配置。填写以下信息：
-
-* 供应商名称填：`codesome-v5`
-
-* 请求地址填：`https://v5.codesome.cn/api`
-
-* API Key 填你的 `cr-...` 开头 API Key
-
-![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
-
-### 步骤 2：安装 Claude Code CLI
+#### 安装 Claude Code CLI
 
 安装 Node.js：
 
@@ -251,7 +323,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-### 步骤 3：（备选）手动配置环境变量
+#### 手动配置环境变量
 
 如果你不想用 ccswitch，可以通过环境变量直接配置：
 
@@ -271,24 +343,24 @@ source ~/.zshrc
 claude
 ```
 
-## Linux 用户
+### Linux
 
 Linux 没有 ccswitch 图形界面，直接安装 CLI 并通过环境变量配置。
 
-### 1. 安装 Node.js 和 npm
+#### 1. 安装 Node.js 和 npm
 
 ```bash
 sudo apt update
 sudo apt install -y nodejs npm
 ```
 
-### 2. 安装 Claude Code
+#### 2. 安装 Claude Code
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-### 3. 写入二合一配置
+#### 3. 写入二合一配置
 
 Bash 用户：
 
@@ -310,70 +382,32 @@ echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-### 4. 验证
+#### 4. 验证
 
 ```bash
 claude
 ```
 
----
+如需使用 `gpt-5.5` 模型，请参考方法 1 的「在 Claude Code 里使用 gpt-5.5」章节。
 
-## 在 Claude Code 里使用 gpt-5.5
+## 常见错误
 
-### 在 ccswitch 里配置 gpt-5.5
+1. 把兑换码当成 API Key。
 
-如图，重点核对这几项：
+2. 用 Codex 的 `CODESOME_API_KEY` 或 `~/.codex/config.toml` 配置 Claude Code。
 
-![ccswitch gpt-5.5 配置](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
+3. `ANTHROPIC_AUTH_TOKEN` 没有替换成真实的 `cr-...` 开头 API Key。
 
-* 提供商名称填 `codesome`
+4. `ANTHROPIC_BASE_URL` 写错。二合一 Claude Code 必须使用 `https://v5.codesome.cn/api`，不要使用 V3 的 `https://cc.codesome.ai` 地址。
 
-* 请求地址填 `https://v5.codesome.cn/openai`
+5. 配置完成后没有关闭并重新打开终端，导致旧的环境变量仍在生效。
 
-* API Key 填 cr 开头的 key
+6. `CLAUDE_CODE_ATTRIBUTION_HEADER` 没有设置为 `0`。
 
-* 模型映射填入 `gpt-5.5`
+7. 使用方法 1 时没有打开 ccswitch 的代理开关，或者开启代理后没有新开终端进行测试。
 
-### 打开 ccswitch 的代理开关
+8. 在 Windows、macOS、Linux 或 WSL 之间切换后，把一套环境里的配置命令和另一套环境混在一起执行。
 
-请务必开启这个开关，否则无法连接到 Codex。
+遇到报错，去看：
 
-![ccswitch 代理开关](<images/二合一 Claude Code 安装与配置指南-test-5.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
-
-如果找不到开关，就点击设置齿轮按钮进入设置页，再找到"代理"。
-
-进入代理页面后，找到"在主页面显示本地代理开关"。
-
-![ccswitch 代理设置](<images/二合一 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
-
-![ccswitch 代理设置](<images/二合一 Claude Code 安装与配置指南-test-4.jpg?v=af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46>)
-
-打开后即可在主页看到这个开关。
-
-### 验证
-
-新开一个终端窗口，输入：
-
-```bash
-claude
-```
-
-看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
-
-### 常见问题
-
-#### 询问模型，发现是 claude 模型
-
-原理是 ccs 的代理进行了转换，claude 客户端误以为自己是 claude 模型，是正常的，无需担忧，下图都是正常的
-
-![正常现象](<images/二合一 Claude Code 安装与配置指南-test-1.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
-
-![正常现象](<images/二合一 Claude Code 安装与配置指南-test.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
-
-#### 模型不回复
-
-1. 看一下 ccswitch 的代理开关是不是关闭，需要保持开启
-
-2. 新开一个窗口进行测试
-
-3. 如果还是不回复，请在群里反馈，我们会第一时间帮您排查
+[使用问题速查：报错、账单与配置排查](02-使用问题速查.md)
