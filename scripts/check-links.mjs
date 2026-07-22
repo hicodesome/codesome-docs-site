@@ -41,12 +41,19 @@ for (const file of files) {
 }
 
 const sidebar = readFileSync(resolve(root, '_sidebar.md'), 'utf8');
+const homepageSite = '03-Agentic入门宝典.md';
 for (const article of articles) {
-  const occurrences = sidebar.split(`(${article.site})`).length - 1;
+  const articleOccurrences = sidebar.split(`(${article.site})`).length - 1;
+  const homepageOccurrences = article.site === homepageSite
+    ? (sidebar.match(/\]\(\/\)/g) || []).length
+    : 0;
+  const occurrences = articleOccurrences + homepageOccurrences;
   if (occurrences !== 1) {
     errors.push(`_sidebar.md: ${article.site} should appear once, found ${occurrences}`);
   }
-  if (!sidebar.includes(`[${article.title}](${article.site})`)) {
+  const titleLink = sidebar.includes(`[${article.title}](${article.site})`) ||
+    (article.site === homepageSite && sidebar.includes(`[${article.title}](/)`));
+  if (!titleLink) {
     errors.push(`_sidebar.md: CDC title does not match ${article.source}`);
   }
 }
