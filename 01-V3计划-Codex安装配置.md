@@ -56,11 +56,11 @@ env_key=CODESOME_API_KEY
 https://nodejs.org/en/download
 ```
 
-Node.js 下载页用于确认 Windows Installer 的位置。
+下载 Windows 安装包并安装。
 
 ![Windows Node.js 安装页](<images/V3 Codex 安装与配置指南-image-001.png?v=5220f5a230776392002cd51e9e12b77ecad72aff1f923bb1936a7d35a938ffbb>)
 
-安装 Windows Installer 后，在 PowerShell 验证：
+安装完成后，在 PowerShell 验证：
 
 ```powershell
 node -v
@@ -179,7 +179,7 @@ codex
 https://nodejs.org/en/download
 ```
 
-Node.js 下载页用于确认 macOS Installer 的位置。
+下载 macOS 安装包并安装。
 
 ![macOS Node.js 安装页](<images/V3 Codex 安装与配置指南-image-005.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 

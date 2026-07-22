@@ -256,14 +256,14 @@ Set-ExecutionPolicy Unrestricted
 https://nodejs.org/en/download
 ```
 
-安装 macOS Installer 后验证：
+安装完成后验证：
 
 ```bash
 node -v
 npm -v
 ```
 
-Node.js 下载页用于确认 macOS Installer 的位置。
+下载 macOS 安装包并安装。
 
 ![macOS Node.js 安装页](<images/V3 Claude Code 安装与配置指南-macos-node-installer.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 
