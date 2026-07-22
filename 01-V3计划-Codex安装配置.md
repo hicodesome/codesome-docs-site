@@ -61,29 +61,29 @@ brew install --cask cc-switch
 
 Windows 用户前往 `https://github.com/farion1231/cc-switch/releases` 下载最新版本，并选择对应的 `.msi` 安装包。
 
-![ccswitch  安装包](<images/V3 Codex 安装与配置指南-image-009.png>)
+![ccswitch  安装包](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
 
-![](<images/V3 Codex 安装与配置指南-image-010.png>)
+![](<images/V3 Codex 安装与配置指南-image-010.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
 
 ### 2. 首次打开时的系统安全提示
 
 macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
 
-![macOS 允许打开 cc-switch](<images/V3 Codex 安装与配置指南-image-011.png>)
+![macOS 允许打开 cc-switch](<images/V3 Codex 安装与配置指南-image-011.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
 
 ### 3. 获取 V3 Codex Key
 
 登录 Codesome V3 后台，打开 `https://v3.codesome.cn/keys` 获取对应 key。月卡订阅要切换到月卡分组；按量额度要切换到 Codex 分组。
 
-![V3 后台创建或复制 key](<images/V3 Codex 安装与配置指南-image-2.png>)
+![V3 后台创建或复制 key](<images/V3 Codex 安装与配置指南-image-2.png?v=0e891fddd0eba743244e85f24ab4207f1746ad791ae24cff0efc746a0b538281>)
 
 ### 4. 创建 V3 供应商
 
 打开 ccswitch 主界面，点击右上角加号，创建供应商。这里只写 V3 Codex 配置，不适用于二合一月卡。
 
-![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png>)
+![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
 
-![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png>)
+![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
 
 * 供应商名称填 `codesome`
 
@@ -105,7 +105,7 @@ https://nodejs.org/en/download
 
 Node.js 下载页用于确认 Windows Installer 的位置。
 
-![Windows Node.js 安装页](<images/V3 Codex 安装与配置指南-image-001.png>)
+![Windows Node.js 安装页](<images/V3 Codex 安装与配置指南-image-001.png?v=5220f5a230776392002cd51e9e12b77ecad72aff1f923bb1936a7d35a938ffbb>)
 
 安装 Windows Installer 后，在 PowerShell 验证：
 
@@ -200,13 +200,13 @@ https://nodejs.org/en/download
 
 Node.js 下载页用于确认 macOS Installer 的位置。
 
-![macOS Node.js 安装页](<images/V3 Codex 安装与配置指南-image-005.png>)
+![macOS Node.js 安装页](<images/V3 Codex 安装与配置指南-image-005.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 
 安装后
 
 打开终端：按 `Command + 空格`，搜索“终端”，回车。后面的安装和验证都在这个窗口里完成。
 
-![macOS 打开终端](<images/V3 Codex 安装与配置指南-image-006.gif>)
+![macOS 打开终端](<images/V3 Codex 安装与配置指南-image-006.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
 
 验证：
 
@@ -356,7 +356,7 @@ https://developers.openai.com/codex/app
 
 CLI 配置完成后，打开 Codex 桌面客户端会看到类似界面。
 
-![Codex 桌面客户端界面](<images/V3 Codex 安装与配置指南-image.png>)
+![Codex 桌面客户端界面](<images/V3 Codex 安装与配置指南-image.png?v=7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45>)
 
 ### 使用顺序
 

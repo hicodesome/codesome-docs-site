@@ -502,11 +502,11 @@ terminal:
 
 打开 Codesome 后台，左侧找到 `API 密钥`，点右上角 `创建密钥`。
 
-![](images/【最新】hermes配置教程-image-3.png)
+![](<images/【最新】hermes配置教程-image-3.png?v=80dbefbe08cb209350bc3e264fac845512222f449c68e25c94112f5bf6773c55>)
 
 选择 codex 分组，创建完成后，点复制按钮，把你的 API key 复制下来。
 
-![](images/【最新】hermes配置教程-image-1.png)
+![](<images/【最新】hermes配置教程-image-1.png?v=b5eb5d9fee1d50756c99799d9db551ef5e63d8e3b9ff314d8fab47d9c5130d3d>)
 
 ## 五、填写你的 API Key
 
@@ -558,7 +558,7 @@ HERMES_OK
 
 如图：
 
-![](images/【最新】hermes配置教程-image-2.png)
+![](<images/【最新】hermes配置教程-image-2.png?v=8e512b83689e6d45d090a37c0dcee0dd72a35091c0a082de0a5f0fe52b9f9e5a>)
 
 说明你的模型配置已经通了，可以继续下一步。
 
@@ -575,7 +575,7 @@ hermes gateway setup
 
 进去以后选择你想要的渠道：
 
-![](images/【最新】hermes配置教程-image.png)
+![](<images/【最新】hermes配置教程-image.png?v=ad0affa6eda03d8d270a09f410a8fd5a404631171a81fad16bdb5b4ad04734ca>)
 
 跟随向导，一步一步完成配置。
 

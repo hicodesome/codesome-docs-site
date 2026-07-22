@@ -2,11 +2,11 @@
 
 https://agentway.dev/zh/ref/codesome
 
-![](<images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-agentway-invite-codesome.png>)
+![](<images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-agentway-invite-codesome.png?v=c9c40c0164c4b6b888834526f241fe950544fef2ff01dbe5fb20ca652c0d9c62>)
 
 它的核心口号非常直接：**From using agents to building an agent PoC**（从使用 Agent，到自己构建一个可交付的 Agent 原型）。
 
-![](<images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-image.png>)
+![](<images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-image.png?v=bdf2186da19d30874a2eb31cd162e6f474c49e7e2596b6137748ab0a8cf73ef0>)
 
 ### 为什么需要 Agentway？
 

@@ -139,4 +139,4 @@ AI agent 自主学习👇（搞钱必备技能树）
 
 
 
-![codesome's genius 扣桑天才吧](<images/codesome｜Agentic 入门宝典-image-001.png>)
+![codesome's genius 扣桑天才吧](<images/codesome｜Agentic 入门宝典-image-001.png?v=266a735f7f0dec67e44d044e78be927204f980498710e02ccd01b4d3432430d3>)

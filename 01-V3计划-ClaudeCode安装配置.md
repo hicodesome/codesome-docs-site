@@ -175,13 +175,13 @@ CLAUDE_CODE_ATTRIBUTION_HEADER=0
 
 ccswitch 下载页里，macOS 用户选择 `.dmg` 安装包，Windows 用户选择 `.msi` 安装包。
 
-![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png>)
+![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
 
-![ccswitch Windows 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-windows-download.png>)
+![ccswitch Windows 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-windows-download.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
 
 macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
 
-![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png>)
+![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
 
 > 不要从第三方网盘或来路不明的页面下载 ccswitch。配置工具会接触 API Key，优先使用 GitHub Releases 或客服提供的版本。
 
@@ -199,11 +199,11 @@ API Key：你的 sk-... 开头 API Key
 
 注意勾选最左侧的这个claude图标（不要选第二个带电脑标志的）
 
-![](<images/V3 Claude Code 安装与配置指南-image.png>)
+![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
 
 下图用于确认字段位置，实际填写值以本小节文字为准。
 
-![](<images/V3 Claude Code 安装与配置指南-image-1.png>)
+![](<images/V3 Claude Code 安装与配置指南-image-1.png?v=0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb>)
 
 * 供应商名称填：`codesome-v3`
 
@@ -276,9 +276,9 @@ Set-ExecutionPolicy Unrestricted
 
 出现确认提示后输入 `y` 并回车，再重新打开 PowerShell 输入 `claude` 验证。
 
-![PowerShell 执行策略确认](<images/V3 Claude Code 安装与配置指南-windows-execution-policy.png>)
+![PowerShell 执行策略确认](<images/V3 Claude Code 安装与配置指南-windows-execution-policy.png?v=8b82d317a0bfd039b530e9f7a0d9121840c469d55fb8909a172000cad9d088e8>)
 
-![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png>)
+![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
 能进入 Claude Code 并正常回复，就配置完成。
 
@@ -301,11 +301,11 @@ npm -v
 
 Node.js 下载页用于确认 macOS Installer 的位置。
 
-![macOS Node.js 安装页](<images/V3 Claude Code 安装与配置指南-macos-node-installer.png>)
+![macOS Node.js 安装页](<images/V3 Claude Code 安装与配置指南-macos-node-installer.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 
 打开终端：按 `Command + 空格`，搜索“终端”，回车。后面的安装和验证都在这个窗口里完成。
 
-![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif>)
+![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
 
 ### 2. 安装 Claude Code
 
@@ -345,7 +345,7 @@ claude
 
 看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
 
-![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png>)
+![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
 ## Linux 推荐路径
 
@@ -428,15 +428,15 @@ claude
 
 2. 使用第三方更完善的 Claude Code 开发插件。这是一个更完整的替代方案，界面示意如下。
 
-![图17](<images/V3 Claude Code 安装与配置指南-image-017.png>)
+![图17](<images/V3 Claude Code 安装与配置指南-image-017.png?v=f9d60703e5507caaa48bc25575346c4e3ebf18e81e71e431b90202616aaa4d40>)
 
-![图18](<images/V3 Claude Code 安装与配置指南-image-018.png>)
+![图18](<images/V3 Claude Code 安装与配置指南-image-018.png?v=0c8c4c5cc85c27e0a1aeea036a435cc5bb0d176bd5470fcdc8f633262437a69b>)
 
 ### 3.3 使用前建议检查
 
 * 先确认本地 `claude` 命令已经能在终端正常启动。
 
-![图18](<images/V3 Claude Code 安装与配置指南-image-018-1.png>)
+![图18](<images/V3 Claude Code 安装与配置指南-image-018-1.png?v=0c8c4c5cc85c27e0a1aeea036a435cc5bb0d176bd5470fcdc8f633262437a69b>)
 
 * 如果 IDE 里不生效，优先检查 IDE 是否读取到了 `~/.claude/settings.json` 或对应环境变量。
 
@@ -470,7 +470,7 @@ claude
 
 如图，重点核对这几项：
 
-![](<images/V3 Claude Code 安装与配置指南-test.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
 
 * 提供商名称填 `codesome`
 
@@ -482,21 +482,21 @@ claude
 
 ### 4.5 配置高级选项
 
-![](<images/V3 Claude Code 安装与配置指南-test-1.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-1.jpg?v=734aa79473f4a23c3a3fb79940cdb0474a3309dc1230f0c205e2e92eee189f23>)
 
 ### 4.6 打开 ccswitch 的代理开关
 
 请务必开启这个开关，否则无法连接到 Codex。
 
-![](<images/V3 Claude Code 安装与配置指南-test-2.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-2.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
 
 如果找不到开关，就点击设置齿轮按钮进入设置页，再找到“代理”。
 
 进入代理页面后，找到“在主页面显示本地代理开关”。
 
-![](<images/V3 Claude Code 安装与配置指南-test-3.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
 
-![](<images/V3 Claude Code 安装与配置指南-test-4.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-4.jpg?v=af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46>)
 
 打开后即可在主页看到这个开关。
 
@@ -510,7 +510,7 @@ claude
 
 ```
 
-![](<images/V3 Claude Code 安装与配置指南-test-5.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-5.jpg?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
 看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
 
@@ -520,9 +520,9 @@ claude
 
 原理是ccs的代理进行了转换，claude客户端误以为自己是claude模型，是正常的，无需担忧，下图都是正常的
 
-![](<images/V3 Claude Code 安装与配置指南-test-6.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-6.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
 
-![](<images/V3 Claude Code 安装与配置指南-test-7.jpg>)
+![](<images/V3 Claude Code 安装与配置指南-test-7.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
 
 #### 4.8.2 模型不回复
 

@@ -1,5 +1,6 @@
 export const CDC_TAG = 'cdc-snapshot-2026-07-14';
 export const CDC_COMMIT = '4f1256480ad14c4664408227b11ed6cd9b977746';
+export const CDC_IMAGE_COUNT = 110;
 
 export const articles = [
   {

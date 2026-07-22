@@ -75,7 +75,7 @@ macOS / Linux 清理完成后，关闭当前终端，重新打开一个新终端
 
 打开 ccswitch 后，新建或编辑供应商配置。下图用于确认字段位置，实际填写值以本小节文字为准。
 
-![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg>)
+![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
 
 * 供应商名称填：`codesome-v5`
 
@@ -151,7 +151,7 @@ Zsh 用户：
 
 如图，重点核对这几项：
 
-![](<images/二合一 Claude Code 安装与配置指南-image.png>)
+![](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
 
 * 提供商名称填 `codesome`
 
@@ -165,15 +165,15 @@ Zsh 用户：
 
 请务必开启这个开关，否则无法连接到 Codex。
 
-![](<images/二合一 Claude Code 安装与配置指南-test-5.jpg>)
+![](<images/二合一 Claude Code 安装与配置指南-test-5.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
 
 如果找不到开关，就点击设置齿轮按钮进入设置页，再找到“代理”。
 
 进入代理页面后，找到“在主页面显示本地代理开关”。
 
-![](<images/二合一 Claude Code 安装与配置指南-test-3.jpg>)
+![](<images/二合一 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
 
-![](<images/二合一 Claude Code 安装与配置指南-test-4.jpg>)
+![](<images/二合一 Claude Code 安装与配置指南-test-4.jpg?v=af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46>)
 
 打开后即可在主页看到这个开关。
 
@@ -181,7 +181,7 @@ Zsh 用户：
 
 新开一个终端窗口，输入：
 
-![](<images/二合一 Claude Code 安装与配置指南-test-2.jpg>)
+![](<images/二合一 Claude Code 安装与配置指南-test-2.jpg?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
 看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
 
@@ -191,9 +191,9 @@ Zsh 用户：
 
 原理是ccs的代理进行了转换，claude客户端误以为自己是claude模型，是正常的，无需担忧，下图都是正常的
 
-![](<images/二合一 Claude Code 安装与配置指南-test-1.jpg>)
+![](<images/二合一 Claude Code 安装与配置指南-test-1.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
 
-![](<images/二合一 Claude Code 安装与配置指南-test.jpg>)
+![](<images/二合一 Claude Code 安装与配置指南-test.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
 
 #### 4.2 模型不回复
 

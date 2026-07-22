@@ -240,11 +240,11 @@ OpenCode 的配置文件路径一般是：
 
 使用斜杠命令 `/model` 即可打开模型选择界面：
 
-![](<images/二合一月卡如何配置 OpenCode-切换模型使用斜杠model命令.png>)
+![](<images/二合一月卡如何配置 OpenCode-切换模型使用斜杠model命令.png?v=f9efdd9979736c507ba9986e3b9d2c483cc6d4090840311219b53efb281b81fd>)
 
 执行命令后会显示可用的模型列表，选择你想使用的模型即可：
 
-![](<images/二合一月卡如何配置 OpenCode-这是命令执行后的选模型界面.png>)
+![](<images/二合一月卡如何配置 OpenCode-这是命令执行后的选模型界面.png?v=e7455b388fd700f3f3d87806783d1ff9af0edf7a536a5a12ec7da3f5b7d4e50b>)
 
 ***
 
