@@ -33,6 +33,36 @@
     .sidebar-toggle span:last-child {
       margin-bottom: 0;
     }
+    .quick-home {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(66, 185, 131, 0.45);
+      border-radius: 4px;
+      background-color: hsla(0, 0%, 100%, 0.95);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+      color: #34495e;
+      font-size: 14px;
+      line-height: 1;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .quick-home:hover,
+    .quick-home:focus-visible {
+      border-color: var(--theme-color);
+      box-shadow: 0 2px 8px rgba(66, 185, 131, 0.24);
+      color: var(--theme-color);
+    }
+    .quick-home:focus-visible {
+      outline: 2px solid var(--theme-color);
+      outline-offset: 2px;
+    }
     .markdown-section img {
       border: 1px solid #eee;
       border-radius: 4px;
@@ -41,6 +71,7 @@
 </head>
 <body>
   <div id="app">文档加载中…</div>
+  <a class="quick-home" href="#/" aria-label="返回主界面" title="返回主界面">返回首页</a>
   <script>
     window.$docsify = {
       name: 'Codesome 文档',
@@ -70,5 +101,25 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-powershell.min.js"></script>
+  <script>
+    document.addEventListener('click', function (event) {
+      var homeLink = event.target.closest('.quick-home');
+
+      if (!homeLink) {
+        return;
+      }
+
+      event.preventDefault();
+
+      var searchInput = document.querySelector('.search input[type="search"]');
+      if (searchInput) {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      window.location.hash = '#/';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
 </body>
 </html>
