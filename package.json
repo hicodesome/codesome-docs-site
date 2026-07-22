@@ -5,7 +5,11 @@
   "description": "Codesome 平台使用文档站（Docsify）",
   "scripts": {
     "dev": "docsify serve . --port 3008",
-    "check:images": "node scripts/check-images.mjs"
+    "sync:cdc": "node scripts/sync-cdc.mjs",
+    "check:cdc": "node scripts/sync-cdc.mjs --check",
+    "check:links": "node scripts/check-links.mjs",
+    "check:images": "node scripts/check-images.mjs",
+    "check": "npm run check:cdc && npm run check:links && npm run check:images"
   },
   "devDependencies": {
     "docsify-cli": "^4.4.4"

@@ -14,10 +14,10 @@
 
 | 你的情况                               | 应该看                                                                                      |
 | ---------------------------------- | ---------------------------------------------------------------------------------------- |
-| 使用 V3 配 Claude Code，key 是 `sk-...` | [V3 Claude Code 安装与配置指南](https://zvgmnl1sw58.feishu.cn/wiki/IPomwd31niucKwkVIVucP63an1g) |
-| 使用 V3 配 Codex                      | [V3 Codex 安装与配置指南](https://zvgmnl1sw58.feishu.cn/wiki/O13Yw8j1kiseS4k2TC0c2Qp8nug)       |
-| 使用二合一配 Codex                       | [二合一 Codex 安装与配置指南](https://oxv18tgb72z.feishu.cn/docx/STgaddmS6o5FTNxdm6Yc83tAnud)      |
-| 已经报错                               | [使用问题速查](https://zvgmnl1sw58.feishu.cn/wiki/UU8Uw09k3itFOzkfj88ceSfenfg)                 |
+| 使用 V3 配 Claude Code，key 是 `sk-...` | [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md) |
+| 使用 V3 配 Codex                      | [V3 Codex 安装与配置指南](01-V3计划-Codex安装配置.md)       |
+| 使用二合一配 Codex                       | [二合一 Codex 安装与配置指南](01-二合一计划-Codex安装配置.md)      |
+| 已经报错                               | [使用问题速查](02-使用问题速查.md)                 |
 
 ## 配置前确认
 
@@ -145,9 +145,9 @@ Zsh 用户：
 
 ### 4. 验证
 
-## 在 Claude Code 里使用 GPT-5.6
+## 在 Claude Code 里使用 gpt-5.5
 
-### 1. 在 ccswitch 里配置 gpt-5.6-terra
+### 1. 在 ccswitch 里配置gpt-5.5
 
 如图，重点核对这几项：
 
@@ -159,9 +159,7 @@ Zsh 用户：
 
 * API Key 填cr开头的key
 
-* 模型映射填入 `gpt-5.6-terra`
-
-日常任务推荐 Terra；高难度任务可改为 `gpt-5.6-sol`，简单任务可改为 `gpt-5.6-luna`。不要直接填写裸 `gpt-5.6`，否则会默认指向更贵的 Sol。
+* 模型映射填入`gpt-5.5`
 
 ### 2. 打开 ccswitch 的代理开关
 

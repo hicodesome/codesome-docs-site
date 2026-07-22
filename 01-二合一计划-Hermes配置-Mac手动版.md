@@ -1,6 +1,7 @@
 # 【最新】Hermes 二合一配置教程
 
 本教程适用于 Codesome 二合一版本（V5）
+\</quote-container>
 
 # Mac 小白版：从零配好 Hermes（二合一版本）
 
@@ -74,7 +75,7 @@ nano ~/.hermes/config.yaml
 
 ```plaintext
 model:
-  default: "gpt-5.6-terra"
+  default: "gpt-5.5"
   provider: "codesome-unified-codex"
   context_length: 2000000
 
@@ -84,7 +85,7 @@ custom_providers:
     key_env: "OPENAI_API_KEY"
     api_mode: "codex_responses"
     models:
-      gpt-5.6-terra:
+      gpt-5.5:
         context_length: 2000000
 
 terminal:
@@ -93,27 +94,25 @@ terminal:
   timeout: 180
 ```
 
-本教程默认使用 `gpt-5.6-terra` 作为日常模型；高难度任务可改为 `gpt-5.6-sol`，简单任务可改为 `gpt-5.6-luna`。不要填写裸 `gpt-5.6`。
-
 ### 方式二：使用 Claude
 
 或者也可以使用这个配置：
 
 ```plaintext
 model:
-  default: "claude-sonnet-5"
+  default: "claude-sonnet-4-6"
   provider: "codesome-unified-claude"
   context_length: 2000000
 
 custom_providers:
   - name: "codesome-unified-claude"
     base_url: "https://v5.codesome.cn/api"
-    api_key: "${CODESOME_CLAUDE_API_KEY}"
+    key_env: "ANTHROPIC_API_KEY"
     api_mode: "anthropic_messages"
     models:
-      claude-sonnet-5:
+      claude-sonnet-4-6:
         context_length: 2000000
-      claude-opus-4-8:
+      claude-opus-4-6:
         context_length: 2000000
 
 terminal:
@@ -157,7 +156,7 @@ OPENAI_API_KEY=cr-你的二合一key
 添加以下内容：
 
 ```plaintext
-CODESOME_CLAUDE_API_KEY=cr-你的二合一key
+ANTHROPIC_API_KEY=cr-你的二合一key
 ```
 
 保存并退出：
@@ -248,7 +247,7 @@ hermes doctor
 
    * Codex 配置使用 `OPENAI_API_KEY`
 
-   * Claude 配置使用 `CODESOME_CLAUDE_API_KEY`
+   * Claude 配置使用 `ANTHROPIC_API_KEY`
 
 ### 连接超时
 
@@ -268,10 +267,9 @@ hermes doctor
 
 ```plaintext
 model:
-  default: gpt-5.6-terra
+  default: gpt-5.5
   provider: custom
   base_url: https://v5.codesome.cn/openai
-  api_key: "${OPENAI_API_KEY}"
   api_mode: codex_responses
   context_length: 2000000
 
@@ -285,10 +283,9 @@ terminal:
 
 ```plaintext
 model:
-  default: claude-sonnet-5
+  default: claude-sonnet-4-6
   provider: custom
   base_url: https://v5.codesome.cn/api
-  api_key: "${CODESOME_CLAUDE_API_KEY}"
   api_mode: anthropic_messages
   context_length: 2000000
 
@@ -308,4 +305,4 @@ terminal:
 
 * Hermes 官方文档：https://github.com/NousResearch/hermes-agent
 
-* Codesome 主文档：https://zvgmnl1sw58.feishu.cn/wiki/Vaifwy0aAisdP8kDLPoc0jV5nCb
+* Codesome 主文档：[站内文章](03-Agentic入门宝典.md)

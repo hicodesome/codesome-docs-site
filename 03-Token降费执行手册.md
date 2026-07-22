@@ -206,7 +206,7 @@ Billed Cost =
 
 CSV 文件路径：<把你的 CSV 文件路径放这里>
 
-已知前提：模型公开单价和当前分组倍率已经固定，不要从账单金额反推模型价格。必要时先联网查询官方价格页，确认常见模型（例如 GPT-5.6 Terra、GPT-5.6 Sol、Claude Opus、Claude Sonnet、xAI 相关模型）的 input、output、cache read、cache creation / cache write 单价；再结合账单里的模型名、倍率和 token 用量核算费用。GPT-5.6 配置优先填写精确模型 ID，避免裸 `gpt-5.6` 默认落到更贵的 Sol。
+已知前提：模型公开单价和当前分组倍率已经固定，不要从账单金额反推模型价格。必要时先联网查询官方价格页，确认常见模型（例如 GPT-5.5、Claude Opus、Claude Sonnet、xAI 相关模型）的 input、output、cache read、cache creation / cache write 单价；再结合账单里的模型名、倍率和 token 用量核算费用。
 
 请按这个顺序输出：
 1. 用“最终扣费 = 各类 Token 使用量 × 对应公开单价 × 当前分组倍率”解释扣费逻辑，并说明 input、output、cache read、cache creation / cache write 不能混在一起算。

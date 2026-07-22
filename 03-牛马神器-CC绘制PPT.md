@@ -1,6 +1,6 @@
 作者：Mens&#x20;
 
-可领福利 [ codesome｜Claude code 小白无门槛宝典](https://ai.feishu.cn/wiki/Vaifwy0aAisdP8kDLPoc0jV5nCb?from=from_copylink)
+可领福利 [ codesome｜Claude code 小白无门槛宝典](03-Agentic入门宝典.md)
 
 No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）
 
@@ -97,4 +97,3 @@ Claude code 的 sonnet thinking 消耗时间很长，但是相比吉米奈等生
 修复后：
 
 ![](<images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-2.png>)
-

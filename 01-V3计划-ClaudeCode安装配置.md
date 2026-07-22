@@ -14,10 +14,10 @@
 
 | 你的情况                   | 应该看                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------- |
-| 要配置 V3 Codex           | [V3 Codex 安装与配置指南](https://zvgmnl1sw58.feishu.cn/wiki/O13Yw8j1kiseS4k2TC0c2Qp8nug)        |
-| 使用二合一月卡，key 是 `cr-...` | [二合一 Claude Code 安装与配置指南](https://oxv18tgb72z.feishu.cn/docx/GRTgdoyi9olkeLxv6TBcpc47nPg) |
-| 要配置二合一 Codex           | [二合一 Codex 安装与配置指南](https://oxv18tgb72z.feishu.cn/docx/STgaddmS6o5FTNxdm6Yc83tAnud)       |
-| 已经报错                   | [使用问题速查](https://zvgmnl1sw58.feishu.cn/wiki/UU8Uw09k3itFOzkfj88ceSfenfg)                  |
+| 要配置 V3 Codex           | [V3 Codex 安装与配置指南](01-V3计划-Codex安装配置.md)        |
+| 使用二合一月卡，key 是 `cr-...` | [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md) |
+| 要配置二合一 Codex           | [二合一 Codex 安装与配置指南](01-二合一计划-Codex安装配置.md)       |
+| 已经报错                   | [使用问题速查](02-使用问题速查.md)                  |
 
 ## 配置前确认
 
@@ -462,11 +462,11 @@ claude
 
 遇到报错，去看：
 
-[使用问题速查：报错、账单与配置排查](https://zvgmnl1sw58.feishu.cn/wiki/UU8Uw09k3itFOzkfj88ceSfenfg)
+[使用问题速查：报错、账单与配置排查](02-使用问题速查.md)
 
-## 在 Claude Code 里使用 GPT-5.6
+## 在 Claude Code 里使用 gpt-5.5
 
-### 4.4 在 ccswitch 里配置 gpt-5.6-terra
+### 4.4 在 ccswitch 里配置gpt-5.5
 
 如图，重点核对这几项：
 
@@ -479,10 +479,6 @@ claude
 * API Key 填你在 Codesome 里设置的 key
 
 * 分组选择 `codex月卡` 或 `codex分组`
-
-* 模型映射填入 `gpt-5.6-terra`
-
-日常任务推荐 Terra；高难度任务可改为 `gpt-5.6-sol`，简单任务可改为 `gpt-5.6-luna`。不要直接填写裸 `gpt-5.6`，否则会默认指向更贵的 Sol。
 
 ### 4.5 配置高级选项
 

@@ -45,13 +45,13 @@ openclaw --version
   "models": {
     "providers": {
       "codesome-codex": {
-        "baseUrl": "https://cc.codesome.ai/v1",
+        "baseUrl": "https://cc.codesome.ai",
         "apiKey": "${CODESOME_OPENAI_API_KEY}",
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5.6-terra",
-            "name": "gpt-5.6-terra",
+            "id": "gpt-5.5",
+            "name": "gpt-5.5",
             "contextWindow": 200000,
             "maxTokens": 8192
           }
@@ -62,19 +62,17 @@ openclaw --version
   "agents": {
     "defaults": {
       "model": {
-        "primary": "codesome-codex/gpt-5.6-terra"
+        "primary": "codesome-codex/gpt-5.5"
       },
       "models": {
-        "codesome-codex/gpt-5.6-terra": {}
+        "codesome-codex/gpt-5.5": {}
       }
     }
   }
 }
 ```
 
-这里用 `gpt-5.6-terra` 作为日常默认模型。OpenClaw 的 `openai-responses` 会在 `baseUrl` 后追加 `/responses`，所以 V3 必须填写 `https://cc.codesome.ai/v1`，最终请求为 `https://cc.codesome.ai/v1/responses`。需要更强能力时改成 `gpt-5.6-sol`，简单任务可用 `gpt-5.6-luna`；不要填写裸 `gpt-5.6`，否则会默认走更贵的 Sol。
-
-如果你要用 Claude 渠道（**不推荐**），请只使用当天后台明确支持 OpenClaw 的分组。本文示例使用 V3 Claude；OpenClaw 的 `anthropic-messages` 会追加 `/v1/messages`，因此保留 `https://v3.codesome.cn` 这个根地址。不要按旧教程配置 Fable：普通 `PRO` 不支持 Fable，客服曾实测支持第三方外接的是明确标注 **`max2.2 可外接`** 的分组，但 Fable 已于 2026 年 7 月 19 日后不可用。就把下面这段合并到 `~/.openclaw/openclaw.json`。这里的 provider 名固定写 `codesome`：（注意填写你的apikey）
+如果你要用 Claude 渠道（**不推荐**），具体的分组是，lite，pro，并且注意max模型分组不兼容openclaw使用。就把下面这段合并到 `~/.openclaw/openclaw.json`。这里的 provider 名固定写 `codesome`：（注意填写你的apikey）
 
 ```json
 {
@@ -91,14 +89,20 @@ openclaw --version
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-sonnet-5",
-            "name": "claude-sonnet-5",
+            "id": "claude-sonnet-4-6",
+            "name": "claude-sonnet-4-6",
             "contextWindow": 200000,
             "maxTokens": 8192
           },
           {
-            "id": "claude-opus-4-8",
-            "name": "Claude Opus 4.8",
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6",
+            "contextWindow": 200000,
+            "maxTokens": 16384
+          },
+          {
+            "id": "claude-opus-4-7",
+            "name": "Claude Opus 4.7",
             "contextWindow": 200000,
             "maxTokens": 16384
           }
@@ -109,11 +113,12 @@ openclaw --version
   "agents": {
     "defaults": {
       "model": {
-        "primary": "codesome/claude-sonnet-5"
+        "primary": "codesome/claude-sonnet-4-6"
       },
       "models": {
-        "codesome/claude-opus-4-8": {},
-        "codesome/claude-sonnet-5": {}
+        "codesome/claude-opus-4-6": {},
+        "codesome/claude-opus-4-7": {},
+        "codesome/claude-sonnet-4-6": {}
       }
     }
   }

@@ -1,4 +1,4 @@
-本教程将指导你安装 Grok Build CLI，并配置使用 Codesome 的 OpenAI 兼容 API（默认使用 `gpt-5.6-terra`）。
+本教程将指导你安装 Grok Build CLI，并配置使用 Codesome 的 OpenAI 兼容 API（`gpt-5.5` 模型）。
 
 ***
 
@@ -45,21 +45,21 @@ export PATH="$HOME/.grok/bin:$PATH"
 installer = "internal"
 
 # ===== v3 配置 =====
-[model.codesome-gpt56-terra]
-model = "gpt-5.6-terra"
-name = "v3 Codesome GPT-5.6 Terra"
+[model.codesome-gpt55]
+model = "gpt-5.5"
+name = "v3 Codesome GPT-5.5"
 api_key = "你的_v3_API_KEY（sk-开头）"
 base_url = "https://cc.codesome.ai/v1"
 
 # ===== 二合一月卡配置 =====
-[model.codesome-gpt56-terra-test]
-model = "gpt-5.6-terra"
-name = "二合一月卡 GPT-5.6 Terra (v5)"
+[model.codesome-gpt55-test]
+model = "gpt-5.5"
+name = "二合一月卡 GPT-5.5 (v5)"
 api_key = "你的_二合一月卡_API_KEY（cr-开头）"
-base_url = "https://v5.codesome.cn/openai"
+base_url = "https://v5.codesome.cn/openai/v1"
 
 [models]
-default = "codesome-gpt56-terra-test"
+default = "codesome-gpt55-test"
 
 [ui]
 max_thoughts_width = 120
@@ -80,7 +80,7 @@ fork_secondary_model = "grok-build"
 grok inspect
 ```
 
-检查输出中是否显示 `codesome-gpt56-terra` 模型。
+检查输出中是否显示 `codesome-gpt55` 模型。
 
 ***
 
@@ -99,7 +99,7 @@ grok
 
 * **检查配置**：`grok inspect`
 
-* **切换模型**：`/model codesome-gpt56-terra`（TUI 内）或 `grok -m codesome-gpt56-terra`
+* **切换模型**：`/model codesome-gpt55`（TUI 内）或 `grok -m codesome-gpt55`
 
 * **更新 CLI**：`grok update`
 
@@ -111,20 +111,17 @@ grok
 
 * **v3 配置**：`https://cc.codesome.ai/v1`
 
-* **二合一月卡配置**：`https://v5.codesome.cn/openai`
+* **二合一月卡配置**：`https://v5.codesome.cn/openai/v1`
 
-* Grok 会自动在后面添加 `/chat/completions`。因此最终请求地址分别为：
+* Grok 会自动在后面添加 `/chat/completions`，最终请求地址为：
 
   ```plain&#x20;text
-  V3：https://cc.codesome.ai/v1/chat/completions
-  二合一：https://v5.codesome.cn/openai/chat/completions
+  https://cc.codesome.ai/v1/chat/completions
   ```
 
 ### 模型 ID
 
-* 默认使用 `gpt-5.6-terra`；需要更强能力时可改为 `gpt-5.6-sol`，简单任务可改为 `gpt-5.6-luna`。
-
-* 不要填写裸 `gpt-5.6`，否则会默认指向更贵的 Sol。
+* 使用 `gpt-5.5` 作为模型 ID
 
 * 注意grokbulid只支持OpenAI 兼容格式，所以只能支持 GPT。
 
@@ -134,7 +131,7 @@ grok
 
 ### 错误：`empty response from model`
 
-* V3 的 `base_url` 应为 `https://cc.codesome.ai/v1`；二合一的 `base_url` 应为 `https://v5.codesome.cn/openai`。
+* 检查 `base_url` 是否包含 `/v1`
 
 * 验证 API Key 是否正确
 
@@ -142,7 +139,7 @@ grok
 
 ### 错误：`404 Not Found`
 
-* 检查 `base_url` 路径：V3 使用 `https://cc.codesome.ai/v1`，二合一使用 `https://v5.codesome.cn/openai`。
+* 检查 `base_url` 路径，确保是 `https://cc.codesome.ai/v1`
 
 * 不要使用 `/v1/messages`（那是 Anthropic 原生格式）
 
