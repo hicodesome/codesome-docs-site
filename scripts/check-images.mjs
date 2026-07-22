@@ -3,16 +3,19 @@ import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { articles, CDC_IMAGE_COUNT } from './cdc-manifest.mjs';
+import { articles } from './cdc-manifest.mjs';
+import { LATEST_BASELINE_SITES } from './content-baseline.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const imagePattern = /!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^)]+?))\s*\)/g;
 
 const refs = new Set();
+const allRefs = new Set();
 const hashes = new Map();
 const errors = [];
 
 for (const article of articles) {
+  const isCdcArticle = !LATEST_BASELINE_SITES.has(article.site);
   const text = readFileSync(join(root, article.site), 'utf8');
   for (const match of text.matchAll(imagePattern)) {
     const target = (match[1] ?? match[2]).trim();
@@ -20,12 +23,15 @@ for (const article of articles) {
     const ref = question === -1 ? target : target.slice(0, question);
     if (!ref.startsWith('images/')) continue;
 
-    refs.add(ref);
+    allRefs.add(ref);
     const destination = join(root, ref);
     if (!existsSync(destination)) {
       errors.push(`断链: ${article.site} -> ${ref}`);
       continue;
     }
+    if (!isCdcArticle) continue;
+
+    refs.add(ref);
 
     const version = question === -1
       ? undefined
@@ -46,13 +52,9 @@ for (const article of articles) {
   }
 }
 
-if (refs.size !== CDC_IMAGE_COUNT) {
-  errors.push(`CDC 图片引用数量不一致: expected ${CDC_IMAGE_COUNT}, found ${refs.size}`);
-}
-
-const orphans = readdirSync(join(root, 'images')).filter(f => !refs.has(`images/${f}`));
+const orphans = readdirSync(join(root, 'images')).filter(f => !allRefs.has(`images/${f}`));
 if (orphans.length) console.warn(`孤儿图片（未被引用）: ${orphans.length} 个\n  ` + orphans.join('\n  '));
 
 if (errors.length) console.error(errors.join('\n'));
-console.log(`共 ${refs.size} 条 CDC 图片引用，内容哈希错误 ${errors.length} 条`);
+console.log(`共 ${refs.size} 条 CDC 图片引用，内容哈希错误 ${errors.length} 条；全部教程图片引用 ${allRefs.size} 条`);
 process.exit(errors.length ? 1 : 0);

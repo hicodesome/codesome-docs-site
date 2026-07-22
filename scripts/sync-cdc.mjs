@@ -10,6 +10,7 @@ import {
   CDC_TAG,
   internalTargetForUrl
 } from './cdc-manifest.mjs';
+import { LATEST_BASELINE_SITES } from './content-baseline.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const checkOnly = process.argv.includes('--check');
@@ -67,22 +68,42 @@ if (JSON.stringify(snapshotFiles) !== JSON.stringify(manifestFiles)) {
   process.exit(1);
 }
 
-const sourceArticles = new Map();
-const imagePaths = new Set();
+const cdcArticles = articles.filter(article => !LATEST_BASELINE_SITES.has(article.site));
+const articleSites = new Set(articles.map(article => article.site));
+const unknownLatestBaselineSites = [...LATEST_BASELINE_SITES].filter(site => !articleSites.has(site));
+if (unknownLatestBaselineSites.length) {
+  console.error(`Latest baseline article is not in the CDC manifest: ${unknownLatestBaselineSites.join(', ')}`);
+  process.exit(1);
+}
+
+const snapshotArticles = new Map();
+const snapshotImagePaths = new Set();
 
 for (const article of articles) {
   const source = gitText('show', `${CDC_TAG}:${article.source}`);
+  snapshotArticles.set(article.source, source);
+
+  for (const match of source.matchAll(imagePattern())) {
+    const imagePath = imagePathFromTarget(match[2] ?? match[3]);
+    if (imagePath) snapshotImagePaths.add(imagePath);
+  }
+}
+
+if (snapshotImagePaths.size !== CDC_IMAGE_COUNT) {
+  console.error(`CDC image reference mismatch: expected ${CDC_IMAGE_COUNT}, found ${snapshotImagePaths.size}`);
+  process.exit(1);
+}
+
+const sourceArticles = new Map();
+const imagePaths = new Set();
+for (const article of cdcArticles) {
+  const source = snapshotArticles.get(article.source);
   sourceArticles.set(article.source, source);
 
   for (const match of source.matchAll(imagePattern())) {
     const imagePath = imagePathFromTarget(match[2] ?? match[3]);
     if (imagePath) imagePaths.add(imagePath);
   }
-}
-
-if (imagePaths.size !== CDC_IMAGE_COUNT) {
-  console.error(`CDC image reference mismatch: expected ${CDC_IMAGE_COUNT}, found ${imagePaths.size}`);
-  process.exit(1);
 }
 
 const snapshotImages = new Map();
@@ -131,7 +152,7 @@ let totalRewrites = 0;
 const articleMismatches = [];
 const imageMismatches = [];
 
-for (const article of articles) {
+for (const article of cdcArticles) {
   const source = sourceArticles.get(article.source);
   const rendered = renderArticle(source);
   const destination = resolve(root, article.site);
@@ -173,6 +194,6 @@ if (articleMismatches.length || imageMismatches.length) {
 
 const action = checkOnly ? 'validated' : 'synchronized';
 console.log(
-  `CDC ${action}: ${articles.length} articles, ${totalRewrites} internal links, ` +
+  `CDC ${action}: ${cdcArticles.length} articles, ${totalRewrites} internal links, ` +
   `${snapshotImages.size} images, ${changedArticles} articles changed, ${changedImages} images changed`
 );
