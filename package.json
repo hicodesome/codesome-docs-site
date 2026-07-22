@@ -1,0 +1,13 @@
+{
+  "name": "doc-codesome",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Codesome 平台使用文档站（Docsify）",
+  "scripts": {
+    "dev": "docsify serve . --port 3008",
+    "check:images": "node scripts/check-images.mjs"
+  },
+  "devDependencies": {
+    "docsify-cli": "^4.4.4"
+  }
+}

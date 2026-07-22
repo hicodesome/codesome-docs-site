@@ -1,0 +1,14 @@
+# Codesome 文档站 —— 追加到服务器上现有 Caddyfile 的站点片段
+# 文档站进程由 PM2 托管（pm2 start ecosystem.config.js），监听 127.0.0.1:3009
+# 把下面的块复制/合并进现有 Caddyfile，然后 caddy reload（或 systemctl reload caddy）
+
+# 方式一：用域名访问（推荐，把 docs.example.com 换成你的域名，自动 HTTPS）
+doc.codesome.ai {
+	encode gzip zstd
+	reverse_proxy 127.0.0.1:3009
+}
+
+# 方式二：没有域名，用现有域名的子路径访问（放进那个域名的站点块里）
+# handle_path /docs/* {
+# 	reverse_proxy 127.0.0.1:3009
+# }
