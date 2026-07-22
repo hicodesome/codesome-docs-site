@@ -1,0 +1,83 @@
+.article-copy-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 38px;
+  margin: 0 0 12px;
+}
+
+.article-copy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(66, 185, 131, 0.45);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  color: #34495e;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+.article-copy-button:hover,
+.article-copy-button:focus-visible {
+  border-color: var(--theme-color);
+  box-shadow: 0 2px 7px rgba(66, 185, 131, 0.2);
+  color: var(--theme-color);
+}
+
+.article-copy-button:focus-visible {
+  outline: 2px solid var(--theme-color);
+  outline-offset: 2px;
+}
+
+.article-copy-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.article-copy-icon {
+  display: inline-block;
+  min-width: 1em;
+  font-size: 16px;
+  line-height: 1;
+  text-align: center;
+}
+
+.article-copy-icon::before {
+  content: '⧉';
+}
+
+.article-copy-button[data-state='success'] {
+  border-color: #42b983;
+  color: #208456;
+}
+
+.article-copy-button[data-state='success'] .article-copy-icon::before {
+  content: '✓';
+}
+
+.article-copy-button[data-state='error'] {
+  border-color: #c84b4b;
+  color: #a73535;
+}
+
+.article-copy-button[data-state='error'] .article-copy-icon::before {
+  content: '!';
+}
+
+@media screen and (max-width: 640px) {
+  .article-copy-toolbar {
+    min-height: 36px;
+    margin-bottom: 14px;
+  }
+
+  .article-copy-button {
+    max-width: 100%;
+  }
+}
