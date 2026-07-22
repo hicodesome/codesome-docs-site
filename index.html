@@ -13,6 +13,160 @@
   <style>
     :root {
       --theme-color: #42b983;
+      --theme-color-rgb: 66, 185, 131;
+      --sidebar-width: 300px;
+      --sidebar-collapsed-offset: -300px;
+      --content-max-width: 1240px;
+    }
+    html,
+    body {
+      min-height: 100%;
+    }
+    body {
+      background:
+        radial-gradient(circle at 10% 0%, rgba(66, 185, 131, 0.15), transparent 30rem),
+        linear-gradient(135deg, #f8fcf9 0%, #edf8f1 48%, #f7faf8 100%);
+      background-attachment: fixed;
+      font-size: 17px;
+    }
+    main {
+      background: transparent;
+    }
+    .sidebar {
+      width: var(--sidebar-width);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(14px);
+    }
+    .sidebar .sidebar-nav {
+      line-height: 2.1em;
+    }
+    .sidebar ul li a {
+      font-size: 15px;
+    }
+    .content {
+      left: var(--sidebar-width);
+      background: transparent;
+    }
+    .markdown-section {
+      max-width: var(--content-max-width);
+      padding: 44px 250px 64px 48px;
+      font-size: 17px;
+    }
+    .markdown-section h1,
+    .markdown-section h2,
+    .markdown-section h3,
+    .markdown-section h4 {
+      scroll-margin-top: 28px;
+    }
+    .markdown-section h1 {
+      font-size: 2.35rem;
+    }
+    .markdown-section h2 {
+      font-size: 1.9rem;
+    }
+    .markdown-section h3 {
+      font-size: 1.55rem;
+    }
+    .markdown-section ol,
+    .markdown-section p,
+    .markdown-section ul {
+      line-height: 1.85rem;
+    }
+    .markdown-section p,
+    .markdown-section ol,
+    .markdown-section ul {
+      margin-top: 1.35em;
+      margin-bottom: 1.35em;
+    }
+    .sidebar-resizer {
+      position: absolute;
+      top: 0;
+      right: -5px;
+      bottom: 0;
+      width: 10px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: col-resize;
+      touch-action: none;
+      z-index: 32;
+    }
+    .sidebar-resizer::after {
+      position: absolute;
+      top: 0;
+      right: 4px;
+      bottom: 0;
+      width: 1px;
+      background: rgba(var(--theme-color-rgb), 0.16);
+      content: '';
+      transition: width 0.15s, background-color 0.15s;
+    }
+    .sidebar-resizer:hover::after,
+    .sidebar-resizer:focus-visible::after {
+      width: 3px;
+      background: rgba(var(--theme-color-rgb), 0.7);
+    }
+    .sidebar-resizer:focus-visible {
+      outline: none;
+    }
+    body.sidebar-resizing,
+    body.sidebar-resizing * {
+      cursor: col-resize !important;
+      user-select: none !important;
+    }
+    .article-toc {
+      position: fixed;
+      top: 112px;
+      right: max(24px, calc((100vw - var(--content-max-width)) / 2));
+      z-index: 10;
+      display: none;
+      width: 216px;
+      max-height: calc(100vh - 144px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    .article-toc.is-visible {
+      display: block;
+    }
+    .article-toc-title {
+      margin-bottom: 10px;
+      color: #52645a;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .article-toc-nav {
+      border-left: 1px solid rgba(var(--theme-color-rgb), 0.2);
+    }
+    .article-toc a {
+      display: block;
+      overflow: hidden;
+      border-left: 2px solid transparent;
+      margin-left: -1px;
+      padding: 5px 8px 5px 14px;
+      color: #6a786f;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.45;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+      white-space: nowrap;
+    }
+    .article-toc a.level-3 {
+      padding-left: 26px;
+      font-size: 13px;
+    }
+    .article-toc a:hover,
+    .article-toc a:focus-visible,
+    .article-toc a.is-active {
+      border-left-color: var(--theme-color);
+      background: rgba(var(--theme-color-rgb), 0.08);
+      color: var(--theme-color);
+    }
+    .article-toc a:focus-visible {
+      outline: 2px solid rgba(var(--theme-color-rgb), 0.35);
+      outline-offset: -2px;
     }
     .sidebar-nav > ul > li > p {
       font-weight: 700;
@@ -59,7 +213,7 @@
     .quick-home:hover,
     .quick-home:focus-visible {
       border-color: var(--theme-color);
-      box-shadow: 0 2px 8px rgba(66, 185, 131, 0.24);
+      box-shadow: 0 2px 8px rgba(var(--theme-color-rgb), 0.24);
       color: var(--theme-color);
     }
     .quick-home:focus-visible {
@@ -70,12 +224,253 @@
       border: 1px solid #eee;
       border-radius: 4px;
     }
+    body.close .sidebar {
+      transform: translateX(var(--sidebar-collapsed-offset));
+    }
+    body.close .content {
+      left: 0;
+    }
+    @media screen and (max-width: 1180px) {
+      .markdown-section {
+        padding-right: 48px;
+      }
+      .article-toc {
+        display: none !important;
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .sidebar {
+        left: var(--sidebar-collapsed-offset);
+      }
+      .content {
+        left: 0;
+      }
+      .markdown-section {
+        max-width: 100%;
+        padding: 36px 24px 56px;
+        font-size: 17px;
+      }
+      body.close .sidebar {
+        transform: translateX(var(--sidebar-width));
+      }
+      body.close .content {
+        transform: translateX(var(--sidebar-width));
+      }
+      .sidebar-resizer {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="app">文档加载中…</div>
   <a class="quick-home" href="#/" aria-label="返回主界面" title="返回主界面">返回首页</a>
   <script>
+    (function () {
+      var root = document.documentElement;
+      var storageKey = 'codesome-docs-sidebar-width';
+      var minWidth = 220;
+      var maxWidth = 440;
+
+      function clampWidth(width) {
+        return Math.min(maxWidth, Math.max(minWidth, width));
+      }
+
+      function setSidebarWidth(width, persist) {
+        var nextWidth = clampWidth(width);
+        root.style.setProperty('--sidebar-width', nextWidth + 'px');
+        root.style.setProperty('--sidebar-collapsed-offset', '-' + nextWidth + 'px');
+
+        if (persist) {
+          try {
+            localStorage.setItem(storageKey, String(nextWidth));
+          } catch (error) {
+            // Storage can be unavailable in private browsing contexts.
+          }
+        }
+      }
+
+      try {
+        var savedWidth = Number(localStorage.getItem(storageKey));
+        if (Number.isFinite(savedWidth)) {
+          setSidebarWidth(savedWidth, false);
+        }
+      } catch (error) {
+        // Keep the default width when storage is unavailable.
+      }
+
+      function installSidebarResizer() {
+        var sidebar = document.querySelector('.sidebar');
+        if (!sidebar || sidebar.querySelector('.sidebar-resizer')) {
+          return;
+        }
+
+        var resizer = document.createElement('div');
+        resizer.className = 'sidebar-resizer';
+        resizer.setAttribute('role', 'separator');
+        resizer.setAttribute('aria-orientation', 'vertical');
+        resizer.setAttribute('aria-label', '调整左侧目录宽度');
+        resizer.setAttribute('aria-valuemin', String(minWidth));
+        resizer.setAttribute('aria-valuemax', String(maxWidth));
+        resizer.setAttribute('tabindex', '0');
+        resizer.title = '拖动调整左侧目录宽度';
+        sidebar.appendChild(resizer);
+
+        function updateAriaValue() {
+          var width = parseInt(getComputedStyle(root).getPropertyValue('--sidebar-width'), 10);
+          resizer.setAttribute('aria-valuenow', String(width));
+        }
+
+        function onKeydown(event) {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+            return;
+          }
+
+          event.preventDefault();
+          var currentWidth = parseInt(getComputedStyle(root).getPropertyValue('--sidebar-width'), 10);
+          var direction = event.key === 'ArrowRight' ? 1 : -1;
+          setSidebarWidth(currentWidth + direction * 16, true);
+          updateAriaValue();
+        }
+
+        function onPointerMove(event) {
+          setSidebarWidth(event.clientX, true);
+          updateAriaValue();
+        }
+
+        function endResize() {
+          document.body.classList.remove('sidebar-resizing');
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', endResize);
+          window.removeEventListener('pointercancel', endResize);
+        }
+
+        resizer.addEventListener('keydown', onKeydown);
+        resizer.addEventListener('pointerdown', function (event) {
+          if (window.innerWidth <= 768) {
+            return;
+          }
+
+          event.preventDefault();
+          document.body.classList.add('sidebar-resizing');
+          window.addEventListener('pointermove', onPointerMove);
+          window.addEventListener('pointerup', endResize);
+          window.addEventListener('pointercancel', endResize);
+        });
+        updateAriaValue();
+      }
+
+      function createArticleToc() {
+        var markdown = document.querySelector('.markdown-section');
+        if (!markdown) {
+          return;
+        }
+
+        var headings = Array.prototype.slice.call(markdown.querySelectorAll('h1, h2, h3'));
+        var toc = document.querySelector('.article-toc');
+        if (!toc) {
+          toc = document.createElement('aside');
+          toc.className = 'article-toc';
+          toc.innerHTML = '<div class="article-toc-title">本页目录</div><nav class="article-toc-nav" aria-label="文章目录"></nav>';
+          document.body.appendChild(toc);
+        }
+
+        var nav = toc.querySelector('.article-toc-nav');
+        nav.innerHTML = '';
+
+        var visibleHeadings = headings.filter(function (heading) {
+          return heading.textContent.trim();
+        });
+
+        visibleHeadings.forEach(function (heading, index) {
+          if (!heading.id) {
+            heading.id = 'article-section-' + index;
+          }
+
+          var link = document.createElement('a');
+          link.className = 'level-' + heading.tagName.slice(1);
+          link.href = (window.location.hash || '#/').split('?')[0] + '?id=' + encodeURIComponent(heading.id);
+          link.dataset.targetId = heading.id;
+          link.textContent = heading.textContent.trim();
+          link.title = heading.textContent.trim();
+          nav.appendChild(link);
+        });
+
+        toc.classList.toggle('is-visible', visibleHeadings.length > 1);
+        bindArticleToc(visibleHeadings, toc);
+      }
+
+      function bindArticleToc(headings, toc) {
+        if (window.__codesomeArticleTocObserver) {
+          window.__codesomeArticleTocObserver.disconnect();
+        }
+
+        var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
+        var activeId = '';
+
+        function setActive(id) {
+          if (!id || id === activeId) {
+            return;
+          }
+
+          activeId = id;
+          links.forEach(function (link) {
+            link.classList.toggle('is-active', link.dataset.targetId === id);
+          });
+        }
+
+        if ('IntersectionObserver' in window && headings.length) {
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                setActive(entry.target.id);
+              }
+            });
+          }, {
+            root: null,
+            rootMargin: '-96px 0px -62% 0px',
+            threshold: 0
+          });
+          headings.forEach(function (heading) { observer.observe(heading); });
+          window.__codesomeArticleTocObserver = observer;
+        }
+
+        setActive(headings[0] && headings[0].id);
+      }
+
+      document.addEventListener('click', function (event) {
+        var tocLink = event.target.closest('.article-toc a');
+        if (!tocLink) {
+          return;
+        }
+
+        var target = document.getElementById(tocLink.dataset.targetId);
+        if (!target) {
+          return;
+        }
+
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.history.replaceState(null, '', tocLink.href);
+      });
+
+      window.__codesomeDocsLayout = {
+        installSidebarResizer: installSidebarResizer,
+        createArticleToc: createArticleToc
+      };
+
+      window.__codesomeDocsLayoutPlugin = function (hook) {
+        hook.mounted(function () {
+          window.__codesomeDocsLayout.installSidebarResizer();
+          window.__codesomeDocsLayout.createArticleToc();
+        });
+        hook.doneEach(function () {
+          window.__codesomeDocsLayout.installSidebarResizer();
+          window.__codesomeDocsLayout.createArticleToc();
+        });
+      };
+    }());
+
     window.$docsify = {
       name: 'Codesome 文档',
       homepage: '03-Agentic入门宝典.md',
@@ -89,8 +484,9 @@
         noData: '没有找到结果',
         depth: 1,
         paths: 'auto',
-        namespace: 'article-title-v1'
+        namespace: 'cdc-titles-v2'
       },
+      plugins: [window.__codesomeDocsLayoutPlugin],
       copyCode: {
         buttonText: '复制',
         errorText: '复制失败',
@@ -103,6 +499,7 @@
   <script src="scripts/sidebar-scroll.js?v=20260722-1"></script>
   <script src="scripts/copy-page-markdown.js?v=20260722-1"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="./assets/cdc-title-injector.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/zoom-image.min.js"></script>
