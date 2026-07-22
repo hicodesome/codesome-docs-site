@@ -1,0 +1,18 @@
+.markdown-section > .page-title {
+  margin: 0 0 28px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #20242a;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+@media screen and (max-width: 640px) {
+  .markdown-section > .page-title {
+    margin-bottom: 22px;
+    font-size: 28px;
+  }
+}

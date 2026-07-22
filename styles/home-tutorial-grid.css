@@ -1,15 +1,20 @@
+.markdown-section.has-home-tutorial-grid {
+  max-width: 1180px;
+}
+
 .home-tutorial-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 36px;
-  margin: 18px 0 30px;
-  padding: 22px 0;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0 32px;
 }
 
 .home-tutorial-group {
   min-width: 0;
+  padding: 14px 16px 12px;
+  border: 1px solid #edf0f2;
+  border-radius: 6px;
+  background: #fbfcfd;
 }
 
 .home-tutorial-group h3 {
@@ -29,7 +34,7 @@
 
 .home-tutorial-group__items > p {
   margin: 0;
-  padding: 8px 0;
+  padding: 7px 0;
   border-bottom: 1px solid #edf0f2;
   color: #59636e;
   line-height: 1.55;
@@ -55,11 +60,16 @@
   line-height: 1.55;
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: 980px) {
+  .home-tutorial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 640px) {
   .home-tutorial-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
+    gap: 12px;
     margin: 14px 0 24px;
-    padding: 18px 0;
   }
 }
