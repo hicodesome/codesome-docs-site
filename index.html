@@ -99,6 +99,7 @@
   </script>
   <script src="scripts/home-tutorial-grid.js?v=20260722-2"></script>
   <script src="scripts/page-title.js?v=20260722-1"></script>
+  <script src="scripts/sidebar-scroll.js?v=20260722-1"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2"></script>
@@ -116,27 +117,15 @@
 
       event.preventDefault();
 
-      function resetSidebarScroll() {
-        var scrollContainers = document.querySelectorAll('.sidebar, .sidebar-nav');
-
-        Array.prototype.forEach.call(scrollContainers, function (container) {
-          container.scrollTop = 0;
-          if (typeof container.scrollTo === 'function') {
-            container.scrollTo(0, 0);
-          }
-        });
-      }
-
       var searchInput = document.querySelector('.search input[type="search"]');
       if (searchInput) {
         searchInput.value = '';
         searchInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
 
-      resetSidebarScroll();
+      window.__codesomeSidebarScroll.resetForHome();
       window.location.hash = '#/';
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(resetSidebarScroll, 0);
     });
   </script>
 </body>
