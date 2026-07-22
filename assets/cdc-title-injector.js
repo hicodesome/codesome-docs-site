@@ -1,10 +1,10 @@
 /**
  * CDC Title Injector
  *
- * Wraps Docsify.get to inject a H1 heading from the CDC article manifest
- * when a markdown file has no H1 of its own. This ensures the Docsify
- * search plugin (depth:1) picks up the correct article title instead of
- * falling back to the URL-encoded file path.
+ * Wraps Docsify.get to normalize CDC article headings for the Docsify
+ * search plugin. Each article receives one manifest H1, while source H1
+ * headings become H2 sections. This keeps search results at article level
+ * without changing the CDC Markdown files on disk.
  *
  * Must be loaded AFTER docsify.min.js (Docsify.get must exist) and
  * BEFORE search.min.js (which calls Docsify.get during init).
@@ -49,22 +49,52 @@
   };
 
   /* ── 1. Clear stale search-index caches ─────────────────────────────
-   * Old namespaces (article-title-v1, no-namespace) hold URL-encoded
-   * path fallbacks.  We remove them so the search plugin builds a fresh
-   * index with correct CDC titles injected below.
+ * Old namespaces hold indexes generated before the heading normalization.
+ * Remove them so the search plugin builds a fresh index below.
    */
   var STALE_KEYS = [
     'docsify.search.index',
     'docsify.search.expires',
     'docsify.search.index/article-title-v1',
-    'docsify.search.expires/article-title-v1'
+    'docsify.search.expires/article-title-v1',
+    'docsify.search.index/cdc-titles-v2',
+    'docsify.search.expires/cdc-titles-v2'
   ];
   STALE_KEYS.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } });
 
+  function normalizeHeadings(content, title) {
+    var source = content.charAt(0) === '\uFEFF' ? content.slice(1) : content;
+    var lines = source.split(/\r?\n/);
+    var fence = null;
+
+    lines = lines.map(function (line) {
+      var fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+
+      if (fenceMatch) {
+        if (!fence) {
+          fence = fenceMatch[1];
+        } else if (
+          fenceMatch[1].charAt(0) === fence.charAt(0) &&
+          fenceMatch[1].length >= fence.length
+        ) {
+          fence = null;
+        }
+        return line;
+      }
+
+      if (!fence) {
+        return line.replace(/^( {0,3})#(?=\s+)/, '$1##');
+      }
+
+      return line;
+    });
+
+    return '# ' + title + '\n\n' + lines.join('\n');
+  }
+
   /* ── 2. Wrap Docsify.get ────────────────────────────────────────────
-   * Intercept every Docsify fetch.  When the fetched file matches a CDC
-   * article and its raw content contains no H1, prepend the proper title
-   * as a level-1 heading.
+   * Intercept every Docsify fetch for a CDC article. Prepend the formal
+   * article title as the only H1 and demote source H1 headings to H2.
    *
    * The search plugin runs in a later lifecycle and calls Docsify.get
    * during its init; by the time it runs, this wrapper is in place, so
@@ -93,15 +123,14 @@
       return origGet(url, hasBar, headers);
     }
 
-    // Fetch the raw content and inject H1 if H1 is absent.
+    // Fetch the raw content and normalize its heading hierarchy.
     var result = origGet(url, hasBar, headers);
     var origThen = result.then;
 
     result.then = function (success, error) {
       return origThen.call(result, function (content, opt) {
-        // /^# /m matches H1 at the start of any line.
-        if (content && typeof content === 'string' && !/^# /m.test(content)) {
-          return success('# ' + cdcTitle + '\n\n' + content, opt);
+        if (content && typeof content === 'string') {
+          return success(normalizeHeadings(content, cdcTitle), opt);
         }
         return success(content, opt);
       }, error);
