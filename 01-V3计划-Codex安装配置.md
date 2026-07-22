@@ -48,9 +48,35 @@ env_key=CODESOME_API_KEY
 
 ## Windows 用户
 
-### 1. 安装 Node.js
+### 步骤 1：用 ccswitch 配置
 
-打开：
+前往 `https://github.com/farion1231/cc-switch/releases` 下载最新版本，选择对应的 `.msi` 安装包。
+
+![](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
+
+![](<images/V3 Codex 安装与配置指南-image-010.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
+
+安装完成后，登录 Codesome V3 后台，打开 `https://v3.codesome.cn/keys` 获取对应 key。月卡订阅要切换到月卡分组；按量额度要切换到 Codex 分组。
+
+![V3 后台创建或复制 key](<images/V3 Codex 安装与配置指南-image-2.png?v=0e891fddd0eba743244e85f24ab4207f1746ad791ae24cff0efc746a0b538281>)
+
+打开 ccswitch 主界面，点击右上角加号，创建供应商：
+
+* 供应商名称填 `codesome`
+
+* API Key 填你在 V3 后台获得的 `sk-...` key
+
+* 请求地址填 https://cc.codesome.ai/v1
+
+* 模型名称填 `gpt-5.5`
+
+![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
+
+![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
+
+### 步骤 2：安装 Codex CLI
+
+安装 Node.js：
 
 ```text
 https://nodejs.org/en/download
@@ -67,7 +93,7 @@ node -v
 npm -v
 ```
 
-### 2. 安装 Codex
+安装 Codex：
 
 ```powershell
 npm i -g @openai/codex
@@ -85,15 +111,13 @@ npm i -g @openai/codex --registry=https://registry.npmmirror.com
 codex --version
 ```
 
-### 3. 写入 V3 Codex 配置
-
-先设置 key：
+写入 V3 Codex 配置（先替换成你的真实 key）：
 
 ```powershell
 $Key = "这里替换成你的真实 sk-... API Key"
 ```
 
-再执行下面这一整段（不要做任何修改，直接粘贴。）：
+再执行下面这一整段（不要做任何修改，直接粘贴）：
 
 ```powershell
 if ([string]::IsNullOrWhiteSpace($Key) -or $Key -eq "这里替换成你的真实 sk-... API Key") {
@@ -130,7 +154,7 @@ $env:CODEX_HOME = "$HOME\.codex"
 $env:CODESOME_API_KEY = $Key
 ```
 
-### 4. 验证
+验证配置：
 
 重新打开 PowerShell：
 
@@ -141,15 +165,26 @@ if ($env:CODESOME_API_KEY) { "CODESOME_API_KEY 已生效" } else { "CODESOME_API
 codex
 ```
 
-### 5. （可选）用 ccswitch 配置
+## macOS 用户
 
-如果希望用图形界面管理配置，可以安装 ccswitch。
+### 步骤 1：用 ccswitch 配置
 
-前往 `https://github.com/farion1231/cc-switch/releases` 下载最新版本，选择对应的 `.msi` 安装包。
+macOS 用户可以先执行：
 
-![ccswitch 安装包](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
+```bash
+brew tap farion1231/ccswitch
+brew install --cask cc-switch
+```
+
+如果命令运行失败，前往 `https://github.com/farion1231/cc-switch/releases`，下载后缀是 `.dmg`的版本。
+
+![](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
 
 ![](<images/V3 Codex 安装与配置指南-image-010.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
+
+macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
+
+![macOS 允许打开 cc-switch](<images/V3 Codex 安装与配置指南-image-011.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
 
 安装完成后，登录 Codesome V3 后台，打开 `https://v3.codesome.cn/keys` 获取对应 key。月卡订阅要切换到月卡分组；按量额度要切换到 Codex 分组。
 
@@ -169,11 +204,9 @@ codex
 
 ![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
 
-## macOS 用户
+### 步骤 2：安装 Codex CLI
 
-### 1. 安装 Node.js
-
-打开：
+安装 Node.js：
 
 ```text
 https://nodejs.org/en/download
@@ -183,9 +216,7 @@ https://nodejs.org/en/download
 
 ![macOS Node.js 安装页](<images/V3 Codex 安装与配置指南-image-005.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 
-安装后
-
-打开终端：按 `Command + 空格`，搜索"终端"，回车。后面的安装和验证都在这个窗口里完成。
+安装后打开终端：按 `Command + 空格`，搜索"终端"，回车。后面的安装和验证都在这个窗口里完成。
 
 ![macOS 打开终端](<images/V3 Codex 安装与配置指南-image-006.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
 
@@ -196,9 +227,7 @@ node -v
 npm -v
 ```
 
-
-
-### 2. 安装 Codex
+安装 Codex：
 
 ```bash
 npm i -g @openai/codex
@@ -210,7 +239,7 @@ npm i -g @openai/codex
 npm i -g @openai/codex --registry=https://registry.npmmirror.com
 ```
 
-### 3. 写入 V3 Codex 配置
+写入 V3 Codex 配置：
 
 ```bash
 export CODESOME_API_KEY='这里替换成你的真实 sk-... API Key'
@@ -267,7 +296,7 @@ export CODEX_HOME="$HOME/.codex"
 export CODESOME_API_KEY="$KEY"
 ```
 
-### 4. 验证
+验证配置：
 
 新开终端：
 
@@ -277,46 +306,9 @@ test -n "$CODESOME_API_KEY" && echo "CODESOME_API_KEY 已生效" || echo "CODESO
 codex
 ```
 
-### 5. （可选）用 ccswitch 配置
-
-如果希望用图形界面管理配置，可以安装 ccswitch。
-
-macOS 用户可以先执行：
-
-```bash
-brew tap farion1231/ccswitch
-brew install --cask cc-switch
-```
-
-如果命令运行失败，前往 `https://github.com/farion1231/cc-switch/releases`，下载后缀是 `.dmg`的版本。
-
-![ccswitch 安装包](<images/V3 Codex 安装与配置指南-image-009.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
-
-![](<images/V3 Codex 安装与配置指南-image-010.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
-
-macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
-
-![macOS 允许打开 cc-switch](<images/V3 Codex 安装与配置指南-image-011.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
-
-安装完成后，登录 Codesome V3 后台，打开 `https://v3.codesome.cn/keys` 获取对应 key。月卡订阅要切换到月卡分组；按量额度要切换到 Codex 分组。
-
-![V3 后台创建或复制 key](<images/V3 Codex 安装与配置指南-image-2.png?v=0e891fddd0eba743244e85f24ab4207f1746ad791ae24cff0efc746a0b538281>)
-
-打开 ccswitch 主界面，点击右上角加号，创建供应商：
-
-* 供应商名称填 `codesome`
-
-* API Key 填你在 V3 后台获得的 `sk-...` key
-
-* 请求地址填 https://cc.codesome.ai/v1
-
-* 模型名称填 `gpt-5.5`
-
-![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
-
-![ccswitch 填写 V3 Codex 配置](<images/V3 Codex 安装与配置指南-image-1.png?v=011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3>)
-
 ## WSL 用户
+
+WSL 环境没有 ccswitch 图形界面，直接安装 CLI。
 
 ### 1. 进入 WSL
 
@@ -358,7 +350,7 @@ WSL 里的配置方式和 macOS/Linux 一样，使用 `~/.codex/config.toml`，`
 https://cc.codesome.ai/v1
 ```
 
-可以直接复用上一节 macOS 的配置命令。
+可以直接复用上一节 macOS 的配置命令。需要 ccswitch 的话，回到 Windows 系统里操作即可。
 
 ## Codex 桌面版
 

@@ -153,9 +153,33 @@ CLAUDE_CODE_ATTRIBUTION_HEADER=0
 
 ## Windows 用户
 
-### 1. 安装 Git for Windows
+### 步骤 1：用 ccswitch 配置
 
-打开：
+打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
+
+在页面的 Assets 区域下载 Windows 版本的 `.msi` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。
+
+安装完成后打开 ccswitch，新建自定义配置。注意勾选最左侧的 claude 图标（不要选第二个带电脑标志的）。
+
+![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
+
+按下图填写：
+
+* 供应商名称填：`codesome-v3`
+
+* 请求地址填：`https://cc.codesome.ai`
+
+* API Key 填你的 `sk-...` 开头 API Key
+
+![](<images/V3 Claude Code 安装与配置指南-image-1.png?v=0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb>)
+
+如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
+
+### 步骤 2：安装 Claude Code CLI
+
+安装 Git for Windows：
 
 ```text
 https://git-scm.com/download/win
@@ -167,25 +191,21 @@ https://git-scm.com/download/win
 git --version
 ```
 
-### 2. 打开 PowerShell
-
-按 `Win` 键，输入 `PowerShell`，打开 Windows PowerShell。不要用 CMD。
-
-### 3. 安装 Claude Code
-
-推荐使用官方 Windows 安装器：
+打开 PowerShell（不要用 CMD），安装 Claude Code：
 
 ```powershell
 irm https://claude.ai/install.ps1 | iex
 ```
 
-安装完成后验证：
+验证：
 
 ```powershell
 claude --version
 ```
 
-### 4. 写入 V3 配置
+### 步骤 3：（备选）手动配置环境变量
+
+如果你不想用 ccswitch，可以通过环境变量直接配置。
 
 把 `你的 sk-... 开头 API Key` 替换成真实 key：
 
@@ -198,7 +218,7 @@ setx CLAUDE_CODE_ATTRIBUTION_HEADER "0"
 
 关闭当前 PowerShell，重新打开一个新 PowerShell。
 
-### 5. 验证
+验证：
 
 ```powershell
 claude
@@ -218,19 +238,23 @@ Set-ExecutionPolicy Unrestricted
 
 能进入 Claude Code 并正常回复，就配置完成。
 
-### 6. （可选）用 ccswitch 配置
+## macOS 用户
 
-如果希望用图形界面管理配置，可以安装 ccswitch。
+### 步骤 1：用 ccswitch 配置
 
 打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
 
-在页面的 Assets 区域下载 Windows 版本的 `.msi` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+在页面的 Assets 区域下载对应系统的安装包：按自己的芯片选择 Apple Silicon 或 Intel 版本的 `.dmg` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
 
 > 不要从第三方网盘或来路不明的页面下载 ccswitch。
 
-安装完成后打开 ccswitch，新建自定义配置。
+macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
 
-注意勾选最左侧的 claude 图标（不要选第二个带电脑标志的）
+![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
+
+安装完成后打开 ccswitch，新建自定义配置。注意勾选最左侧的 claude 图标（不要选第二个带电脑标志的）。
 
 ![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
 
@@ -246,21 +270,12 @@ Set-ExecutionPolicy Unrestricted
 
 如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
 
-## macOS 用户
+### 步骤 2：安装 Claude Code CLI
 
-### 1. 安装 Node.js
-
-打开：
+安装 Node.js：
 
 ```text
 https://nodejs.org/en/download
-```
-
-安装完成后验证：
-
-```bash
-node -v
-npm -v
 ```
 
 下载 macOS 安装包并安装。
@@ -271,7 +286,14 @@ npm -v
 
 ![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
 
-### 2. 安装 Claude Code
+验证：
+
+```bash
+node -v
+npm -v
+```
+
+安装 Claude Code：
 
 ```bash
 npm install -g @anthropic-ai/claude-code
@@ -289,7 +311,9 @@ npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.c
 claude --version
 ```
 
-### 3. 写入 V3 配置
+### 步骤 3：（备选）手动配置环境变量
+
+如果你不想用 ccswitch，可以通过环境变量直接配置：
 
 ```bash
 echo 'export ANTHROPIC_BASE_URL="https://cc.codesome.ai"' >> ~/.zshrc
@@ -299,7 +323,7 @@ echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-### 4. 验证
+验证：
 
 新开终端：
 
@@ -311,41 +335,9 @@ claude
 
 ![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
-### 5. （可选）用 ccswitch 配置
-
-如果希望用图形界面管理配置，可以安装 ccswitch。
-
-打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
-
-在页面的 Assets 区域下载对应系统的安装包：按自己的芯片选择 Apple Silicon 或 Intel 版本的 `.dmg` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
-
-![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
-
-> 不要从第三方网盘或来路不明的页面下载 ccswitch。
-
-macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
-
-![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
-
-安装完成后打开 ccswitch，新建自定义配置。
-
-注意勾选最左侧的 claude 图标（不要选第二个带电脑标志的）
-
-![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
-
-按下图填写：
-
-* 供应商名称填：`codesome-v3`
-
-* 请求地址填：`https://cc.codesome.ai`
-
-* API Key 填你的 `sk-...` 开头 API Key
-
-![](<images/V3 Claude Code 安装与配置指南-image-1.png?v=0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb>)
-
-如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
-
 ## Linux 用户
+
+Linux 没有 ccswitch 图形界面，直接安装 CLI 并通过环境变量配置。
 
 ### 1. 安装 Node.js 和 npm
 
