@@ -42,57 +42,15 @@
 
 二合一 Codex 核心配置：
 
-## 方法 1（推荐）：用 ccswitch 配置二合一 Codex
-
-### 1. 安装 ccswitch
-
-macOS 用户可以先执行：
-
-如果命令运行失败，前往 `https://github.com/farion1231/cc-switch/releases`，下载后缀是 `.dmg`的版本。
-
-Windows 用户前往 `https://github.com/farion1231/cc-switch/releases` 下载最新版本，并选择对应的 `.msi` 安装包。
-
-![](<images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
-
-![](<images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
-
-### 2. 首次打开时的系统安全提示
-
-macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
-
-![](<images/二合一 Codex 安装与配置指南-ccswitch_security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
-
-### 3. 获取二合一 Codex Key
-
-下单后即可获取对应 key。你的 key 是 `cr-...`。
-
-### 4. 创建二合一供应商
-
-打开 ccswitch 主界面，点击右上角加号，创建供应商。这里只写二合一 Codex 配置，不适用于 V3。
-
-注意一定要先切换到codex配置页面，需要在ccswitch主界面右上角点击codex图标再点击加号
-
-![](<images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png?v=f33acb7a6545224ca37ad72ebf60e3db3921e7806449c79fc7e05668e3e9a64c>)
-
-
-
-![](<images/二合一 Codex 安装与配置指南-image.png?v=d8c67319fe9b621bd4eea091ee95c0ea7d7b466221037d6f9a9f5d64038a8949>)
-
-* 供应商名称填 `codesome-`二合一
-
-* API Key 填你在二合一后台获得的 `cr-...` key
-
-* 请求地址填 <https://v5.codesome.cn/openai>
-
-* 模型名称填 `gpt-5.5`
-
-## 以下是环境变量方式配置，不再推荐（方法2）
-
-## Windows PowerShell 推荐路径
+## Windows 用户
 
 ### 1. 安装 Node.js
 
 打开：
+
+```text
+https://nodejs.org/en/download
+```
 
 Node.js 下载页用于确认 Windows Installer 的位置。
 
@@ -100,27 +58,120 @@ Node.js 下载页用于确认 Windows Installer 的位置。
 
 安装 Windows Installer 后，在 PowerShell 验证：
 
+```powershell
+node -v
+npm -v
+```
+
 ### 2. 安装 Codex
+
+```powershell
+npm i -g @openai/codex
+```
 
 如果下载慢，可以使用镜像：
 
+```powershell
+npm i -g @openai/codex --registry=https://registry.npmmirror.com
+```
+
 验证：
+
+```powershell
+codex --version
+```
 
 ### 3. 写入二合一 Codex 配置
 
 先设置 key：
 
+```powershell
+$Key = "这里替换成你的真实 cr-... API Key"
+```
+
 再执行下面这一整段（不要做任何修改，直接粘贴。）：
+
+```powershell
+if ([string]::IsNullOrWhiteSpace($Key) -or $Key -eq "这里替换成你的真实 cr-... API Key") {
+    throw "请先执行：`$Key = `"你的真实 cr-... API Key`""
+}
+
+New-Item -ItemType Directory -Force "$HOME\.codex" | Out-Null
+
+@'
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+model_provider = "codesome"
+
+disable_response_storage = true
+network_access = "enabled"
+windows_wsl_setup_acknowledged = true
+check_for_update_on_startup = false
+
+model_context_window = 1000000
+model_auto_compact_token_limit = 900000
+
+[model_providers.codesome]
+name = "Codesome 二合一"
+base_url = "https://v5.codesome.cn/openai"
+wire_api = "responses"
+env_key = "CODESOME_API_KEY"
+'@ | Set-Content -Encoding UTF8 "$HOME\.codex\config.toml"
+
+[Environment]::SetEnvironmentVariable("CODEX_HOME", "$HOME\.codex", "User")
+[Environment]::SetEnvironmentVariable("CODESOME_API_KEY", $Key, "User")
+
+$env:CODEX_HOME = "$HOME\.codex"
+$env:CODESOME_API_KEY = $Key
+```
 
 ### 4. 验证
 
 重新打开 PowerShell：
 
-## macOS 推荐路径
+```powershell
+Get-Content "$HOME\.codex\config.toml" | Select-String 'model =|review_model =|model_provider =|base_url =|env_key ='
+[Environment]::GetEnvironmentVariable("CODEX_HOME", "User")
+if ($env:CODESOME_API_KEY) { "CODESOME_API_KEY 已生效" } else { "CODESOME_API_KEY 未生效" }
+codex
+```
+
+### 5. （可选）用 ccswitch 配置
+
+如果希望用图形界面管理配置，可以安装 ccswitch。
+
+前往 `https://github.com/farion1231/cc-switch/releases` 下载最新版本，选择对应的 `.msi` 安装包。
+
+![ccswitch 安装包](<images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
+
+![ccswitch 安装包](<images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
+
+安装完成后，获取你的二合一 key（`cr-...`）。
+
+打开 ccswitch 主界面，点击右上角加号，创建供应商。注意一定要先切换到 codex 配置页面，需要在 ccswitch 主界面右上角点击 codex 图标再点击加号。
+
+![ccswitch 右上角图标](<images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png?v=f33acb7a6545224ca37ad72ebf60e3db3921e7806449c79fc7e05668e3e9a64c>)
+
+![ccswitch 填写二合一 Codex 配置](<images/二合一 Codex 安装与配置指南-image.png?v=d8c67319fe9b621bd4eea091ee95c0ea7d7b466221037d6f9a9f5d64038a8949>)
+
+* 供应商名称填 `codesome-二合一`
+
+* API Key 填你在二合一后台获得的 `cr-...` key
+
+* 请求地址填 https://v5.codesome.cn/openai
+
+* 模型名称填 `gpt-5.5`
+
+## macOS 用户
 
 ### 1. 安装 Node.js
 
 打开：
+
+```text
+https://nodejs.org/en/download
+```
 
 Node.js 下载页用于确认 macOS Installer 的位置。
 
@@ -134,33 +185,168 @@ Node.js 下载页用于确认 macOS Installer 的位置。
 
 验证：
 
+```bash
+node -v
+npm -v
+```
+
 ### 2. 安装 Codex
 
-如果下载慢，可以使用镜像：
+```bash
+npm i -g @openai/codex
+```
+
+如果下载慢：
+
+```bash
+npm i -g @openai/codex --registry=https://registry.npmmirror.com
+```
 
 ### 3. 写入二合一 Codex 配置
 
+```bash
+export CODESOME_API_KEY='这里替换成你的真实 cr-... API Key'
+```
+
 然后执行：
+
+```bash
+KEY="${CODESOME_API_KEY:?请先执行 export CODESOME_API_KEY='你的真实 cr-... API Key'}"
+
+mkdir -p ~/.codex
+
+cat > ~/.codex/config.toml <<'EOF'
+model = "gpt-5.5"
+review_model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+model_provider = "codesome"
+
+disable_response_storage = true
+network_access = "enabled"
+check_for_update_on_startup = false
+
+model_context_window = 1000000
+model_auto_compact_token_limit = 900000
+
+[model_providers.codesome]
+name = "Codesome 二合一"
+base_url = "https://v5.codesome.cn/openai"
+wire_api = "responses"
+env_key = "CODESOME_API_KEY"
+EOF
+
+chmod 600 ~/.codex/config.toml
+
+ESCAPED_KEY=$(printf "%s" "$KEY" | sed "s/'/'\\\\''/g")
+
+for f in ~/.zshrc ~/.bashrc ~/.profile; do
+  touch "$f"
+  sed -i.bak \
+    -e '/^unset CODEX_HOME$/d' \
+    -e '/^export CODEX_HOME=/d' \
+    -e '/^export CODESOME_API_KEY=/d' \
+    "$f"
+
+  cat >> "$f" <<EOF
+
+unset CODEX_HOME
+export CODEX_HOME="\$HOME/.codex"
+export CODESOME_API_KEY='$ESCAPED_KEY'
+EOF
+done
+
+export CODEX_HOME="$HOME/.codex"
+export CODESOME_API_KEY="$KEY"
+```
 
 ### 4. 验证
 
 新开终端：
 
-## WSL 推荐路径
+```bash
+grep -n 'model =\|review_model =\|base_url =' ~/.codex/config.toml
+test -n "$CODESOME_API_KEY" && echo "CODESOME_API_KEY 已生效" || echo "CODESOME_API_KEY 未生效"
+codex
+```
+
+### 5. （可选）用 ccswitch 配置
+
+如果希望用图形界面管理配置，可以安装 ccswitch。
+
+macOS 用户可以先执行：
+
+```bash
+brew tap farion1231/ccswitch
+brew install --cask cc-switch
+```
+
+如果命令运行失败，前往 `https://github.com/farion1231/cc-switch/releases`，下载后缀是 `.dmg`的版本。
+
+![ccswitch 安装包](<images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
+
+![ccswitch 安装包](<images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
+
+macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打开，需要去：`设置` → `隐私与安全` → `安全性`，允许信任当前开发者。
+
+![macOS 允许打开 cc-switch](<images/二合一 Codex 安装与配置指南-ccswitch_security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
+
+安装完成后，获取你的二合一 key（`cr-...`）。
+
+打开 ccswitch 主界面，点击右上角加号，创建供应商。注意一定要先切换到 codex 配置页面。
+
+![ccswitch 右上角图标](<images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png?v=f33acb7a6545224ca37ad72ebf60e3db3921e7806449c79fc7e05668e3e9a64c>)
+
+![ccswitch 填写二合一 Codex 配置](<images/二合一 Codex 安装与配置指南-image.png?v=d8c67319fe9b621bd4eea091ee95c0ea7d7b466221037d6f9a9f5d64038a8949>)
+
+* 供应商名称填 `codesome-二合一`
+
+* API Key 填你在二合一后台获得的 `cr-...` key
+
+* 请求地址填 https://v5.codesome.cn/openai
+
+* 模型名称填 `gpt-5.5`
+
+## WSL 用户
 
 ### 1. 进入 WSL
 
 在 Windows PowerShell 输入：
 
+```powershell
+wsl
+```
+
 ### 2. 安装 Node.js
+
+```bash
+sudo apt update
+sudo apt install -y curl
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+nvm alias default 'lts/*'
+```
 
 验证：
 
+```bash
+node -v
+npm -v
+```
+
 ### 3. 安装 Codex
+
+```bash
+npm i -g @openai/codex
+```
 
 ### 4. 配置
 
 WSL 里的配置方式和 macOS/Linux 一样，使用 `~/.codex/config.toml`，`base_url` 必须是：
+
+```text
+https://v5.codesome.cn/openai
+```
 
 可以直接复用上一节 macOS 的配置命令。
 
@@ -172,13 +358,17 @@ WSL 里的配置方式和 macOS/Linux 一样，使用 `~/.codex/config.toml`，`
 
 打开官方 Codex 桌面客户端下载页：
 
+```text
+https://developers.openai.com/codex/app
+```
+
 假如您无法访问，您可以看这里整理的安装包文档：
 
 [codex安装包](https://oxv18tgb72z.feishu.cn/wiki/VqsgwplhVisZUokEDsacox7hnvb)
 
 CLI 配置完成后，打开 Codex 桌面客户端会看到类似界面。
 
-![](<images/二合一 Codex 安装与配置指南-codex_desktop.png?v=7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45>)
+![Codex 桌面客户端界面](<images/二合一 Codex 安装与配置指南-codex_desktop.png?v=7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45>)
 
 ### 使用顺序
 

@@ -33,49 +33,170 @@
 
 二合一 Claude Code 核心配置：
 
+```text
+ANTHROPIC_BASE_URL=https://v5.codesome.cn/api
+ANTHROPIC_AUTH_TOKEN=你的 cr-... 开头 API Key
+CLAUDE_CODE_ATTRIBUTION_HEADER=0
+```
+
 ## 大扫除：先清理残留配置
 
 > **重要：**&#x5982;果你以前配置过 V3、其他中转站，或者把 `sk-...` 和 `cr-...` 混用过，先做这一步。二合一 Claude Code 必须使用 `https://v5.codesome.cn/api` 和 `cr-...` key。
 >
 > 下面命令执行时如果出现红字报错，通常说明对应变量本来不存在，可以继续下一步。
 
+### Windows 清理环境变量和旧配置
+
 在 PowerShell 里执行，先清理当前用户级环境变量：
 
-如果你以前用管理员权限配置过，还需要用“管理员身份运行”的 PowerShell 清理系统级环境变量：
+```powershell
+$vars = @(
+  'ANTHROPIC_BASE_URL',
+  'ANTHROPIC_AUTH_TOKEN',
+  'ANTHROPIC_MODEL',
+  'ANTHROPIC_DEFAULT_OPUS_MODEL',
+  'ANTHROPIC_DEFAULT_SONNET_MODEL',
+  'ANTHROPIC_DEFAULT_HAIKU_MODEL',
+  'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC',
+  'CLAUDE_CODE_SUBAGENT_MODEL',
+  'CLAUDE_CODE_EFFORT_LEVEL'
+)
+
+foreach ($var in $vars) {
+  reg delete HKCU\Environment /V $var /F 2>$null
+  Remove-Item "Env:$var" -ErrorAction SilentlyContinue
+}
+```
+
+如果你以前用管理员权限配置过，还需要用"管理员身份运行"的 PowerShell 清理系统级环境变量：
+
+```powershell
+$machineEnvPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
+
+Get-ItemProperty -Path $machineEnvPath |
+  Get-Member -MemberType NoteProperty |
+  Where-Object {
+    $_.Name -like 'ANTHROPIC_*' -or
+    $_.Name -like 'CLAUDE_CODE_*'
+  } |
+  ForEach-Object {
+    Remove-ItemProperty -Path $machineEnvPath -Name $_.Name -ErrorAction SilentlyContinue
+    Write-Host "Removed machine env:" $_.Name
+  }
+```
 
 ### macOS / Linux 清理环境变量和旧配置
 
 如果你在 macOS、Linux 或 WSL 里配置过 Claude Code，也要清理当前 Session、shell 配置文件和旧的 `settings.json`。
 
-macOS / Linux 清理完成后，关闭当前终端，重新打开一个新终端，再继续写入本篇二合一配置。
+```bash
+# 临时清除当前 Session 环境变量
+unset ANTHROPIC_BASE_URL
+unset ANTHROPIC_AUTH_TOKEN
+unset ANTHROPIC_MODEL
+unset ANTHROPIC_DEFAULT_OPUS_MODEL
+unset ANTHROPIC_DEFAULT_SONNET_MODEL
+unset ANTHROPIC_DEFAULT_HAIKU_MODEL
+unset CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+unset CLAUDE_CODE_SUBAGENT_MODEL
+unset CLAUDE_CODE_EFFORT_LEVEL
+unset http_proxy
+unset https_proxy
+unset HTTP_PROXY
+unset HTTPS_PROXY
+unset ALL_PROXY
 
-最后检查并删除旧配置文件：
+# 清理 shell 配置文件里的旧变量
+cleanup_file() {
+  file="$1"
+  [ -f "$file" ] || return 0
+  tmp="$(mktemp)"
+  grep -Ev 'ANTHROPIC|CLAUDE|OPENAI|CODESOME|SUB2API|proxy|PROXY' "$file" > "$tmp"
+  cat "$tmp" > "$file"
+  rm -f "$tmp"
+}
 
-如果这个文件存在，先删除它；如果不存在，直接继续。完成后关闭当前终端，重新打开一个新 PowerShell，再继续写入本篇二合一配置：`ANTHROPIC_BASE_URL=https://v5.codesome.cn/api`，`ANTHROPIC_AUTH_TOKEN=你的 cr-... 开头 API Key`。
+cleanup_file ~/.zshrc
+cleanup_file ~/.bashrc
+cleanup_file ~/.bash_profile
+cleanup_file ~/.profile
 
-## 方法 1（推荐）：用 ccswitch 配置
+# 删除 Claude Code 旧配置文件
+rm -f ~/.claude/settings.json
 
-### 下载 ccswitch
+# 重新加载 shell 配置
+source ~/.zshrc 2>/dev/null
+source ~/.bashrc 2>/dev/null
 
-> ccswitch 不是 Claude Code 本体，而是用来管理 Claude Code 接入地址、API Key、模型和本地代理的配置工具。请先完成 Claude Code 安装，再下载并打开 ccswitch。
+# 检查是否还有残留
+env | grep -E 'ANTHROPIC|CLAUDE|OPENAI|CODESOME|SUB2API|proxy|PROXY'
 
-1. 打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
+echo ""
+echo "如果没有任何输出，说明环境变量已基本清理完成。"
+```
 
-1) 在页面的 Assets 区域下载对应系统的安装包：Windows 用户下载 Windows 版本；macOS 用户按自己的芯片选择 Apple Silicon 或 Intel 版本。
+清理完成后，关闭当前终端，重新打开一个新终端。
 
-1. 如果 GitHub 无法打开，或不确定该下载哪个文件，再在 Codesome 用户群 / 客服群里说明“需要 ccswitch 安装包”，让客服或管理员发最新版。
+## Windows 用户
 
-1) 安装完成后打开 ccswitch，再按照下面的字段填写二合一配置。
+### 1. 安装 Git for Windows
 
-> 不要从第三方网盘或来路不明的页面下载 ccswitch。配置工具会接触 API Key，优先使用 GitHub Releases 或客服提供的版本。
+打开：
 
-如果使用 ccswitch 管理 Claude Code 配置，核心填写：
+```text
+https://git-scm.com/download/win
+```
 
-### 按图填写基础配置
+安装后在 PowerShell 验证：
 
-打开 ccswitch 后，新建或编辑供应商配置。下图用于确认字段位置，实际填写值以本小节文字为准。
+```powershell
+git --version
+```
 
-![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
+### 2. 安装 Claude Code
+
+打开 Windows PowerShell，执行：
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+验证：
+
+```powershell
+claude --version
+```
+
+### 3. 写入二合一配置
+
+把 `你的 cr-... 开头 API Key` 替换成真实 key：
+
+```powershell
+setx ANTHROPIC_BASE_URL "https://v5.codesome.cn/api"
+setx ANTHROPIC_AUTH_TOKEN "你的 cr-... 开头 API Key"
+setx CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC "1"
+setx CLAUDE_CODE_ATTRIBUTION_HEADER "0"
+```
+
+关闭当前 PowerShell，重新打开一个新 PowerShell。
+
+### 4. 验证
+
+```powershell
+claude
+```
+
+能进入 Claude Code 并正常回复，就配置完成。
+
+### 5. （可选）用 ccswitch 配置
+
+如果希望用图形界面管理配置，可以安装 ccswitch。
+
+打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>，下载 Windows 版本的 `.msi` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。
+
+安装完成后打开 ccswitch，新建或编辑供应商配置。填写以下信息：
 
 * 供应商名称填：`codesome-v5`
 
@@ -83,124 +204,176 @@ macOS / Linux 清理完成后，关闭当前终端，重新打开一个新终端
 
 * API Key 填你的 `cr-...` 开头 API Key
 
-配置完成后，如果你要在 VSCode 等 IDE 插件里使用，记得确认插件能读取当前 Claude Code 配置。
+![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
 
-## 以下是环境变量方式配置，不再推荐（方法2）
-
-## Windows 推荐路径
-
-### 1. 安装 Git for Windows
-
-打开：
-
-安装后在 PowerShell 验证：
-
-### 2. 安装 Claude Code
-
-打开 Windows PowerShell，执行：
-
-验证：
-
-### 3. 写入二合一配置
-
-把 `你的 cr-... 开头 API Key` 替换成真实 key：
-
-关闭当前 PowerShell，重新打开一个新 PowerShell。
-
-### 4. 验证
-
-能进入 Claude Code 并正常回复，就配置完成。
-
-## macOS 推荐路径
+## macOS 用户
 
 ### 1. 安装 Node.js
 
 打开：
 
+```text
+https://nodejs.org/en/download
+```
+
 安装后验证：
+
+```bash
+node -v
+npm -v
+```
 
 ### 2. 安装 Claude Code
 
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
 如果下载慢：
 
+```bash
+npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
+```
+
 ### 3. 写入二合一配置
+
+```bash
+echo 'export ANTHROPIC_BASE_URL="https://v5.codesome.cn/api"' >> ~/.zshrc
+echo 'export ANTHROPIC_AUTH_TOKEN="你的 cr-... 开头 API Key"' >> ~/.zshrc
+echo 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1' >> ~/.zshrc
+echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.zshrc
+source ~/.zshrc
+```
 
 ### 4. 验证
 
 新开终端：
 
-## Linux 推荐路径
+```bash
+claude
+```
+
+### 5. （可选）用 ccswitch 配置
+
+如果希望用图形界面管理配置，可以安装 ccswitch。
+
+打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>，下载对应系统的 `.dmg` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。
+
+macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
+
+安装完成后打开 ccswitch，新建或编辑供应商配置。填写以下信息：
+
+* 供应商名称填：`codesome-v5`
+
+* 请求地址填：`https://v5.codesome.cn/api`
+
+* API Key 填你的 `cr-...` 开头 API Key
+
+![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
+
+## Linux 用户
 
 ### 1. 安装 Node.js 和 npm
 
-如果没有安装，Ubuntu / Debian 可以执行：
+```bash
+sudo apt update
+sudo apt install -y nodejs npm
+```
 
 ### 2. 安装 Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
 
 ### 3. 写入二合一配置
 
 Bash 用户：
 
+```bash
+echo 'export ANTHROPIC_BASE_URL="https://v5.codesome.cn/api"' >> ~/.bashrc
+echo 'export ANTHROPIC_AUTH_TOKEN="你的 cr-... 开头 API Key"' >> ~/.bashrc
+echo 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1' >> ~/.bashrc
+echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.bashrc
+source ~/.bashrc
+```
+
 Zsh 用户：
+
+```bash
+echo 'export ANTHROPIC_BASE_URL="https://v5.codesome.cn/api"' >> ~/.zshrc
+echo 'export ANTHROPIC_AUTH_TOKEN="你的 cr-... 开头 API Key"' >> ~/.zshrc
+echo 'export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1' >> ~/.zshrc
+echo 'export CLAUDE_CODE_ATTRIBUTION_HEADER=0' >> ~/.zshrc
+source ~/.zshrc
+```
 
 ### 4. 验证
 
+```bash
+claude
+```
+
+---
+
 ## 在 Claude Code 里使用 gpt-5.5
 
-### 1. 在 ccswitch 里配置gpt-5.5
+### 在 ccswitch 里配置 gpt-5.5
 
 如图，重点核对这几项：
 
-![](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
+![ccswitch gpt-5.5 配置](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
 
 * 提供商名称填 `codesome`
 
 * 请求地址填 `https://v5.codesome.cn/openai`
 
-* API Key 填cr开头的key
+* API Key 填 cr 开头的 key
 
-* 模型映射填入`gpt-5.5`
+* 模型映射填入 `gpt-5.5`
 
-### 2. 打开 ccswitch 的代理开关
+### 打开 ccswitch 的代理开关
 
 请务必开启这个开关，否则无法连接到 Codex。
 
-![](<images/二合一 Claude Code 安装与配置指南-test-5.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
+![ccswitch 代理开关](<images/二合一 Claude Code 安装与配置指南-test-5.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
 
-如果找不到开关，就点击设置齿轮按钮进入设置页，再找到“代理”。
+如果找不到开关，就点击设置齿轮按钮进入设置页，再找到"代理"。
 
-进入代理页面后，找到“在主页面显示本地代理开关”。
+进入代理页面后，找到"在主页面显示本地代理开关"。
 
-![](<images/二合一 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
+![ccswitch 代理设置](<images/二合一 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
 
-![](<images/二合一 Claude Code 安装与配置指南-test-4.jpg?v=af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46>)
+![ccswitch 代理设置](<images/二合一 Claude Code 安装与配置指南-test-4.jpg?v=af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46>)
 
 打开后即可在主页看到这个开关。
 
-### 3. 验证
+### 验证
 
 新开一个终端窗口，输入：
 
-![](<images/二合一 Claude Code 安装与配置指南-test-2.jpg?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
+```bash
+claude
+```
 
 看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
 
-### 4. 常见问题
+### 常见问题
 
-#### 4.1 询问模型，发现是claude模型
+#### 询问模型，发现是 claude 模型
 
-原理是ccs的代理进行了转换，claude客户端误以为自己是claude模型，是正常的，无需担忧，下图都是正常的
+原理是 ccs 的代理进行了转换，claude 客户端误以为自己是 claude 模型，是正常的，无需担忧，下图都是正常的
 
-![](<images/二合一 Claude Code 安装与配置指南-test-1.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
+![正常现象](<images/二合一 Claude Code 安装与配置指南-test-1.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
 
-![](<images/二合一 Claude Code 安装与配置指南-test.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
+![正常现象](<images/二合一 Claude Code 安装与配置指南-test.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
 
-#### 4.2 模型不回复
+#### 模型不回复
 
-1. 看一下ccswitch的代理开关是不是关闭，需要保持开启
+1. 看一下 ccswitch 的代理开关是不是关闭，需要保持开启
 
 2. 新开一个窗口进行测试
 
 3. 如果还是不回复，请在群里反馈，我们会第一时间帮您排查
-
-##

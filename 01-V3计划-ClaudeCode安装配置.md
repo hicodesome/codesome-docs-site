@@ -35,11 +35,11 @@
 
 ## 大扫除：先清理残留配置
 
-### Windows 清理环境变量和旧配置
-
 > **重要：**&#x5982;果你以前配置过其他 Claude / Anthropic 地址、其他中转站，或者从别的分组切换过来，先做这一步。很多配置失败不是新 key 有问题，而是旧环境变量还在生效。
 >
 > 下面命令执行时如果出现红字报错，通常说明对应变量本来不存在，可以继续下一步。
+
+### Windows 清理环境变量和旧配置
 
 在 PowerShell 里执行，先清理当前用户级环境变量：
 
@@ -71,7 +71,7 @@ Get-ItemProperty HKCU:\Environment |
   Select-Object *ANTHROPIC*, *CLAUDE_CODE*
 ```
 
-如果你以前用管理员权限配置过，还需要用“管理员身份运行”的 PowerShell 清理系统级环境变量：
+如果你以前用管理员权限配置过，还需要用"管理员身份运行"的 PowerShell 清理系统级环境变量：
 
 ```powershell
 $machineEnvPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
@@ -141,15 +141,7 @@ echo ""
 echo "如果没有任何输出，说明环境变量已基本清理完成。"
 ```
 
-macOS / Linux 清理完成后，关闭当前终端，重新打开一个新终端，再继续写入本篇 V3 配置。
-
-最后检查并删除旧配置文件：
-
-```text
-C:\Users\你的用户名\.claude\settings.json
-```
-
-如果这个文件存在，先删除它；如果不存在，直接继续。完成后关闭当前终端，重新打开一个新 PowerShell，再继续写入本篇 V3 配置：`ANTHROPIC_BASE_URL=https://cc.codesome.ai`，`ANTHROPIC_AUTH_TOKEN=你的 sk-... 开头 API Key`。
+清理完成后，关闭当前终端，重新打开一个新终端。
 
 V3 Claude Code 核心配置：
 
@@ -159,63 +151,7 @@ ANTHROPIC_AUTH_TOKEN=你的 sk-... 开头 API Key
 CLAUDE_CODE_ATTRIBUTION_HEADER=0
 ```
 
-# 方法 1（推荐）：用 ccswitch 配置
-
-### 下载 ccswitch
-
-> ccswitch 不是 Claude Code 本体，而是用来管理 Claude Code 接入地址、API Key、模型和本地代理的配置工具。请先完成 Claude Code 安装，再下载并打开 ccswitch。
-
-1. 打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
-
-2. 在页面的 Assets 区域下载对应系统的安装包：Windows 用户下载 Windows 版本；macOS 用户按自己的芯片选择 Apple Silicon 或 Intel 版本。
-
-3. 如果 GitHub 无法打开，或不确定该下载哪个文件，再在 Codesome 用户群 / 客服群里说明“需要 ccswitch 安装包”，让客服或管理员发最新版。
-
-4. 安装完成后打开 ccswitch，再按照下面的字段填写 Codesome 配置。
-
-ccswitch 下载页里，macOS 用户选择 `.dmg` 安装包，Windows 用户选择 `.msi` 安装包。
-
-![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
-
-![ccswitch Windows 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-windows-download.png?v=31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49>)
-
-macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
-
-![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
-
-> 不要从第三方网盘或来路不明的页面下载 ccswitch。配置工具会接触 API Key，优先使用 GitHub Releases 或客服提供的版本。
-
-如果使用 ccswitch 管理 Claude Code 配置，核心填写：
-
-```text
-供应商名称：codesome-v3
-请求地址：https://cc.codesome.ai
-API Key：你的 sk-... 开头 API Key
-```
-
-### 按图填写基础配置
-
-打开 ccswitch 后，新建自定义配置。
-
-注意勾选最左侧的这个claude图标（不要选第二个带电脑标志的）
-
-![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
-
-下图用于确认字段位置，实际填写值以本小节文字为准。
-
-![](<images/V3 Claude Code 安装与配置指南-image-1.png?v=0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb>)
-
-* 供应商名称填：`codesome-v3`
-
-* 请求地址填：`https://cc.codesome.ai`
-
-* API Key 填你的 `sk-...` 开头 API Key
-
-如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
-
-# 方法 2：使用环境变量配置
-
-## Windows 推荐路径
+## Windows 用户
 
 ### 1. 安装 Git for Windows
 
@@ -282,7 +218,35 @@ Set-ExecutionPolicy Unrestricted
 
 能进入 Claude Code 并正常回复，就配置完成。
 
-## macOS 推荐路径
+### 6. （可选）用 ccswitch 配置
+
+如果希望用图形界面管理配置，可以安装 ccswitch。
+
+打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
+
+在页面的 Assets 区域下载 Windows 版本的 `.msi` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。
+
+安装完成后打开 ccswitch，新建自定义配置。
+
+注意勾选最左侧的 claude 图标（不要选第二个带电脑标志的）
+
+![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
+
+按下图填写：
+
+* 供应商名称填：`codesome-v3`
+
+* 请求地址填：`https://cc.codesome.ai`
+
+* API Key 填你的 `sk-...` 开头 API Key
+
+![](<images/V3 Claude Code 安装与配置指南-image-1.png?v=0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb>)
+
+如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
+
+## macOS 用户
 
 ### 1. 安装 Node.js
 
@@ -303,7 +267,7 @@ Node.js 下载页用于确认 macOS Installer 的位置。
 
 ![macOS Node.js 安装页](<images/V3 Claude Code 安装与配置指南-macos-node-installer.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 
-打开终端：按 `Command + 空格`，搜索“终端”，回车。后面的安装和验证都在这个窗口里完成。
+打开终端：按 `Command + 空格`，搜索"终端"，回车。后面的安装和验证都在这个窗口里完成。
 
 ![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
 
@@ -347,7 +311,41 @@ claude
 
 ![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
-## Linux 推荐路径
+### 5. （可选）用 ccswitch 配置
+
+如果希望用图形界面管理配置，可以安装 ccswitch。
+
+打开 ccswitch 下载页：<https://github.com/farion1231/cc-switch/releases>
+
+在页面的 Assets 区域下载对应系统的安装包：按自己的芯片选择 Apple Silicon 或 Intel 版本的 `.dmg` 安装包。如果 GitHub 无法打开，在 Codesome 用户群说明"需要 ccswitch 安装包"。
+
+![ccswitch macOS 安装包](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png?v=1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493>)
+
+> 不要从第三方网盘或来路不明的页面下载 ccswitch。
+
+macOS 首次打开如果遇到安全提示，需要在系统设置里允许打开当前开发者。
+
+![macOS 允许打开 cc-switch](<images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png?v=68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d>)
+
+安装完成后打开 ccswitch，新建自定义配置。
+
+注意勾选最左侧的 claude 图标（不要选第二个带电脑标志的）
+
+![](<images/V3 Claude Code 安装与配置指南-image.png?v=f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba>)
+
+按下图填写：
+
+* 供应商名称填：`codesome-v3`
+
+* 请求地址填：`https://cc.codesome.ai`
+
+* API Key 填你的 `sk-...` 开头 API Key
+
+![](<images/V3 Claude Code 安装与配置指南-image-1.png?v=0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb>)
+
+如果买的是月卡，记得在后台把这个 API Key 选到月卡/订阅分组。
+
+## Linux 用户
 
 ### 1. 安装 Node.js 和 npm
 
@@ -405,7 +403,7 @@ claude
 
 # VSCode 等 IDE 插件
 
-### 3.1 最省事的做法
+### 最省事的做法
 
 在 `~/.claude/settings.json` 里粘贴。Windows 用户则在用户目录下的 `.claude` 文件夹里操作：
 
@@ -422,7 +420,7 @@ claude
 
 然后重启 VSCode 即可使用。
 
-### 3.2 两种常见用法
+### 两种常见用法
 
 1. 通过官方的 Claude Code 插件使用。你可以在侧边栏打开插件市场，搜索 Anthropic 公司的 Claude Code 插件；如果你本地的 `claude` 命令已经配置完成，一般可以直接使用。注意：默认最好装好 git-bash 工具。
 
@@ -432,7 +430,7 @@ claude
 
 ![图18](<images/V3 Claude Code 安装与配置指南-image-018.png?v=0c8c4c5cc85c27e0a1aeea036a435cc5bb0d176bd5470fcdc8f633262437a69b>)
 
-### 3.3 使用前建议检查
+### 使用前建议检查
 
 * 先确认本地 `claude` 命令已经能在终端正常启动。
 
@@ -466,7 +464,7 @@ claude
 
 ## 在 Claude Code 里使用 gpt-5.5
 
-### 4.4 在 ccswitch 里配置gpt-5.5
+### 在 ccswitch 里配置 gpt-5.5
 
 如图，重点核对这几项：
 
@@ -480,19 +478,19 @@ claude
 
 * 分组选择 `codex月卡` 或 `codex分组`
 
-### 4.5 配置高级选项
+### 配置高级选项
 
 ![](<images/V3 Claude Code 安装与配置指南-test-1.jpg?v=734aa79473f4a23c3a3fb79940cdb0474a3309dc1230f0c205e2e92eee189f23>)
 
-### 4.6 打开 ccswitch 的代理开关
+### 打开 ccswitch 的代理开关
 
 请务必开启这个开关，否则无法连接到 Codex。
 
 ![](<images/V3 Claude Code 安装与配置指南-test-2.jpg?v=f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8>)
 
-如果找不到开关，就点击设置齿轮按钮进入设置页，再找到“代理”。
+如果找不到开关，就点击设置齿轮按钮进入设置页，再找到"代理"。
 
-进入代理页面后，找到“在主页面显示本地代理开关”。
+进入代理页面后，找到"在主页面显示本地代理开关"。
 
 ![](<images/V3 Claude Code 安装与配置指南-test-3.jpg?v=196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d>)
 
@@ -500,7 +498,7 @@ claude
 
 打开后即可在主页看到这个开关。
 
-### 4.7 验证
+### 验证
 
 新开一个终端窗口，输入：
 
@@ -514,19 +512,19 @@ claude
 
 看到欢迎界面后，按回车接受协议；再随便输一句话试试，能正常回复就说明配好了。
 
-### 4.8 常见问题
+### 常见问题
 
-#### 4.8.1 询问模型，发现是claude模型
+#### 询问模型，发现是 claude 模型
 
-原理是ccs的代理进行了转换，claude客户端误以为自己是claude模型，是正常的，无需担忧，下图都是正常的
+原理是 ccs 的代理进行了转换，claude 客户端误以为自己是 claude 模型，是正常的，无需担忧，下图都是正常的
 
 ![](<images/V3 Claude Code 安装与配置指南-test-6.jpg?v=c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98>)
 
 ![](<images/V3 Claude Code 安装与配置指南-test-7.jpg?v=206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750>)
 
-#### 4.8.2 模型不回复
+#### 模型不回复
 
-1. 看一下ccswitch的代理开关是不是关闭，需要保持开启
+1. 看一下 ccswitch 的代理开关是不是关闭，需要保持开启
 
 2. 新开一个窗口进行测试
 
