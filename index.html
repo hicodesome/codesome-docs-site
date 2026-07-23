@@ -396,8 +396,7 @@
           nav.appendChild(link);
         });
 
-        var isArticleRoute = Boolean(window.location.hash && window.location.hash !== '#/' && window.location.hash !== '#');
-        toc.classList.toggle('is-visible', isArticleRoute && visibleHeadings.length > 0);
+        toc.classList.toggle('is-visible', visibleHeadings.length > 0);
         bindArticleToc(visibleHeadings, toc);
       }
 
