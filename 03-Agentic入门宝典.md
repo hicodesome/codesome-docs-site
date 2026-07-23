@@ -40,6 +40,10 @@ Cherry studio、workbuddy、trae、Claudian
 
 1. [【VSCode 教程】如何在 vscode 里面使用 cc](01-第三方客户端接入配置.md)
 
+**实用玩法👇**
+
+[GPT Image 2 终端生图备忘录：无需脚本，终端直接生成图片](03-GPTImage2终端生图备忘录.md)
+
 **扣桑AI管家服务👇**
 
 **💰**付费 599元
@@ -57,8 +61,6 @@ Cherry studio、workbuddy、trae、Claudian
 [codesome 新人体验额度领取入口](05-兑换码兑换指南.md)
 
 [懒人党福音最简单：通过对话来管理你的 cc 中转站](03-对话管理CC中转站.md)
-
-[GPT Image 2 终端生图备忘录：无需脚本，终端直接生成图片](03-GPTImage2终端生图备忘录.md)
 
 
 

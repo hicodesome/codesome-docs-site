@@ -7,6 +7,7 @@
     opencode: 'open code 配置教程👇',
     agents: '常见 Agent 配置教程👇',
     clients: '第三方客户端接入👇',
+    usage: '实用玩法👇',
     learning: 'AI 学习资源👇'
   };
 
@@ -100,6 +101,7 @@
     var opencode = findStrongMarker(article, categoryLabels.opencode);
     var agents = findStrongMarker(article, categoryLabels.agents);
     var manager = findStrongMarker(article, '扣桑AI管家服务👇');
+    var usage = findStrongMarker(article, categoryLabels.usage);
     var thirdParty = findParagraph(article, function (text) {
       return text.indexOf('cherry studio') === 0;
     });
@@ -113,7 +115,7 @@
       });
 
     if (!claude || !codex || !opencode || !agents || !thirdParty ||
-        !manager || !learning || !learningEnd) {
+        !usage || !manager || !learning || !learningEnd) {
       return null;
     }
 
@@ -140,7 +142,12 @@
       },
       {
         label: categoryLabels.clients,
-        items: nodesBetween(thirdParty, manager, true)
+        items: nodesBetween(thirdParty, usage, true)
+      },
+      {
+        label: categoryLabels.usage,
+        marker: usage,
+        items: nodesBetween(usage, manager, false)
       },
       {
         label: categoryLabels.learning,
@@ -173,7 +180,7 @@
     var heading = findHeading(article, '扣桑 AI 工作坊 常用教程');
     var groups = heading && collectGroups(article);
 
-    if (!heading || !groups || groups.length !== 6) {
+    if (!heading || !groups || groups.length !== 7) {
       return;
     }
 
