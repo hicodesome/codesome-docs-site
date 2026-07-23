@@ -4,15 +4,24 @@
 
 ## 当前人工最新基准
 
-以下 5 篇教程以站点当前内容为最新基准，不再与 CDC 快照比较，也不会被 `sync:cdc` 覆盖：
+以下 6 篇教程以站点当前内容为最新基准，不再与 CDC 快照比较，也不会被 `sync:cdc` 覆盖：
 
 - [V3 Claude Code 安装与配置指南](../01-V3计划-ClaudeCode安装配置.md)
 - [V3 Codex 安装与配置指南](../01-V3计划-Codex安装配置.md)
 - [二合一 Claude Code 安装与配置指南](../01-二合一计划-ClaudeCode安装配置.md)
 - [二合一 Codex 安装与配置指南](../01-二合一计划-Codex安装配置.md)
 - [Claude Code 上下文自动压缩配置](../02-ClaudeCode上下文压缩配置.md)
+- [codesome｜Agentic 入门宝典](../03-Agentic入门宝典.md)（2026-07-23 起，因主页需引用站点独有文章转人工维护）
 
 机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs)。
+
+## 站点独有人工文章
+
+以下文章不来自 CDC 快照，由人工直接在站点仓库维护，不参与 `sync:cdc` 同步：
+
+- [GPT Image 2 终端生图备忘录](../03-GPTImage2终端生图备忘录.md)
+
+机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs) 的 `SITE_ONLY_ARTICLES`。
 
 ## 其他教程
 

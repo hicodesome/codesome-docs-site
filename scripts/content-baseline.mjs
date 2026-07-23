@@ -22,9 +22,25 @@ export const LATEST_BASELINE_ARTICLES = [
   {
     site: '02-ClaudeCode上下文压缩配置.md',
     title: 'Claude Code 上下文自动压缩配置'
+  },
+  {
+    site: '03-Agentic入门宝典.md',
+    title: 'codesome｜Agentic 入门宝典'
   }
 ];
 
 export const LATEST_BASELINE_SITES = new Set(
   LATEST_BASELINE_ARTICLES.map(article => article.site)
+);
+
+// 站点独有人工文章：不来自 CDC 快照，也不参与 CDC 正文和图片同步。
+export const SITE_ONLY_ARTICLES = [
+  {
+    site: '03-GPTImage2终端生图备忘录.md',
+    title: 'GPT Image 2 终端生图备忘录'
+  }
+];
+
+export const SITE_ONLY_SITES = new Set(
+  SITE_ONLY_ARTICLES.map(article => article.site)
 );

@@ -5,6 +5,7 @@
   - [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md)
   - [Claude Code 上下文自动压缩配置](02-ClaudeCode上下文压缩配置.md)
   - [Codex 桌面版持续 Reconnecting + 502 报错排查](02-Codex桌面版断连和502排查.md)
+  - [GPT Image 2 终端生图备忘录](03-GPTImage2终端生图备忘录.md)
   - [官方地址是多少](01-官方地址.md)
   - [Grok Build CLI + Codesome API 配置教程](01-GrokBuildCLI配置教程.md)
   - [No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）](03-牛马神器-CC绘制PPT.md)

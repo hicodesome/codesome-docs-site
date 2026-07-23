@@ -2,17 +2,18 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articles, internalDocumentTargets } from './cdc-manifest.mjs';
+import { SITE_ONLY_ARTICLES, SITE_ONLY_SITES } from './content-baseline.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const articleNames = new Set(articles.map(article => article.site));
 const discoveredArticles = readdirSync(root)
   .filter(file => /^\d{2}-.*\.md$/.test(file))
   .sort();
-const expectedArticles = [...articleNames].sort();
+const expectedArticles = [...articleNames, ...SITE_ONLY_SITES].sort();
 const errors = [];
 
 if (JSON.stringify(discoveredArticles) !== JSON.stringify(expectedArticles)) {
-  errors.push('站点正文文件集合与 CDC 25 篇映射不一致');
+  errors.push('站点正文文件集合与已登记文章清单（CDC 25 篇 + 站点独有文章）不一致');
 }
 
 const files = [...expectedArticles, 'README.md', '_sidebar.md'];
@@ -42,7 +43,7 @@ for (const file of files) {
 
 const sidebar = readFileSync(resolve(root, '_sidebar.md'), 'utf8');
 const homepageSite = '03-Agentic入门宝典.md';
-for (const article of articles) {
+for (const article of [...articles, ...SITE_ONLY_ARTICLES]) {
   const articleOccurrences = sidebar.split(`(${article.site})`).length - 1;
   const homepageOccurrences = article.site === homepageSite
     ? (sidebar.match(/\]\(\/\)/g) || []).length
@@ -54,7 +55,7 @@ for (const article of articles) {
   const titleLink = sidebar.includes(`[${article.title}](${article.site})`) ||
     (article.site === homepageSite && sidebar.includes(`[${article.title}](/)`));
   if (!titleLink) {
-    errors.push(`_sidebar.md: CDC title does not match ${article.source}`);
+    errors.push(`_sidebar.md: 侧边栏标题与登记标题不一致 (${article.title})`);
   }
 }
 
@@ -63,4 +64,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`链接检查通过：${articles.length} 篇正文，${localLinks} 条本地 Markdown 链接，已知内部飞书链接残留 0 条`);
+console.log(`链接检查通过：${articles.length} 篇 CDC 正文 + ${SITE_ONLY_ARTICLES.length} 篇站点独有文章，${localLinks} 条本地 Markdown 链接，已知内部飞书链接残留 0 条`);

@@ -58,6 +58,8 @@ Cherry studio、workbuddy、trae、Claudian
 
 [懒人党福音最简单：通过对话来管理你的 cc 中转站](03-对话管理CC中转站.md)
 
+[GPT Image 2 终端生图备忘录：无需脚本，终端直接生成图片](03-GPTImage2终端生图备忘录.md)
+
 
 
 ## 扣桑 AI 工作坊 排障和成本优化
