@@ -35,8 +35,12 @@
       return homepage();
     }
 
-    if (!/\.md$/i.test(route) || route.split('/').indexOf('..') !== -1) {
+    if (route.split('/').indexOf('..') !== -1) {
       return '';
+    }
+
+    if (!/\.md$/i.test(route)) {
+      route = route + '.md';
     }
 
     return route;
