@@ -125,6 +125,12 @@
 
     // Fetch the raw content and normalize its heading hierarchy.
     var result = origGet(url, hasBar, headers);
+
+    // Handle cached content returned directly as a string.
+    if (typeof result === 'string') {
+      return normalizeHeadings(result, cdcTitle);
+    }
+
     var origThen = result.then;
 
     result.then = function (success, error) {
