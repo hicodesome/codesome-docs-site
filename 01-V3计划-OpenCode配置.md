@@ -6,7 +6,7 @@
 
 * `claude-sonnet-4-6`
 
-* `claude-opus-4-7`
+* `claude-opus-5`
 
 **GPT 模型**（通过 OpenAI Responses 格式）：
 
@@ -55,8 +55,8 @@ OpenCode 的配置文件路径一般是：
         "claude-sonnet-4-6": {
           "name": "Claude Sonnet 4.6"
         },
-        "claude-opus-4-7": {
-          "name": "Claude Opus 4.7"
+        "claude-opus-5": {
+          "name": "Claude Opus 5"
         }
       }
     }
@@ -149,11 +149,11 @@ OpenCode 的配置文件路径一般是：
 
 ### 切换到 Opus
 
-如果你想默认使用 Claude Opus 4.7，可以改成：
+如果你想默认使用 Claude Opus 5，可以改成：
 
 ```json
-"model": "codesome-v3-anthropic/claude-opus-4-7",
-"small_model": "codesome-v3-anthropic/claude-opus-4-7"
+"model": "codesome-v3-anthropic/claude-opus-5",
+"small_model": "codesome-v3-anthropic/claude-opus-5"
 ```
 
 ### 混合使用
@@ -161,7 +161,7 @@ OpenCode 的配置文件路径一般是：
 你也可以让主模型和小模型使用不同的配置，例如：
 
 ```json
-"model": "codesome-v3-anthropic/claude-opus-4-7",
+"model": "codesome-v3-anthropic/claude-opus-5",
 "small_model": "codesome-v3-anthropic/claude-sonnet-4-6"
 ```
 
@@ -340,8 +340,8 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
         "claude-sonnet-4-6": {
           "name": "Claude Sonnet 4.6"
         },
-        "claude-opus-4-7": {
-          "name": "Claude Opus 4.7"
+        "claude-opus-5": {
+          "name": "Claude Opus 5"
         }
       }
     },
@@ -379,6 +379,8 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 * Claude 的 `baseURL` 设置为 `https://cc.codesome.ai`
 
 * GPT 的 `baseURL` 设置为 `https://cc.codesome.ai/openai`
+* Claude 当前使用 `claude-sonnet-5` 或 `claude-opus-5`
+
 
 * 所有 provider 的 `apiKey` 都替换成你的 Codesome V3 API Key（如需同时使用两种模型，需要两个不同分组的 API Key）
 
