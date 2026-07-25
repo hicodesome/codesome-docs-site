@@ -1,4 +1,6 @@
-本文适用于已经购买 **Codesome 二合一月卡**，并希望在 **OpenCode** 中使用 Claude 或 GPT 模型的用户。
+# 二合一月卡如何配置 OpenCode
+
+二合一月卡如何配置希望在 **OpenCode** 中使用 Claude 或 GPT 模型的用户。
 
 当前二合一月卡支持：
 
@@ -32,17 +34,17 @@
 
 ## 一、找到 OpenCode 配置文件
 
-OpenCode 的配置文件路径一般是：
+OpenCode 的全局配置文件路径一般是：
 
 ```bash
-~/.config/opencode/config.json
+~/.config/opencode/opencode.json
 ```
 
 如果这个文件不存在，可以手动创建。
 
-如果你已经有这个配置文件，**不要直接覆盖原来的内容**，可以把下面的配置内容发给 AI，让 AI 帮你合并到现有 `config.json` 中。
+OpenCode 同时支持 `opencode.jsonc`。如果你原来使用的是 `opencode.jsonc`，可以继续使用，不需要改成 `opencode.json`。
 
-这个文件还有可能是jsonl后缀，
+如果你已经有这个配置文件，**不要直接覆盖原来的内容**，可以把下面的配置内容发给 AI，让 AI 帮你合并到现有 `opencode.json` 中。
 
 ***
 
@@ -417,12 +419,12 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 
 ### 4. 已经有配置文件怎么办？
 
-如果你已经有自己的 `config.json`，不要直接覆盖。
+如果你已经有自己的 `opencode.json` 或 `opencode.jsonc`，不要直接覆盖。
 
 可以把你的原配置和本文配置一起发给 AI，并告诉它：
 
 ```txt
-请帮我把 Codesome 二合一的 Claude 和 GPT provider 合并到我现有的 OpenCode config.json 中，不要删除我原来的配置。
+请帮我把 Codesome 二合一的 Claude 和 GPT provider 合并到我现有的 OpenCode opencode.json 中，不要删除我原来的配置。
 ```
 
 这样可以避免把你原来的其他 provider、模型、主题或快捷配置覆盖掉。
@@ -436,7 +438,7 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 1. 配置文件路径是否正确：
 
 ```bash
-~/.config/opencode/config.json
+~/.config/opencode/opencode.json
 ```
 
 1. Claude 的 `baseURL` 是否为：
@@ -537,7 +539,7 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 
 ## 十、一句话版
 
-在 OpenCode 的配置文件 `~/.config/opencode/config.json` 中：
+在 OpenCode 的配置文件 `~/.config/opencode/opencode.json` 中：
 
 * Claude 的 `baseURL` 设置为 `https://v5.codesome.cn/api/v1`
 

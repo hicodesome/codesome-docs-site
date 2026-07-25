@@ -1,34 +1,52 @@
-本文适用于已经购买 **Codesome V3 套餐**，并希望在 **OpenCode** 中使用 Claude 或 GPT 模型的用户。
+# V3 如何配置 OpenCode
+
+V3 如何配置希望在 **OpenCode** 中使用 Claude 或 GPT 模型的用户。
 
 当前 V3 套餐支持：
 
 **Claude 模型**（通过 Anthropic Messages 格式）：
 
-* `claude-sonnet-4-6`
+* `claude-sonnet-5`
 
 * `claude-opus-5`
 
 **GPT 模型**（通过 OpenAI Responses 格式）：
 
-* `gpt-5.5`
+* `gpt-5.6-luna`
+
+* `gpt-5.6-terra`
+
+* `gpt-5.6-sol`
+
+其中：
+
+* Luna 适合简单、低成本任务
+
+* Terra 适合日常开发，推荐作为默认模型
+
+* Sol 适合高难度任务
+
+* `gpt-5.6` 是 GPT-5.6 的默认模型 ID，当前默认对应 Sol 档
 
 下面按步骤配置即可。
 
-***
+---
 
 ## 一、找到 OpenCode 配置文件
 
-OpenCode 的配置文件路径一般是：
+OpenCode 的全局配置文件路径一般是：
 
 ```bash
-~/.config/opencode/config.json
+~/.config/opencode/opencode.json
 ```
 
 如果这个文件不存在，可以手动创建。
 
-如果你已经有这个配置文件，**不要直接覆盖原来的内容**，可以把下面的配置内容发给 AI，让 AI 帮你合并到现有 `config.json` 中。
+OpenCode 同时支持 `opencode.jsonc`。如果你原来使用的是 `opencode.jsonc`，可以继续使用，不需要改成 `opencode.json`。
 
-***
+如果你已经有这个配置文件，**不要直接覆盖原来的内容**，可以把下面的配置内容发给 AI，让 AI 帮你合并到现有 `opencode.json` 中。
+
+---
 
 ## 二、选择配置方案
 
@@ -52,8 +70,8 @@ OpenCode 的配置文件路径一般是：
         "chunkTimeout": 30000
       },
       "models": {
-        "claude-sonnet-4-6": {
-          "name": "Claude Sonnet 4.6"
+        "claude-sonnet-5": {
+          "name": "Claude Sonnet 5"
         },
         "claude-opus-5": {
           "name": "Claude Opus 5"
@@ -61,8 +79,8 @@ OpenCode 的配置文件路径一般是：
       }
     }
   },
-  "model": "codesome-v3-anthropic/claude-sonnet-4-6",
-  "small_model": "codesome-v3-anthropic/claude-sonnet-4-6"
+  "model": "codesome-v3-anthropic/claude-sonnet-5",
+  "small_model": "codesome-v3-anthropic/claude-sonnet-5"
 }
 ```
 
@@ -84,22 +102,43 @@ OpenCode 的配置文件路径一般是：
         "chunkTimeout": 30000
       },
       "models": {
-        "gpt-5.5": {
-          "name": "GPT-5.5",
+        "gpt-5.6-luna": {
+          "name": "GPT-5.6 Luna",
           "limit": {
-            "context": 400000,
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-terra": {
+          "name": "GPT-5.6 Terra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-sol": {
+          "name": "GPT-5.6 Sol",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6": {
+          "name": "GPT-5.6（默认 Sol）",
+          "limit": {
+            "context": 1050000,
             "output": 128000
           }
         }
       }
     }
   },
-  "model": "codesome-v3-openai/gpt-5.5",
-  "small_model": "codesome-v3-openai/gpt-5.5"
+  "model": "codesome-v3-openai/gpt-5.6-terra",
+  "small_model": "codesome-v3-openai/gpt-5.6-terra"
 }
 ```
 
-***
+---
 
 ## 三、替换 API Key
 
@@ -123,7 +162,7 @@ OpenCode 的配置文件路径一般是：
 
 * 不要把 API Key 发到公开群、论坛、GitHub 或截图里
 
-***
+---
 
 ## 四、模型说明
 
@@ -131,21 +170,44 @@ OpenCode 的配置文件路径一般是：
 
 配置中的 `model` 和 `small_model` 决定了 OpenCode 默认使用哪个模型。
 
-**推荐配置**（使用 Claude Sonnet 4.6）：
+**推荐配置**（使用 Claude Sonnet 5）：
 
 ```json
-"model": "codesome-v3-anthropic/claude-sonnet-4-6",
-"small_model": "codesome-v3-anthropic/claude-sonnet-4-6"
+"model": "codesome-v3-anthropic/claude-sonnet-5",
+"small_model": "codesome-v3-anthropic/claude-sonnet-5"
 ```
 
 ### 切换到 GPT
 
-如果你想默认使用 GPT-5.5，可以改成：
+如果你想默认使用 GPT-5.6，日常开发推荐使用 Terra：
 
 ```json
-"model": "codesome-v3-openai/gpt-5.5",
-"small_model": "codesome-v3-openai/gpt-5.5"
+"model": "codesome-v3-openai/gpt-5.6-terra",
+"small_model": "codesome-v3-openai/gpt-5.6-terra"
 ```
+
+如果是简单任务，希望降低消耗，可以使用 Luna：
+
+```json
+"model": "codesome-v3-openai/gpt-5.6-luna",
+"small_model": "codesome-v3-openai/gpt-5.6-luna"
+```
+
+如果是高难度任务，可以使用 Sol：
+
+```json
+"model": "codesome-v3-openai/gpt-5.6-sol",
+"small_model": "codesome-v3-openai/gpt-5.6-sol"
+```
+
+也可以直接使用：
+
+```json
+"model": "codesome-v3-openai/gpt-5.6",
+"small_model": "codesome-v3-openai/gpt-5.6"
+```
+
+不过需要注意，`gpt-5.6` 当前默认对应 Sol 档。日常任务通常更推荐直接填写完整模型 ID：`gpt-5.6-terra`。
 
 ### 切换到 Opus
 
@@ -162,12 +224,12 @@ OpenCode 的配置文件路径一般是：
 
 ```json
 "model": "codesome-v3-anthropic/claude-opus-5",
-"small_model": "codesome-v3-anthropic/claude-sonnet-4-6"
+"small_model": "codesome-v3-anthropic/claude-sonnet-5"
 ```
 
 不过一般建议两个模型保持一致，这样更稳定。
 
-***
+---
 
 ## 五、保存并重启 OpenCode
 
@@ -177,7 +239,7 @@ OpenCode 的配置文件路径一般是：
 
 如果 OpenCode 已经打开，请完全退出后重新打开，避免旧配置还在缓存里继续作妖。
 
-***
+---
 
 ## 六、切换模型
 
@@ -195,7 +257,7 @@ OpenCode 的配置文件路径一般是：
 
 ![](<images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png?v=e7455b388fd700f3f3d87806783d1ff9af0edf7a536a5a12ec7da3f5b7d4e50b>)
 
-***
+---
 
 ## 七、常见报错说明
 
@@ -211,7 +273,7 @@ OpenCode 的配置文件路径一般是：
 
 **注意**：V3 的 baseURL 是 `https://cc.codesome.ai`，不需要 `/api/v1` 后缀。
 
-***
+---
 
 ### 2. GPT 报错：路径错误
 
@@ -229,7 +291,7 @@ OpenCode 的配置文件路径一般是：
 
 两者不一样，不要搞混。
 
-***
+---
 
 ### 3. 报错：JSON 格式错误
 
@@ -257,21 +319,21 @@ OpenCode 的配置文件路径一般是：
 
 JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 
-***
+---
 
 ### 4. 已经有配置文件怎么办？
 
-如果你已经有自己的 `config.json`，不要直接覆盖。
+如果你已经有自己的 `opencode.json` 或 `opencode.jsonc`，不要直接覆盖。
 
 可以把你的原配置和本文配置一起发给 AI，并告诉它：
 
 ```txt
-请帮我把 Codesome V3 的 Claude 和 GPT provider 合并到我现有的 OpenCode config.json 中，不要删除我原来的配置。
+请帮我把 Codesome V3 的 Claude 和 GPT provider 合并到我现有的 OpenCode opencode.json 中，不要删除我原来的配置。
 ```
 
 这样可以避免把你原来的其他 provider、模型、主题或快捷配置覆盖掉。
 
-***
+---
 
 ## 八、最终检查项
 
@@ -280,7 +342,7 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 1. 配置文件路径是否正确：
 
 ```bash
-~/.config/opencode/config.json
+~/.config/opencode/opencode.json
 ```
 
 1. Claude 的 `baseURL` 是否为：
@@ -297,15 +359,15 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 
 1. 所有 provider 的 `apiKey` 是否都已经替换成自己的 Codesome V3 API Key
 
-2. 默认模型是否已设置（推荐 `codesome-v3-anthropic/claude-sonnet-4-6`）
+2. 默认模型是否已设置（推荐 `codesome-v3-anthropic/claude-sonnet-5`，GPT 日常开发推荐 `codesome-v3-openai/gpt-5.6-terra`）
 
 3. 修改后是否已经重启 OpenCode
 
-***
+---
 
 ## 九、同时使用 Claude 和 GPT
 
-如果你需要同时使用 Claude 和 GPT 模型，可以在配置文件中同时添加两个 provider（参考方案 A 和方案 B 的配置，合并到同一个 `config.json` 中）。
+如果你需要同时使用 Claude 和 GPT 模型，可以在配置文件中同时添加两个 provider（参考方案 A 和方案 B 的配置，合并到同一个 `opencode.json` 中）。
 
 **重要提示**：
 
@@ -337,8 +399,8 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
         "chunkTimeout": 30000
       },
       "models": {
-        "claude-sonnet-4-6": {
-          "name": "Claude Sonnet 4.6"
+        "claude-sonnet-5": {
+          "name": "Claude Sonnet 5"
         },
         "claude-opus-5": {
           "name": "Claude Opus 5"
@@ -355,32 +417,55 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
         "chunkTimeout": 30000
       },
       "models": {
-        "gpt-5.5": {
-          "name": "GPT-5.5",
+        "gpt-5.6-luna": {
+          "name": "GPT-5.6 Luna",
           "limit": {
-            "context": 400000,
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-terra": {
+          "name": "GPT-5.6 Terra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-sol": {
+          "name": "GPT-5.6 Sol",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6": {
+          "name": "GPT-5.6（默认 Sol）",
+          "limit": {
+            "context": 1050000,
             "output": 128000
           }
         }
       }
     }
   },
-  "model": "codesome-v3-anthropic/claude-sonnet-4-6",
-  "small_model": "codesome-v3-anthropic/claude-sonnet-4-6"
+  "model": "codesome-v3-anthropic/claude-sonnet-5",
+  "small_model": "codesome-v3-anthropic/claude-sonnet-5"
 }
 ```
 
-***
+---
 
 ## 十、一句话版
 
-在 OpenCode 的配置文件 `~/.config/opencode/config.json` 中：
+在 OpenCode 的配置文件 `~/.config/opencode/opencode.json` 中：
 
 * Claude 的 `baseURL` 设置为 `https://cc.codesome.ai`
 
 * GPT 的 `baseURL` 设置为 `https://cc.codesome.ai/openai`
+
 * Claude 当前使用 `claude-sonnet-5` 或 `claude-opus-5`
 
+* GPT 当前使用 `gpt-5.6-luna`、`gpt-5.6-terra` 或 `gpt-5.6-sol`，日常开发推荐 Terra
 
 * 所有 provider 的 `apiKey` 都替换成你的 Codesome V3 API Key（如需同时使用两种模型，需要两个不同分组的 API Key）
 
