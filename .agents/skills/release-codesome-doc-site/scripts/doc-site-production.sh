@@ -165,8 +165,8 @@ encode_path() {
 is_public_release_file() {
   local path=$1
   case "$path" in
-    index.html|_sidebar.md|*.md)
-      [[ "$path" != */* ]]
+    index.html|_sidebar.md|[0-9][0-9]-*.md)
+      return 0
       ;;
     styles/*.css|scripts/*.js|assets/*.js|assets/*.css|assets/vendor/*|images/*)
       return 0
