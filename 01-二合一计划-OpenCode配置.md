@@ -4,13 +4,27 @@
 
 **Claude 模型**（通过 Anthropic Messages 格式）：
 
-* `claude-sonnet-4-6`
+* `claude-sonnet-5`
 
-* `claude-opus-4-7`
+* `claude-opus-4-8`
 
 **GPT 模型**（通过 OpenAI Responses 格式）：
 
-* `gpt-5.5`
+* `gpt-5.6-luna`
+
+* `gpt-5.6-terra`
+
+* `gpt-5.6-sol`
+
+其中：
+
+* Luna 适合简单、低成本任务
+
+* Terra 适合日常开发，推荐作为默认模型
+
+* Sol 适合高难度任务
+
+* `gpt-5.6` 是 GPT-5.6 的默认模型 ID，当前默认对应 Sol 档
 
 下面按步骤配置即可。
 
@@ -54,17 +68,17 @@ OpenCode 的配置文件路径一般是：
         "chunkTimeout": 30000
       },
       "models": {
-        "claude-sonnet-4-6": {
-          "name": "Claude Sonnet 4.6"
+        "claude-sonnet-5": {
+          "name": "Claude Sonnet 5"
         },
-        "claude-opus-4-7": {
-          "name": "Claude Opus 4.7"
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8"
         }
       }
     }
   },
-  "model": "codesome-anthropic/claude-sonnet-4-6",
-  "small_model": "codesome-anthropic/claude-sonnet-4-6"
+  "model": "codesome-anthropic/claude-sonnet-5",
+  "small_model": "codesome-anthropic/claude-sonnet-5"
 }
 ```
 
@@ -86,18 +100,39 @@ OpenCode 的配置文件路径一般是：
         "chunkTimeout": 30000
       },
       "models": {
-        "gpt-5.5": {
-          "name": "GPT-5.5",
+        "gpt-5.6-luna": {
+          "name": "GPT-5.6 Luna",
           "limit": {
-            "context": 400000,
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-terra": {
+          "name": "GPT-5.6 Terra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-sol": {
+          "name": "GPT-5.6 Sol",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6": {
+          "name": "GPT-5.6（默认 Sol）",
+          "limit": {
+            "context": 1050000,
             "output": 128000
           }
         }
       }
     }
   },
-  "model": "codesome-openai/gpt-5.5",
-  "small_model": "codesome-openai/gpt-5.5"
+  "model": "codesome-openai/gpt-5.6-terra",
+  "small_model": "codesome-openai/gpt-5.6-terra"
 }
 ```
 
@@ -119,11 +154,11 @@ OpenCode 的配置文件路径一般是：
         "chunkTimeout": 30000
       },
       "models": {
-        "claude-sonnet-4-6": {
-          "name": "Claude Sonnet 4.6"
+        "claude-sonnet-5": {
+          "name": "Claude Sonnet 5"
         },
-        "claude-opus-4-7": {
-          "name": "Claude Opus 4.7"
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8"
         }
       }
     },
@@ -137,18 +172,39 @@ OpenCode 的配置文件路径一般是：
         "chunkTimeout": 30000
       },
       "models": {
-        "gpt-5.5": {
-          "name": "GPT-5.5",
+        "gpt-5.6-luna": {
+          "name": "GPT-5.6 Luna",
           "limit": {
-            "context": 400000,
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-terra": {
+          "name": "GPT-5.6 Terra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-sol": {
+          "name": "GPT-5.6 Sol",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6": {
+          "name": "GPT-5.6（默认 Sol）",
+          "limit": {
+            "context": 1050000,
             "output": 128000
           }
         }
       }
     }
   },
-  "model": "codesome-anthropic/claude-sonnet-4-6",
-  "small_model": "codesome-anthropic/claude-sonnet-4-6"
+  "model": "codesome-anthropic/claude-sonnet-5",
+  "small_model": "codesome-anthropic/claude-sonnet-5"
 }
 ```
 
@@ -186,29 +242,52 @@ OpenCode 的配置文件路径一般是：
 
 配置中的 `model` 和 `small_model` 决定了 OpenCode 默认使用哪个模型。
 
-**推荐配置**（使用 Claude Sonnet 4.6）：
+**推荐配置**（使用 Claude Sonnet 5）：
 
 ```json
-"model": "codesome-anthropic/claude-sonnet-4-6",
-"small_model": "codesome-anthropic/claude-sonnet-4-6"
+"model": "codesome-anthropic/claude-sonnet-5",
+"small_model": "codesome-anthropic/claude-sonnet-5"
 ```
 
 ### 切换到 GPT
 
-如果你想默认使用 GPT-5.5，可以改成：
+如果你想默认使用 GPT-5.6，日常开发推荐使用 Terra：
 
 ```json
-"model": "codesome-openai/gpt-5.5",
-"small_model": "codesome-openai/gpt-5.5"
+"model": "codesome-openai/gpt-5.6-terra",
+"small_model": "codesome-openai/gpt-5.6-terra"
 ```
+
+如果是简单任务，希望降低消耗，可以使用 Luna：
+
+```json
+"model": "codesome-openai/gpt-5.6-luna",
+"small_model": "codesome-openai/gpt-5.6-luna"
+```
+
+如果是高难度任务，可以使用 Sol：
+
+```json
+"model": "codesome-openai/gpt-5.6-sol",
+"small_model": "codesome-openai/gpt-5.6-sol"
+```
+
+也可以直接使用：
+
+```json
+"model": "codesome-openai/gpt-5.6",
+"small_model": "codesome-openai/gpt-5.6"
+```
+
+不过需要注意，`gpt-5.6` 当前默认对应 Sol 档。日常任务通常更推荐直接填写完整模型 ID：`gpt-5.6-terra`。
 
 ### 切换到 Opus
 
-如果你想默认使用 Claude Opus 4.7，可以改成：
+如果你想默认使用 Claude Opus 4.8，可以改成：
 
 ```json
-"model": "codesome-anthropic/claude-opus-4-7",
-"small_model": "codesome-anthropic/claude-opus-4-7"
+"model": "codesome-anthropic/claude-opus-4-8",
+"small_model": "codesome-anthropic/claude-opus-4-8"
 ```
 
 ### 混合使用
@@ -216,8 +295,8 @@ OpenCode 的配置文件路径一般是：
 你也可以让主模型和小模型使用不同的配置，例如：
 
 ```json
-"model": "codesome-anthropic/claude-opus-4-7",
-"small_model": "codesome-anthropic/claude-sonnet-4-6"
+"model": "codesome-anthropic/claude-opus-4-8",
+"small_model": "codesome-anthropic/claude-sonnet-5"
 ```
 
 不过一般建议两个模型保持一致，这样更稳定。
@@ -374,7 +453,7 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 
 1. 所有 provider 的 `apiKey` 是否都已经替换成自己的 Codesome API Key
 
-2. 默认模型是否已设置（推荐 `codesome-anthropic/claude-sonnet-4-6`）
+2. 默认模型是否已设置（推荐 `codesome-anthropic/claude-sonnet-5`）
 
 3. 修改后是否已经重启 OpenCode
 
@@ -398,11 +477,11 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
         "chunkTimeout": 30000
       },
       "models": {
-        "claude-sonnet-4-6": {
-          "name": "Claude Sonnet 4.6"
+        "claude-sonnet-5": {
+          "name": "Claude Sonnet 5"
         },
-        "claude-opus-4-7": {
-          "name": "Claude Opus 4.7"
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8"
         }
       }
     },
@@ -416,18 +495,39 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
         "chunkTimeout": 30000
       },
       "models": {
-        "gpt-5.5": {
-          "name": "GPT-5.5",
+        "gpt-5.6-luna": {
+          "name": "GPT-5.6 Luna",
           "limit": {
-            "context": 400000,
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-terra": {
+          "name": "GPT-5.6 Terra",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6-sol": {
+          "name": "GPT-5.6 Sol",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          }
+        },
+        "gpt-5.6": {
+          "name": "GPT-5.6（默认 Sol）",
+          "limit": {
+            "context": 1050000,
             "output": 128000
           }
         }
       }
     }
   },
-  "model": "codesome-anthropic/claude-sonnet-4-6",
-  "small_model": "codesome-anthropic/claude-sonnet-4-6"
+  "model": "codesome-anthropic/claude-sonnet-5",
+  "small_model": "codesome-anthropic/claude-sonnet-5"
 }
 ```
 
@@ -442,6 +542,10 @@ JSON 对格式非常敏感，敏感程度堪比半夜两点的客服群。
 * Claude 的 `baseURL` 设置为 `https://v5.codesome.cn/api/v1`
 
 * GPT 的 `baseURL` 设置为 `https://v5.codesome.cn/openai`
+
+* Claude 当前使用 `claude-sonnet-5` 或 `claude-opus-4-8`
+
+* GPT 当前使用 `gpt-5.6-luna`、`gpt-5.6-terra` 或 `gpt-5.6-sol`，日常开发推荐 Terra
 
 * 所有 provider 的 `apiKey` 都替换成你的 Codesome API Key
 
