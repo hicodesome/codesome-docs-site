@@ -12,12 +12,20 @@ export const LATEST_BASELINE_ARTICLES = [
     title: 'V3 Codex 安装与配置指南'
   },
   {
+    site: '01-V3计划-OpenCode配置.md',
+    title: 'V3 OpenCode 配置指南'
+  },
+  {
     site: '01-二合一计划-ClaudeCode安装配置.md',
     title: '二合一 Claude Code 安装与配置指南'
   },
   {
     site: '01-二合一计划-Codex安装配置.md',
     title: '二合一 Codex 安装与配置指南'
+  },
+  {
+    site: '01-二合一计划-OpenCode配置.md',
+    title: '二合一 OpenCode 配置指南'
   },
   {
     site: '02-ClaudeCode上下文压缩配置.md',
