@@ -10,6 +10,7 @@
   - [Grok Build CLI + Codesome API 配置教程](01-GrokBuildCLI配置教程.md)
   - [No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）](03-牛马神器-CC绘制PPT.md)
   - [OpenClaw 最新配置教程](01-OpenClaw配置教程.md)
+  - [PIAgent 模型配置示例](01-PIAgent模型配置示例.md)
   - [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md)
   - [V3 Codex 安装与配置指南](01-V3计划-Codex安装配置.md)
   - [V3 如何配置 OpenCode](01-V3计划-OpenCode配置.md)

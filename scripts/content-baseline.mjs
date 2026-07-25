@@ -1,6 +1,6 @@
 // 当前人工确认的站点内容基准。
 // 这些文章不参与 CDC 正文和图片同步；其他文章继续以 CDC 为准。
-export const LATEST_BASELINE_VERSION = '2026-07-23';
+export const LATEST_BASELINE_VERSION = '2026-07-25';
 
 export const LATEST_BASELINE_ARTICLES = [
   {
@@ -38,6 +38,10 @@ export const SITE_ONLY_ARTICLES = [
   {
     site: '03-GPTImage2终端生图备忘录.md',
     title: 'GPT Image 2 终端生图备忘录'
+  },
+  {
+    site: '01-PIAgent模型配置示例.md',
+    title: 'PIAgent 模型配置示例'
   }
 ];
 

@@ -1,6 +1,6 @@
 # 文档内容基准
 
-登记日期：2026-07-23
+登记日期：2026-07-25
 
 ## 当前人工最新基准
 
@@ -20,16 +20,17 @@
 以下文章不来自 CDC 快照，由人工直接在站点仓库维护，不参与 `sync:cdc` 同步：
 
 - [GPT Image 2 终端生图备忘录](../03-GPTImage2终端生图备忘录.md)
+- [PIAgent 模型配置示例](../01-PIAgent模型配置示例.md)
 
 机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs) 的 `SITE_ONLY_ARTICLES`。
 
 ## 其他教程
 
-除上述 5 篇外，文档站其余教程暂时继续以不可变 CDC 快照为准：
+除上述 6 篇外，文档站其余教程暂时继续以不可变 CDC 快照为准：
 
 - CDC 标签：`cdc-snapshot-2026-07-14`
 - CDC 内容清单：[`scripts/cdc-manifest.mjs`](../scripts/cdc-manifest.mjs)
-- `npm run check:cdc` 和 `npm run sync:cdc` 会继续校验或同步其余教程；当前人工最新基准中的 5 篇会被排除。
+- `npm run check:cdc` 和 `npm run sync:cdc` 会继续校验或同步其余教程；当前人工最新基准中的 6 篇会被排除。
 
 ## 维护规则
 

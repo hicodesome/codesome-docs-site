@@ -30,6 +30,8 @@
 
 [OpenClaw 最新配置教程](01-OpenClaw配置教程.md)
 
+[PIAgent 模型配置示例](01-PIAgent模型配置示例.md)
+
 [ 【最新】hermes配置教程](01-二合一计划-Hermes配置-AI自动版.md)
 
 Cherry studio、workbuddy、trae、Claudian
