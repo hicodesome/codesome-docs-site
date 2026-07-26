@@ -44,7 +44,7 @@
 
 ## 方法 1（推荐）：使用 CC switch 配置
 
-CC switch 负责管理请求地址、API Key、模型和本地代理配置，不负责安装 Claude Code 或 Codex CLI。完成本方法后，请继续方法 2 安装并配置 CLI。
+方法 1 是完整的推荐流程：安装 Codex CLI 后，再用 CC switch 管理请求地址、API Key、模型和本地代理配置。CC switch 本身不负责安装 CLI；Windows 和 macOS 请继续完成下面对应系统的 CLI 安装与验证。WSL 没有 CC switch 图形客户端，请直接使用方法 2。
 
 ### Windows
 
@@ -69,6 +69,41 @@ CC switch 负责管理请求地址、API Key、模型和本地代理配置，不
 * 请求地址填 https://v5.codesome.cn/openai
 
 * 模型名称填 `gpt-5.6-terra`
+
+#### 安装并验证 Codex CLI
+
+CC switch 配置完成后，还要安装 `codex` 命令。已经安装过 Codex 的用户可直接执行 `codex --version`，无需重复安装。
+
+安装 Node.js：
+
+```text
+https://nodejs.org/en/download
+```
+
+安装完成后，在 PowerShell 验证：
+
+```powershell
+node -v
+npm -v
+```
+
+安装 Codex：
+
+```powershell
+npm i -g @openai/codex
+```
+
+如果下载慢，可以使用镜像：
+
+```powershell
+npm i -g @openai/codex --registry=https://registry.npmmirror.com
+```
+
+验证：
+
+```powershell
+codex --version
+```
 
 ### macOS
 
@@ -105,13 +140,48 @@ macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打�
 
 * 模型名称填 `gpt-5.6-terra`
 
+#### 安装并验证 Codex CLI
+
+CC switch 配置完成后，还要安装 `codex` 命令。已经安装过 Codex 的用户可直接执行 `codex --version`，无需重复安装。
+
+安装 Node.js：
+
+```text
+https://nodejs.org/en/download
+```
+
+安装完成后，在终端验证：
+
+```bash
+node -v
+npm -v
+```
+
+安装 Codex：
+
+```bash
+npm i -g @openai/codex
+```
+
+如果下载慢，可以使用镜像：
+
+```bash
+npm i -g @openai/codex --registry=https://registry.npmmirror.com
+```
+
+验证：
+
+```bash
+codex --version
+```
+
 ### WSL
 
 CC switch 运行在 Windows/macOS；WSL 请直接跳到方法 2。
 
-## 方法 2：安装 CLI 并配置
+## 方法 2：不使用 CC switch，手动安装 CLI 并配置
 
-下面保留原有 CLI 安装、验证和手动配置步骤。
+方法 2 是方法 1 的替代流程，不是方法 1 的必做下一步。如果已经按方法 1 安装并验证过 CLI，不要重复安装；只有在不使用 CC switch 时，才从本节开始手动配置。
 
 ### Windows
 

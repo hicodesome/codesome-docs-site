@@ -139,7 +139,7 @@ echo "如果没有任何输出，说明环境变量已基本清理完成。"
 
 ## 方法 1（推荐）：使用 CC switch 配置
 
-CC switch 负责管理请求地址、API Key、模型和本地代理配置，不负责安装 Claude Code 或 Codex CLI。完成本方法后，请继续方法 2 安装并配置 CLI。
+方法 1 是完整的推荐流程：安装 Claude Code CLI 后，再用 CC switch 管理请求地址、API Key 和本地代理配置。CC switch 本身不负责安装 CLI；Windows 和 macOS 请继续完成下面对应系统的 CLI 安装与验证。Linux 没有 CC switch 图形客户端，请直接使用方法 2。
 
 ### Windows
 
@@ -156,6 +156,34 @@ CC switch 负责管理请求地址、API Key、模型和本地代理配置，不
 * API Key 填你的 `cr-...` 开头 API Key
 
 ![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
+
+#### 安装并验证 Claude Code CLI
+
+CC switch 配置完成后，还要安装 `claude` 命令。已经安装过 Claude Code 的用户可直接执行 `claude --version`，无需重复安装。
+
+安装 Git for Windows：
+
+```text
+https://git-scm.com/download/win
+```
+
+安装后在 PowerShell 验证：
+
+```powershell
+git --version
+```
+
+安装 Claude Code：
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+验证：
+
+```powershell
+claude --version
+```
 
 ### macOS
 
@@ -174,6 +202,41 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 * API Key 填你的 `cr-...` 开头 API Key
 
 ![ccswitch 基础配置示例](<images/二合一 Claude Code 安装与配置指南-test-6.jpg?v=4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383>)
+
+#### 安装并验证 Claude Code CLI
+
+CC switch 配置完成后，还要安装 `claude` 命令。已经安装过 Claude Code 的用户可直接执行 `claude --version`，无需重复安装。
+
+安装 Node.js：
+
+```text
+https://nodejs.org/en/download
+```
+
+安装完成后，在终端验证：
+
+```bash
+node -v
+npm -v
+```
+
+安装 Claude Code：
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+如果下载慢，可以使用镜像：
+
+```bash
+npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
+```
+
+验证：
+
+```bash
+claude --version
+```
 
 ### Linux
 
@@ -239,9 +302,9 @@ claude
 
 3. 如果还是不回复，请在群里反馈，我们会第一时间帮您排查
 
-## 方法 2：安装 CLI 并配置
+## 方法 2：不使用 CC switch，手动安装 CLI 并配置
 
-下面保留原有 CLI 安装、验证和手动配置步骤。
+方法 2 是方法 1 的替代流程，不是方法 1 的必做下一步。如果已经按方法 1 安装并验证过 CLI，不要重复安装；只有在不使用 CC switch 时，才从本节开始手动配置。
 
 ### Windows
 
