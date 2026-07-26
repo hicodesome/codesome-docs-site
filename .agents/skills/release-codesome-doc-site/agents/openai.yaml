@@ -1,4 +1,0 @@
-interface:
-  display_name: "发布 Codesome 文档站"
-  short_description: "自动部署并完成 Codesome 正式生产文档站的端到端核验"
-  default_prompt: "Use $release-codesome-doc-site to publish the Codesome documentation site and verify production end to end."
