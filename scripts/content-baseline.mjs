@@ -1,6 +1,6 @@
 // 当前人工确认的站点内容基准。
 // 这些文章不参与 CDC 正文和图片同步；其他文章继续以 CDC 为准。
-export const LATEST_BASELINE_VERSION = '2026-07-25';
+export const LATEST_BASELINE_VERSION = '2026-07-26';
 
 export const LATEST_BASELINE_ARTICLES = [
   {
@@ -34,6 +34,34 @@ export const LATEST_BASELINE_ARTICLES = [
   {
     site: '03-Agentic入门宝典.md',
     title: 'codesome｜Agentic 入门宝典'
+  },
+  {
+    site: '01-GrokBuildCLI配置教程.md',
+    title: 'Grok Build CLI + Codesome API 配置教程'
+  },
+  {
+    site: '01-OpenClaw配置教程.md',
+    title: 'OpenClaw 最新配置教程'
+  },
+  {
+    site: '01-二合一计划-Hermes配置-AI自动版.md',
+    title: '【最新】hermes配置教程'
+  },
+  {
+    site: '01-二合一计划-Hermes配置-Mac手动版.md',
+    title: '【最新】Hermes 二合一配置教程'
+  },
+  {
+    site: '01-第三方客户端接入配置.md',
+    title: '第三方客户端接入 Codesome 配置指南'
+  },
+  {
+    site: '02-使用问题速查.md',
+    title: 'codesome｜使用问题速查'
+  },
+  {
+    site: '03-Token降费执行手册.md',
+    title: '这样做，可以省下大半 Token 账单：长上下文降费执行手册'
   }
 ];
 

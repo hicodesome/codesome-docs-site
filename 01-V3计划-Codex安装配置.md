@@ -70,7 +70,7 @@ CC switch 负责管理请求地址、API Key、模型和本地代理配置，不
 
 * 请求地址填 https://cc.codesome.ai/v1
 
-* 模型名称填 `gpt-5.5`
+* 模型名称填 `gpt-5.6-terra`
 
 ![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
 
@@ -107,7 +107,7 @@ macOS 在启动台选择 `cc-switch` 后，如果因为安全性问题无法打�
 
 * 请求地址填 https://cc.codesome.ai/v1
 
-* 模型名称填 `gpt-5.5`
+* 模型名称填 `gpt-5.6-terra`
 
 ![ccswitch 创建供应商](<images/V3 Codex 安装与配置指南-image-3.png?v=2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1>)
 
@@ -176,8 +176,8 @@ if ([string]::IsNullOrWhiteSpace($Key) -or $Key -eq "这里替换成你的真实
 New-Item -ItemType Directory -Force "$HOME\.codex" | Out-Null
 
 @'
-model = "gpt-5.5"
-review_model = "gpt-5.5"
+model = "gpt-5.6-terra"
+review_model = "gpt-5.6-terra"
 model_reasoning_effort = "xhigh"
 model_provider = "codesome"
 
@@ -265,8 +265,8 @@ KEY="${CODESOME_API_KEY:?请先执行 export CODESOME_API_KEY='你的真实 sk-.
 mkdir -p ~/.codex
 
 cat > ~/.codex/config.toml <<'EOF'
-model = "gpt-5.5"
-review_model = "gpt-5.5"
+model = "gpt-5.6-terra"
+review_model = "gpt-5.6-terra"
 model_reasoning_effort = "xhigh"
 model_provider = "codesome"
 

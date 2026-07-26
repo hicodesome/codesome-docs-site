@@ -102,9 +102,9 @@ AI agent 自主学习👇（搞钱必备技能树）
 >
 > **<span style="color: rgb(216,57,49); background-color: inherit">目前我们月卡套餐更加多样，使用场景也更加丰富。</span>**
 >
-> * 我们支持 GPT5.5 月卡，可以用在 codex、claude code 里面
+> * 我们支持 GPT5.6 月卡，可以用在 codex、claude code 里面
 >
-> * 我们支持 GPT5.5 和 claude 二合一月卡，可以用在 codex、claude code 里面
+> * 我们支持 GPT5.6 和 claude 二合一月卡，可以用在 codex、claude code 里面
 >
 > * 我们支持 claude 模型月卡，可以用在 claude code 、claude 桌面版里面
 
@@ -126,7 +126,7 @@ AI agent 自主学习👇（搞钱必备技能树）
 
 3. **专属折扣链接：** 如果大家在社交媒体、自媒体平台看到了专属折扣链接，可以使用，会有折扣惊喜
 
-4. **模型支持说明：** claude 全部都会支持最新模型，比如 opus 4.6，sonnet 4.6 目前官方灰度测试，不一定会访问到资源
+4. **模型支持说明：** claude 全部都会支持最新模型，比如 opus 5，sonnet 5 目前官方灰度测试，不一定会访问到资源
 
 1) **使用中的报错排查：** 网络报错、502 等运行中问题统一整理到了[ codesome｜使用问题速查](02-使用问题速查.md)；上下文自动压缩配置问题请参考[ Claude Code 上下文自动压缩配置](02-ClaudeCode上下文压缩配置.md)。这里保留说明类常见问题，不重复展开。
 

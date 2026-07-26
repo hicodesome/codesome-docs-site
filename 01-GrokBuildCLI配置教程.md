@@ -1,4 +1,4 @@
-本教程将指导你安装 Grok Build CLI，并配置使用 Codesome 的 OpenAI 兼容 API（`gpt-5.5` 模型）。
+本教程将指导你安装 Grok Build CLI，并配置使用 Codesome 的 OpenAI 兼容 API（`gpt-5.6-terra` 模型）。
 
 ***
 
@@ -45,21 +45,21 @@ export PATH="$HOME/.grok/bin:$PATH"
 installer = "internal"
 
 # ===== v3 配置 =====
-[model.codesome-gpt55]
-model = "gpt-5.5"
-name = "v3 Codesome GPT-5.5"
+[model.codesome-gpt56terra]
+model = "gpt-5.6-terra"
+name = "v3 Codesome GPT-5.6 Terra"
 api_key = "你的_v3_API_KEY（sk-开头）"
 base_url = "https://cc.codesome.ai/v1"
 
 # ===== 二合一月卡配置 =====
-[model.codesome-gpt55-test]
-model = "gpt-5.5"
-name = "二合一月卡 GPT-5.5 (v5)"
+[model.codesome-gpt56terra-test]
+model = "gpt-5.6-terra"
+name = "二合一月卡 GPT-5.6 Terra (v5)"
 api_key = "你的_二合一月卡_API_KEY（cr-开头）"
 base_url = "https://v5.codesome.cn/openai/v1"
 
 [models]
-default = "codesome-gpt55-test"
+default = "codesome-gpt56terra-test"
 
 [ui]
 max_thoughts_width = 120
@@ -80,7 +80,7 @@ fork_secondary_model = "grok-build"
 grok inspect
 ```
 
-检查输出中是否显示 `codesome-gpt55` 模型。
+检查输出中是否显示 `codesome-gpt56terra` 模型。
 
 ***
 
@@ -99,7 +99,7 @@ grok
 
 * **检查配置**：`grok inspect`
 
-* **切换模型**：`/model codesome-gpt55`（TUI 内）或 `grok -m codesome-gpt55`
+* **切换模型**：`/model codesome-gpt56terra`（TUI 内）或 `grok -m codesome-gpt56terra`
 
 * **更新 CLI**：`grok update`
 
@@ -121,7 +121,7 @@ grok
 
 ### 模型 ID
 
-* 使用 `gpt-5.5` 作为模型 ID
+* 使用 `gpt-5.6-terra` 作为模型 ID
 
 * 注意grokbulid只支持OpenAI 兼容格式，所以只能支持 GPT。
 

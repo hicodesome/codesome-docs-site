@@ -4,7 +4,7 @@
 
 ## 当前人工最新基准
 
-以下 8 篇教程以站点当前内容为最新基准，不再与 CDC 快照比较，也不会被 `sync:cdc` 覆盖：
+以下 15 篇教程以站点当前内容为最新基准，不再与 CDC 快照比较，也不会被 `sync:cdc` 覆盖：
 
 - [V3 Claude Code 安装与配置指南](../01-V3计划-ClaudeCode安装配置.md)
 - [V3 Codex 安装与配置指南](../01-V3计划-Codex安装配置.md)
@@ -14,6 +14,13 @@
 - [二合一 OpenCode 配置指南](../01-二合一计划-OpenCode配置.md)
 - [Claude Code 上下文自动压缩配置](../02-ClaudeCode上下文压缩配置.md)
 - [codesome｜Agentic 入门宝典](../03-Agentic入门宝典.md)（2026-07-23 起，因主页需引用站点独有文章转人工维护）
+- [Grok Build CLI + Codesome API 配置教程](../01-GrokBuildCLI配置教程.md)
+- [OpenClaw 最新配置教程](../01-OpenClaw配置教程.md)
+- [【最新】hermes配置教程](../01-二合一计划-Hermes配置-AI自动版.md)
+- [【最新】Hermes 二合一配置教程](../01-二合一计划-Hermes配置-Mac手动版.md)
+- [第三方客户端接入 Codesome 配置指南](../01-第三方客户端接入配置.md)
+- [codesome｜使用问题速查](../02-使用问题速查.md)
+- [这样做，可以省下大半 Token 账单：长上下文降费执行手册](../03-Token降费执行手册.md)
 
 机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs)。
 
@@ -29,11 +36,11 @@
 
 ## 其他教程
 
-除上述 8 篇外，文档站其余教程暂时继续以不可变 CDC 快照为准：
+除上述 15 篇外，文档站其余教程暂时继续以不可变 CDC 快照为准：
 
 - CDC 标签：`cdc-snapshot-2026-07-14`
 - CDC 内容清单：[`scripts/cdc-manifest.mjs`](../scripts/cdc-manifest.mjs)
-- `npm run check:cdc` 和 `npm run sync:cdc` 会继续校验或同步其余教程；当前人工最新基准中的 8 篇会被排除。
+- `npm run check:cdc` 和 `npm run sync:cdc` 会继续校验或同步其余教程；当前人工最新基准中的 15 篇会被排除。
 
 ## 维护规则
 

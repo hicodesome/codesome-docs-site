@@ -75,7 +75,7 @@ nano ~/.hermes/config.yaml
 
 ```plaintext
 model:
-  default: "gpt-5.5"
+  default: "gpt-5.6-terra"
   provider: "codesome-unified-codex"
   context_length: 2000000
 
@@ -85,7 +85,7 @@ custom_providers:
     key_env: "OPENAI_API_KEY"
     api_mode: "codex_responses"
     models:
-      gpt-5.5:
+      gpt-5.6-terra:
         context_length: 2000000
 
 terminal:
@@ -100,7 +100,7 @@ terminal:
 
 ```plaintext
 model:
-  default: "claude-sonnet-4-6"
+  default: "claude-sonnet-5"
   provider: "codesome-unified-claude"
   context_length: 2000000
 
@@ -110,9 +110,9 @@ custom_providers:
     key_env: "ANTHROPIC_API_KEY"
     api_mode: "anthropic_messages"
     models:
-      claude-sonnet-4-6:
+      claude-sonnet-5:
         context_length: 2000000
-      claude-opus-4-6:
+      claude-opus-5:
         context_length: 2000000
 
 terminal:
@@ -267,7 +267,7 @@ hermes doctor
 
 ```plaintext
 model:
-  default: gpt-5.5
+  default: gpt-5.6-terra
   provider: custom
   base_url: https://v5.codesome.cn/openai
   api_mode: codex_responses
@@ -283,7 +283,7 @@ terminal:
 
 ```plaintext
 model:
-  default: claude-sonnet-4-6
+  default: claude-sonnet-5
   provider: custom
   base_url: https://v5.codesome.cn/api
   api_mode: anthropic_messages

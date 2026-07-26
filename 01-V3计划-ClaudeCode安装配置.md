@@ -464,9 +464,9 @@ claude
 
 [使用问题速查：报错、账单与配置排查](02-使用问题速查.md)
 
-## 在 Claude Code 里使用 gpt-5.5
+## 在 Claude Code 里使用 gpt-5.6-terra
 
-### 在 ccswitch 里配置 gpt-5.5
+### 在 ccswitch 里配置 gpt-5.6-terra
 
 如图，重点核对这几项：
 

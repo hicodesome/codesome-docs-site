@@ -86,8 +86,8 @@ description: 当用户希望安装、修复、迁移、验证或配置 Hermes �
 
 Provider 提示：
 
-- Codex 路径：`gpt-5.5`、Codex、Responses API、`OPENAI_API_KEY`、CodeSome Codex
-- Claude 路径：Claude、`claude-sonnet-4-6`、`claude-opus-4-6`、`CODESOME_CLAUDE_API_KEY`、CodeSome Claude
+- Codex 路径：`gpt-5.6-terra`、Codex、Responses API、`OPENAI_API_KEY`、CodeSome Codex
+- Claude 路径：Claude、`claude-sonnet-5`、`claude-opus-5`、`CODESOME_CLAUDE_API_KEY`、CodeSome Claude
 
 如果两条路径都存在，优先采用用户明确指定的请求。如果用户说得很模糊，但当前工作路径已经很明显，则默认保持原状，除非修复过程必须切换。
 
@@ -166,7 +166,7 @@ tail -50 ~/.hermes/logs/gateway.log
 
 ```yaml
 model:
-  default: "gpt-5.5"
+  default: "gpt-5.6-terra"
   provider: "codesome-codex"
   context_length: 2000000
 
@@ -175,7 +175,7 @@ custom_providers:
     base_url: "https://cc.codesome.ai/v1"
     api_mode: "codex_responses"
     models:
-      gpt-5.5:
+      gpt-5.6-terra:
         context_length: 2000000
 
 terminal:
@@ -194,7 +194,7 @@ OPENAI_API_KEY=your_c..._key
 
 ```yaml
 model:
-  default: gpt-5.5
+  default: gpt-5.6-terra
   provider: custom
   base_url: https://cc.codesome.ai/v1
   api_mode: codex_responses
@@ -212,7 +212,7 @@ terminal:
 
 ```yaml
 model:
-  default: "claude-sonnet-4-6"
+  default: "claude-sonnet-5"
   provider: "codesome-claude"
   context_length: 2000000
 
@@ -222,9 +222,9 @@ custom_providers:
     api_key: "${CODESOME_CLAUDE_API_KEY}"
     api_mode: "anthropic_messages"
     models:
-      claude-sonnet-4-6:
+      claude-sonnet-5:
         context_length: 2000000
-      claude-opus-4-6:
+      claude-opus-5:
         context_length: 2000000
 
 terminal:
@@ -445,7 +445,7 @@ nano ~/.hermes/config.yaml
 
 ```yaml
 model:
-  default: "gpt-5.5"
+  default: "gpt-5.6-terra"
   provider: "codesome-codex"
   context_length: 2000000
 
@@ -454,7 +454,7 @@ custom_providers:
     base_url: "https://cc.codesome.ai/v1"
     api_mode: "codex_responses"
     models:
-      gpt-5.5:
+      gpt-5.6-terra:
         context_length: 2000000
 
 terminal:
@@ -468,7 +468,7 @@ terminal:
 
 ```yaml
 model:
-  default: "claude-sonnet-4-6"
+  default: "claude-sonnet-5"
   provider: "codesome-claude"
   context_length: 2000000
 
@@ -478,9 +478,9 @@ custom_providers:
     api_key: "${CODESOME_CLAUDE_API_KEY}"
     api_mode: "anthropic_messages"
     models:
-      claude-sonnet-4-6:
+      claude-sonnet-5:
         context_length: 2000000
-      claude-opus-4-6:
+      claude-opus-5:
         context_length: 2000000
 
 terminal:

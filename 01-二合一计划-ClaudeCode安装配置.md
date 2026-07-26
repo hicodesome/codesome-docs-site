@@ -179,13 +179,13 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 CC switch 暂无 Linux 图形客户端，请直接跳到方法 2。
 
-### 在 Claude Code 里使用 gpt-5.5
+### 在 Claude Code 里使用 gpt-5.6-terra
 
-#### 在 ccswitch 里配置 gpt-5.5
+#### 在 ccswitch 里配置 gpt-5.6-terra
 
 如图，重点核对这几项：
 
-![ccswitch gpt-5.5 配置](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
+![ccswitch gpt-5.6-terra 配置](<images/二合一 Claude Code 安装与配置指南-image.png?v=83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009>)
 
 * 提供商名称填 `codesome`
 
@@ -193,7 +193,7 @@ CC switch 暂无 Linux 图形客户端，请直接跳到方法 2。
 
 * API Key 填 cr 开头的 key
 
-* 模型映射填入 `gpt-5.5`
+* 模型映射填入 `gpt-5.6-terra`
 
 #### 打开 ccswitch 的代理开关
 
@@ -388,7 +388,7 @@ source ~/.zshrc
 claude
 ```
 
-如需使用 `gpt-5.5` 模型，请参考方法 1 的「在 Claude Code 里使用 gpt-5.5」章节。
+如需使用 `gpt-5.6-terra` 模型，请参考方法 1 的「在 Claude Code 里使用 gpt-5.6-terra」章节。
 
 ## 常见错误
 

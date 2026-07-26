@@ -50,8 +50,8 @@ openclaw --version
         "api": "openai-responses",
         "models": [
           {
-            "id": "gpt-5.5",
-            "name": "gpt-5.5",
+            "id": "gpt-5.6-terra",
+            "name": "gpt-5.6-terra",
             "contextWindow": 200000,
             "maxTokens": 8192
           }
@@ -62,10 +62,10 @@ openclaw --version
   "agents": {
     "defaults": {
       "model": {
-        "primary": "codesome-codex/gpt-5.5"
+        "primary": "codesome-codex/gpt-5.6-terra"
       },
       "models": {
-        "codesome-codex/gpt-5.5": {}
+        "codesome-codex/gpt-5.6-terra": {}
       }
     }
   }
@@ -89,20 +89,14 @@ openclaw --version
         "api": "anthropic-messages",
         "models": [
           {
-            "id": "claude-sonnet-4-6",
-            "name": "claude-sonnet-4-6",
+            "id": "claude-sonnet-5",
+            "name": "claude-sonnet-5",
             "contextWindow": 200000,
             "maxTokens": 8192
           },
           {
-            "id": "claude-opus-4-6",
-            "name": "Claude Opus 4.6",
-            "contextWindow": 200000,
-            "maxTokens": 16384
-          },
-          {
-            "id": "claude-opus-4-7",
-            "name": "Claude Opus 4.7",
+            "id": "claude-opus-5",
+            "name": "Claude Opus 5",
             "contextWindow": 200000,
             "maxTokens": 16384
           }
@@ -113,12 +107,11 @@ openclaw --version
   "agents": {
     "defaults": {
       "model": {
-        "primary": "codesome/claude-sonnet-4-6"
+        "primary": "codesome/claude-sonnet-5"
       },
       "models": {
-        "codesome/claude-opus-4-6": {},
-        "codesome/claude-opus-4-7": {},
-        "codesome/claude-sonnet-4-6": {}
+        "codesome/claude-opus-5": {},
+        "codesome/claude-sonnet-5": {}
       }
     }
   }
