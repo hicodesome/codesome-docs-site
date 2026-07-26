@@ -257,19 +257,18 @@ CC switch 配置和 CLI 安装完成后，打开 Codex 桌面客户端会看到�
 
 1. 用 Claude Code 的 `ANTHROPIC_*` 配置 Codex。
 
-2. 没有设置 `CODESOME_API_KEY`。
+2. 用二合一 Claude Code 地址 `https://v5.codesome.cn/api` 配 Codex。
 
-3. 用二合一 Claude Code 地址 `https://v5.codesome.cn/api` 配 Codex。
+3. 用 V3 地址 `https://cc.codesome.ai/v1` 配二合一。
 
-4. 用 V3 地址 `https://cc.codesome.ai/v1` 配二合一。
+4. 用 `sk-...` key 配二合一。
 
-5. 用 `sk-...` key 配二合一。
+5. `~/.codex/config.toml` 不存在或写错。
 
-6. `~/.codex/config.toml` 不存在或写错。
+6. 桌面版没重启。
 
-7. 桌面版没重启。
+7. WSL 和 Windows PowerShell 混在一起配置。
 
-8. WSL 和 Windows PowerShell 混在一起配置。
 遇到报错，去看：
 
 [使用问题速查：报错、账单与配置排查](02-使用问题速查.md)

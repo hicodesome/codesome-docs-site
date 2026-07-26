@@ -261,15 +261,13 @@ CC switch 配置和 CLI 安装完成后，打开 Codex 桌面客户端会看到�
 
 1. 用 Claude Code 的 `ANTHROPIC_*` 配置 Codex。
 
-2. 没有设置 `CODESOME_API_KEY`。
+2. `~/.codex/config.toml` 不存在或写错。
 
-3. `~/.codex/config.toml` 不存在或写错。
+3. V3 `base_url` 少了 `/v1`。
 
-4. V3 `base_url` 少了 `/v1`。
+4. 桌面版没重启。
 
-5. 桌面版没重启。
-
-6. 用二合一 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
+5. 用二合一 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
 
 遇到报错，去看：
 
