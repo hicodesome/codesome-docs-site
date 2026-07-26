@@ -48,7 +48,7 @@ env_key=CODESOME_API_KEY
 
 ## 方法 1（推荐）：使用 CC switch 配置
 
-方法 1 是完整的推荐流程：安装 Codex CLI 后，再用 CC switch 管理请求地址、API Key、模型和本地代理配置。CC switch 本身不负责安装 CLI；Windows 和 macOS 请继续完成下面对应系统的 CLI 安装与验证。WSL 没有 CC switch 图形客户端，请直接使用方法 2。
+方法 1 是唯一的配置流程：用 CC switch 管理请求地址、API Key、模型和本地代理配置，下面按系统同时提供 Codex CLI 的安装与验证步骤。CC switch 图形客户端支持 Windows 和 macOS；WSL 仅保留 CLI 安装步骤，CC switch 配置需在 Windows 或 macOS 中完成。
 
 ### Windows
 
@@ -185,214 +185,9 @@ codex --version
 
 ### WSL
 
-CC switch 运行在 Windows/macOS；WSL 请直接跳到方法 2。
+WSL 没有 CC switch 图形客户端。若你需要在 WSL 中安装 Codex CLI，可按下面步骤完成；CC switch 配置需在 Windows 或 macOS 中完成。
 
-## 方法 2：不使用 CC switch，手动安装 CLI 并配置
-
-方法 2 是方法 1 的替代流程，不是方法 1 的必做下一步。如果已经按方法 1 安装并验证过 CLI，不要重复安装；只有在不使用 CC switch 时，才从本节开始手动配置。
-
-### Windows
-
-#### 安装 Codex CLI
-
-安装 Node.js：
-
-```text
-https://nodejs.org/en/download
-```
-
-下载 Windows 安装包并安装。
-
-![Windows Node.js 安装页](<images/V3 Codex 安装与配置指南-image-001.png?v=5220f5a230776392002cd51e9e12b77ecad72aff1f923bb1936a7d35a938ffbb>)
-
-安装完成后，在 PowerShell 验证：
-
-```powershell
-node -v
-npm -v
-```
-
-安装 Codex：
-
-```powershell
-npm i -g @openai/codex
-```
-
-如果下载慢，可以使用镜像：
-
-```powershell
-npm i -g @openai/codex --registry=https://registry.npmmirror.com
-```
-
-验证：
-
-```powershell
-codex --version
-```
-
-写入 V3 Codex 配置（先替换成你的真实 key）：
-
-```powershell
-$Key = "这里替换成你的真实 sk-... API Key"
-```
-
-再执行下面这一整段（不要做任何修改，直接粘贴）：
-
-```powershell
-if ([string]::IsNullOrWhiteSpace($Key) -or $Key -eq "这里替换成你的真实 sk-... API Key") {
-    throw "请先执行：`$Key = `"你的真实 sk-... API Key`""
-}
-
-New-Item -ItemType Directory -Force "$HOME\.codex" | Out-Null
-
-@'
-model = "gpt-5.6-terra"
-review_model = "gpt-5.6-terra"
-model_reasoning_effort = "xhigh"
-model_provider = "codesome"
-
-disable_response_storage = true
-network_access = "enabled"
-windows_wsl_setup_acknowledged = true
-check_for_update_on_startup = false
-
-model_context_window = 1000000
-model_auto_compact_token_limit = 900000
-
-[model_providers.codesome]
-name = "Codesome V3"
-base_url = "https://cc.codesome.ai/v1"
-wire_api = "responses"
-env_key = "CODESOME_API_KEY"
-'@ | Set-Content -Encoding UTF8 "$HOME\.codex\config.toml"
-
-[Environment]::SetEnvironmentVariable("CODEX_HOME", "$HOME\.codex", "User")
-[Environment]::SetEnvironmentVariable("CODESOME_API_KEY", $Key, "User")
-
-$env:CODEX_HOME = "$HOME\.codex"
-$env:CODESOME_API_KEY = $Key
-```
-
-验证配置：
-
-重新打开 PowerShell：
-
-```powershell
-Get-Content "$HOME\.codex\config.toml" | Select-String 'model =|review_model =|model_provider =|base_url =|env_key ='
-[Environment]::GetEnvironmentVariable("CODEX_HOME", "User")
-if ($env:CODESOME_API_KEY) { "CODESOME_API_KEY 已生效" } else { "CODESOME_API_KEY 未生效" }
-codex
-```
-
-### macOS
-
-#### 安装 Codex CLI
-
-安装 Node.js：
-
-```text
-https://nodejs.org/en/download
-```
-
-下载 macOS 安装包并安装。
-
-![macOS Node.js 安装页](<images/V3 Codex 安装与配置指南-image-005.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
-
-安装后打开终端：按 `Command + 空格`，搜索"终端"，回车。后面的安装和验证都在这个窗口里完成。
-
-![macOS 打开终端](<images/V3 Codex 安装与配置指南-image-006.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
-
-验证：
-
-```bash
-node -v
-npm -v
-```
-
-安装 Codex：
-
-```bash
-npm i -g @openai/codex
-```
-
-如果下载慢：
-
-```bash
-npm i -g @openai/codex --registry=https://registry.npmmirror.com
-```
-
-写入 V3 Codex 配置：
-
-```bash
-export CODESOME_API_KEY='这里替换成你的真实 sk-... API Key'
-```
-
-然后执行：
-
-```bash
-KEY="${CODESOME_API_KEY:?请先执行 export CODESOME_API_KEY='你的真实 sk-... API Key'}"
-
-mkdir -p ~/.codex
-
-cat > ~/.codex/config.toml <<'EOF'
-model = "gpt-5.6-terra"
-review_model = "gpt-5.6-terra"
-model_reasoning_effort = "xhigh"
-model_provider = "codesome"
-
-disable_response_storage = true
-network_access = "enabled"
-check_for_update_on_startup = false
-
-model_context_window = 1000000
-model_auto_compact_token_limit = 900000
-
-[model_providers.codesome]
-name = "Codesome V3"
-base_url = "https://cc.codesome.ai/v1"
-wire_api = "responses"
-env_key = "CODESOME_API_KEY"
-EOF
-
-chmod 600 ~/.codex/config.toml
-
-ESCAPED_KEY=$(printf "%s" "$KEY" | sed "s/'/'\\\\''/g")
-
-for f in ~/.zshrc ~/.bashrc ~/.profile; do
-  touch "$f"
-  sed -i.bak \
-    -e '/^unset CODEX_HOME$/d' \
-    -e '/^export CODEX_HOME=/d' \
-    -e '/^export CODESOME_API_KEY=/d' \
-    "$f"
-
-  cat >> "$f" <<EOF
-
-unset CODEX_HOME
-export CODEX_HOME="\$HOME/.codex"
-export CODESOME_API_KEY='$ESCAPED_KEY'
-EOF
-done
-
-export CODEX_HOME="$HOME/.codex"
-export CODESOME_API_KEY="$KEY"
-```
-
-验证配置：
-
-新开终端：
-
-```bash
-grep -n 'model =\|review_model =\|base_url =' ~/.codex/config.toml
-test -n "$CODESOME_API_KEY" && echo "CODESOME_API_KEY 已生效" || echo "CODESOME_API_KEY 未生效"
-codex
-```
-
-### WSL
-
-WSL 环境没有 ccswitch 图形界面，直接安装 CLI。
-
-#### 1. 进入 WSL
+#### 安装并验证 Codex CLI
 
 在 Windows PowerShell 输入：
 
@@ -400,7 +195,7 @@ WSL 环境没有 ccswitch 图形界面，直接安装 CLI。
 wsl
 ```
 
-#### 2. 安装 Node.js
+安装 Node.js：
 
 ```bash
 sudo apt update
@@ -418,25 +213,15 @@ node -v
 npm -v
 ```
 
-#### 3. 安装 Codex
+安装 Codex：
 
 ```bash
 npm i -g @openai/codex
 ```
 
-#### 4. 配置
-
-WSL 里的配置方式和 macOS/Linux 一样，使用 `~/.codex/config.toml`，`base_url` 必须是：
-
-```text
-https://cc.codesome.ai/v1
-```
-
-可以直接复用上一节 macOS 的配置命令。需要 ccswitch 的话，回到 Windows 系统里操作即可。
-
 ### Codex 桌面版
 
-**Codex 桌面版通常依赖 CLI 配置。先把 CLI 配好，再安装并打开桌面客户端。**
+**Codex 桌面版通常依赖 CLI。先完成本文的 CC switch 配置和 CLI 安装，再安装并打开桌面客户端。**
 
 #### 下载地址
 
@@ -448,13 +233,13 @@ https://developers.openai.com/codex/app
 
 
 
-CLI 配置完成后，打开 Codex 桌面客户端会看到类似界面。
+CC switch 配置和 CLI 安装完成后，打开 Codex 桌面客户端会看到类似界面。
 
 ![Codex 桌面客户端界面](<images/V3 Codex 安装与配置指南-image.png?v=7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45>)
 
 #### 使用顺序
 
-1. **先按本文完成 Codex CLI 安装与配置。**
+1. **先按本文完成 CC switch 配置和 Codex CLI 安装。**
 
 2. 确认终端里执行 `codex` 可以正常进入并回复。
 
@@ -484,9 +269,7 @@ CLI 配置完成后，打开 Codex 桌面客户端会看到类似界面。
 
 5. 桌面版没重启。
 
-6. WSL 和 Windows PowerShell 混在一起配置。
-
-7. 用二合一 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
+6. 用二合一 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
 
 遇到报错，去看：
 
