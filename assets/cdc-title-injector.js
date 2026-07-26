@@ -58,7 +58,9 @@
     'docsify.search.index/article-title-v1',
     'docsify.search.expires/article-title-v1',
     'docsify.search.index/cdc-titles-v2',
-    'docsify.search.expires/cdc-titles-v2'
+    'docsify.search.expires/cdc-titles-v2',
+    'docsify.search.index/cdc-titles-v3',
+    'docsify.search.expires/cdc-titles-v3'
   ];
   STALE_KEYS.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } });
 
@@ -66,6 +68,11 @@
     var source = content.charAt(0) === '\uFEFF' ? content.slice(1) : content;
     var lines = source.split(/\r?\n/);
     var fence = null;
+    var titleHeadingPattern = /^ {0,3}#(?!#)\s+(.+?)\s*$/;
+    var hasExactTitle = lines.some(function (line) {
+      var match = line.match(titleHeadingPattern);
+      return match && match[1].trim() === title;
+    });
 
     lines = lines.map(function (line) {
       var fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
@@ -83,13 +90,17 @@
       }
 
       if (!fence) {
+        var titleMatch = line.match(titleHeadingPattern);
+        if (hasExactTitle && titleMatch && titleMatch[1].trim() === title) {
+          return line;
+        }
         return line.replace(/^( {0,3})#(?=\s+)/, '$1##');
       }
 
       return line;
     });
 
-    return '# ' + title + '\n\n' + lines.join('\n');
+    return hasExactTitle ? lines.join('\n') : '# ' + title + '\n\n' + lines.join('\n');
   }
 
   /* ── 2. Wrap Docsify.get ────────────────────────────────────────────
