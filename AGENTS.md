@@ -16,6 +16,7 @@
 
 - 站点为 Docsify 静态站；本地预览使用 `npm run dev`，完整内容检查使用 `npm run check`。
 - 新增或改名文章时同步检查 `_sidebar.md`、首页入口、内部链接、图片和 `docs/CONTENT_BASELINE.md`。
+- 每篇站点文章都必须在 `scripts/cdc-manifest.mjs` 或 `scripts/content-baseline.mjs` 登记标题；登记后运行 `npm run generate:titles` 生成 `assets/article-titles.js`，再运行 `npm run check`。`check:titles` 会阻止漏登记文章、过期生成文件或错误的 `index.html` 加载顺序进入发布。
 - 修改浏览器 CSS/JS 时必须同步更新 `index.html` 对应资源的 `?v=` 缓存版本。
 - 模型、套餐、分组、倍率、价格、额度、版本和站点行为属于动态事实，发布前按当天后台、正式资料或用户明确口径复核。
 
