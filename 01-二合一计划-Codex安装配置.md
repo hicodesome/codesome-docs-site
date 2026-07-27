@@ -255,19 +255,21 @@ CC switch 配置和 CLI 安装完成后，打开 Codex 桌面客户端会看到�
 
 ## 常见错误
 
-1. 用 Claude Code 的 `ANTHROPIC_*` 配置 Codex。
+1. 如果严格按本文配置后仍出现 503，请先回到 CC switch 的模型选择处，选择界面中正确显示的模型 ID `gpt-5.6-terra`，不要选择“自定义”。
 
-2. 用二合一 Claude Code 地址 `https://v5.codesome.cn/api` 配 Codex。
+2. 用 Claude Code 的 `ANTHROPIC_*` 配置 Codex。
 
-3. 用 V3 地址 `https://cc.codesome.ai/v1` 配二合一。
+3. 用二合一 Claude Code 地址 `https://v5.codesome.cn/api` 配 Codex。
 
-4. 用 `sk-...` key 配二合一。
+4. 用 V3 地址 `https://cc.codesome.ai/v1` 配二合一。
 
-5. `~/.codex/config.toml` 不存在或写错。
+5. 用 `sk-...` key 配二合一。
 
-6. 桌面版没重启。
+6. `~/.codex/config.toml` 不存在或写错。
 
-7. WSL 和 Windows PowerShell 混在一起配置。
+7. 桌面版没重启。
+
+8. WSL 和 Windows PowerShell 混在一起配置。
 
 遇到报错，去看：
 

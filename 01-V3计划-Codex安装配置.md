@@ -259,15 +259,17 @@ CC switch 配置和 CLI 安装完成后，打开 Codex 桌面客户端会看到�
 
 ## 常见错误
 
-1. 用 Claude Code 的 `ANTHROPIC_*` 配置 Codex。
+1. 如果严格按本文配置后仍出现 503，请先回到 CC switch 的模型选择处，选择界面中正确显示的模型 ID `gpt-5.6-terra`，不要选择“自定义”。
 
-2. `~/.codex/config.toml` 不存在或写错。
+2. 用 Claude Code 的 `ANTHROPIC_*` 配置 Codex。
 
-3. V3 `base_url` 少了 `/v1`。
+3. `~/.codex/config.toml` 不存在或写错。
 
-4. 桌面版没重启。
+4. V3 `base_url` 少了 `/v1`。
 
-5. 用二合一 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
+5. 桌面版没重启。
+
+6. 用二合一 `cr-...` key 或 v5 地址配置了这篇 V3 教程。
 
 遇到报错，去看：
 
