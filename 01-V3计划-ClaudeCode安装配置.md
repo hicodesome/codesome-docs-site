@@ -153,7 +153,7 @@ CLAUDE_CODE_ATTRIBUTION_HEADER=0
 
 ## 方法 1（推荐）：使用 CC switch 配置
 
-方法 1 是完整的推荐流程：安装 Claude Code CLI 后，再用 CC switch 管理请求地址、API Key 和本地代理配置。CC switch 本身不负责安装 CLI；Windows 和 macOS 请继续完成下面对应系统的 CLI 安装与验证。Linux 没有 CC switch 图形客户端，请直接使用方法 2。
+方法 1 是完整的推荐流程：安装 Claude Code CLI 后，再用 CC switch 管理请求地址、API Key 和本地代理配置。CC switch 本身不负责安装 CLI；Windows、macOS 和 Linux 都有当前客户端安装包，请继续完成对应系统的 CLI 安装与验证。
 
 ### Windows
 
@@ -183,7 +183,7 @@ CLAUDE_CODE_ATTRIBUTION_HEADER=0
 
 CC switch 配置完成后，还要安装 `claude` 命令。已经安装过 Claude Code 的用户可直接执行 `claude --version`，无需重复安装。
 
-安装 Git for Windows：
+Git for Windows 不是运行官方安装器的硬性前提，没有安装时 Claude Code 可以继续使用 PowerShell。不过仍然推荐安装：Claude Code 和其他 Agent 后续经常需要读取 Git 仓库、查看改动和提交代码，Git 基本属于必装的开发工具，建议现在一并安装：
 
 ```text
 https://git-scm.com/download/win
@@ -235,7 +235,7 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 CC switch 配置完成后，还要安装 `claude` 命令。已经安装过 Claude Code 的用户可直接执行 `claude --version`，无需重复安装。
 
-安装 Node.js：
+先安装 Node.js：
 
 ```text
 https://nodejs.org/en/download
@@ -248,17 +248,19 @@ node -v
 npm -v
 ```
 
-安装 Claude Code：
+通过 npm 安装 Claude Code：
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-如果下载慢，可以使用镜像：
+如果默认 npm 下载慢或无法连接，使用镜像：
 
 ```bash
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
+
+不要在 npm 安装命令前加 `sudo`。
 
 验证：
 
@@ -268,7 +270,39 @@ claude --version
 
 ### Linux
 
-CC switch 暂无 Linux 图形客户端，请直接跳到方法 2。
+CC Switch 当前 Release 提供 Linux x86_64/ARM64 的 AppImage、deb 和 rpm。请从 <https://github.com/farion1231/cc-switch/releases> 下载与你的架构和发行版匹配的安装包，再按本节相同字段创建供应商。
+
+先确认 Node.js 和 npm 已安装：
+
+```bash
+node -v
+npm -v
+```
+
+如果未安装，Ubuntu / Debian 可以执行：
+
+```bash
+sudo apt update
+sudo apt install -y nodejs npm
+```
+
+通过 npm 安装 Claude Code：
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+如果默认 npm 无法连接，使用镜像：
+
+```bash
+npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
+```
+
+不要使用 `sudo npm install -g`。安装完成后验证：
+
+```bash
+claude --version
+```
 
 ## 方法 2：不使用 CC switch，手动安装 CLI 并配置
 
@@ -278,13 +312,13 @@ CC switch 暂无 Linux 图形客户端，请直接跳到方法 2。
 
 #### 安装 Claude Code CLI
 
-安装 Git for Windows：
+Git for Windows 不是运行官方安装器的硬性前提，没有安装时 Claude Code 可以继续使用 PowerShell。不过仍然推荐安装：Claude Code 和其他 Agent 后续经常需要读取 Git 仓库、查看改动和提交代码，Git 基本属于必装的开发工具，建议现在一并安装：
 
 ```text
 https://git-scm.com/download/win
 ```
 
-安装完成后，在 PowerShell 验证：
+安装后可以在 PowerShell 验证；如果暂时不安装，跳过这一步：
 
 ```powershell
 git --version
@@ -323,15 +357,13 @@ setx CLAUDE_CODE_ATTRIBUTION_HEADER "0"
 claude
 ```
 
-如果 Windows 安装后输入 `claude` 仍提示找不到命令，可以用管理员身份打开 PowerShell，并执行：
+如果输入 `claude` 后提示“无法加载文件 `claude.ps1`，因为在此系统上禁止运行脚本”，或者看到 `PSSecurityException`，这是 **PowerShell 执行策略阻止 `claude.ps1` 运行**，不是 Claude Code 没有安装。执行：
 
 ```powershell
-Set-ExecutionPolicy Unrestricted
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-出现确认提示后输入 `y` 并回车，再重新打开 PowerShell 输入 `claude` 验证。
-
-![PowerShell 执行策略确认](<images/V3 Claude Code 安装与配置指南-windows-execution-policy.png?v=8b82d317a0bfd039b530e9f7a0d9121840c469d55fb8909a172000cad9d088e8>)
+出现确认提示后输入 `y` 并回车，再重新打开 PowerShell，输入 `claude` 验证。这个设置只作用于当前 Windows 用户，不需要把整台电脑的执行策略改成 `Unrestricted`。
 
 ![Claude Code 欢迎界面](<images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png?v=3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7>)
 
@@ -341,7 +373,11 @@ Set-ExecutionPolicy Unrestricted
 
 #### 安装 Claude Code CLI
 
-安装 Node.js：
+打开终端：按 `Command + 空格`，搜索"终端"，回车。后面的安装和验证都在这个窗口里完成。
+
+![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
+
+先安装 Node.js：
 
 ```text
 https://nodejs.org/en/download
@@ -351,28 +387,26 @@ https://nodejs.org/en/download
 
 ![macOS Node.js 安装页](<images/V3 Claude Code 安装与配置指南-macos-node-installer.png?v=8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960>)
 
-打开终端：按 `Command + 空格`，搜索"终端"，回车。后面的安装和验证都在这个窗口里完成。
-
-![macOS 打开终端](<images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif?v=77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178>)
-
-验证：
+在终端验证：
 
 ```bash
 node -v
 npm -v
 ```
 
-安装 Claude Code：
+通过 npm 安装 Claude Code：
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
 
-如果下载慢，可以使用镜像：
+如果默认 npm 下载慢或无法连接，使用镜像：
 
 ```bash
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
+
+不要在 npm 安装命令前加 `sudo`。
 
 验证：
 
@@ -406,7 +440,7 @@ claude
 
 ### Linux
 
-Linux 没有 ccswitch 图形界面，直接安装 CLI 并通过环境变量配置。
+不使用 CC Switch 时，可以直接安装 CLI 并通过环境变量配置。
 
 #### 1. 安装 Node.js 和 npm
 
@@ -417,7 +451,7 @@ node -v
 npm -v
 ```
 
-如果没有安装，Ubuntu / Debian 可以先执行：
+如果没有安装，Ubuntu / Debian 可以执行：
 
 ```bash
 sudo apt update
@@ -430,7 +464,13 @@ sudo apt install -y nodejs npm
 npm install -g @anthropic-ai/claude-code
 ```
 
-如果权限不足，可以加 `sudo`。
+如果默认 npm 无法连接，使用镜像：
+
+```bash
+npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
+```
+
+不要使用 `sudo npm install -g`。
 
 #### 3. 写入 V3 配置
 
@@ -460,46 +500,14 @@ source ~/.zshrc
 claude
 ```
 
-### VSCode 等 IDE 插件
+### VS Code、Trae 等 IDE 插件
 
-#### 最省事的做法
+直接使用前文已经完成的 CC Switch 配置，不需要再手动编辑 `settings.json`。
 
-在 `~/.claude/settings.json` 里粘贴。Windows 用户则在用户目录下的 `.claude` 文件夹里操作：
-
-```json
-{
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://cc.codesome.ai",
-    "ANTHROPIC_AUTH_TOKEN": "你的 sk-... 开头 API Key",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
-  }
-}
-```
-
-然后重启 VSCode 即可使用。
-
-#### 两种常见用法
-
-1. 通过官方的 Claude Code 插件使用。你可以在侧边栏打开插件市场，搜索 Anthropic 公司的 Claude Code 插件；如果你本地的 `claude` 命令已经配置完成，一般可以直接使用。注意：默认最好装好 git-bash 工具。
-
-2. 使用第三方更完善的 Claude Code 开发插件。这是一个更完整的替代方案，界面示意如下。
-
-![图17](<images/V3 Claude Code 安装与配置指南-image-017.png?v=f9d60703e5507caaa48bc25575346c4e3ebf18e81e71e431b90202616aaa4d40>)
-
-![图18](<images/V3 Claude Code 安装与配置指南-image-018.png?v=0c8c4c5cc85c27e0a1aeea036a435cc5bb0d176bd5470fcdc8f633262437a69b>)
-
-#### 使用前建议检查
-
-* 先确认本地 `claude` 命令已经能在终端正常启动。
-
-![图18](<images/V3 Claude Code 安装与配置指南-image-018-1.png?v=0c8c4c5cc85c27e0a1aeea036a435cc5bb0d176bd5470fcdc8f633262437a69b>)
-
-* 如果 IDE 里不生效，优先检查 IDE 是否读取到了 `~/.claude/settings.json` 或对应环境变量。
-
-* Windows 环境里，如果插件依赖 shell，记得确认 `git-bash` 已安装。
-
-* 如果你使用 ccswitch 管理 GUI 配置，先确认命令行里的 `claude` 已经能正常回复；IDE 插件不一定能读取 ccswitch 的 GUI 状态。
+1. 打开 CC Switch，点击左上角的齿轮进入设置。
+2. 勾选 **应用到 VS Code 插件**。这项设置同样适用于 Trae。
+3. 打开 VS Code 或 Trae 的扩展市场，搜索 `Claude Code`。
+4. 安装 Claude Code 插件后即可使用。
 
 ## 常见错误
 
