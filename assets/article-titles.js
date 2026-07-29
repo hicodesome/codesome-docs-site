@@ -18,7 +18,7 @@
   "01-第三方客户端接入配置.md": "第三方客户端接入 Codesome 配置指南",
   "02-ClaudeCode上下文压缩配置.md": "Claude Code 上下文自动压缩配置",
   "02-Codex桌面版断连和502排查.md": "Codex 桌面版持续 Reconnecting + 502 报错排查",
-  "02-V3-V5余额额度用量查询.md": "Codesome V3 / V5 余额、额度和用量查询指南",
+  "02-V3-V5余额额度用量查询.md": "如何查询我的余额和用量（网页与 API）",
   "02-使用问题速查.md": "codesome｜使用问题速查",
   "02-平台服务紧张应对方案.md": "关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告",
   "02-月卡按量二合一怎么选.md": "月卡、按量和二合一怎么选（购买前选购指南）",
@@ -32,5 +32,5 @@
   "05-AI编程课红包福利.md": "AI 编程课红包福利",
   "05-兑换码兑换指南.md": "cc兑换码兑换指南"
 });
-  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-e75b03f47517d92b";
+  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-7fed5156ef11f450";
 }(window));

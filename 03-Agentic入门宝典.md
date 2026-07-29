@@ -46,6 +46,8 @@ Cherry studio、workbuddy、trae、Claudian
 
 [GPT Image 2 终端生图备忘录：无需脚本，终端直接生成图片](03-GPTImage2终端生图备忘录.md)
 
+[如何查询我的余额和用量（网页与 API）](02-V3-V5余额额度用量查询.md)
+
 **扣桑AI管家服务👇**
 
 **💰**付费 599元
@@ -69,8 +71,6 @@ Cherry studio、workbuddy、trae、Claudian
 ## 扣桑 AI 工作坊 排障和成本优化
 
 [codesome｜使用问题速查](02-使用问题速查.md)
-
-[Codesome V3 / V5 余额、额度和用量查询指南](02-V3-V5余额额度用量查询.md)
 
 [【互救指南】Hermes 坏了别慌：小白也能看懂的 Codex、Claude Code、Hermes 互救指南](https://zvgmnl1sw58.feishu.cn/wiki/TokNdz8whoj6QHxLtwccpsttnIg)
 

@@ -85,7 +85,7 @@ export const SITE_ONLY_ARTICLES = [
   },
   {
     site: '02-V3-V5余额额度用量查询.md',
-    title: 'Codesome V3 / V5 余额、额度和用量查询指南'
+    title: '如何查询我的余额和用量（网页与 API）'
   }
 ];
 
