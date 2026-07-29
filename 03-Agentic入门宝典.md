@@ -48,6 +48,8 @@ Cherry studio、workbuddy、trae、Claudian
 
 [如何查询我的余额和用量（网页与 API）](02-V3-V5余额额度用量查询.md)
 
+[懒人党福音最简单：通过对话来管理你的 cc 中转站](03-对话管理CC中转站.md)
+
 **扣桑AI管家服务👇**
 
 **💰**付费 599元
@@ -63,8 +65,6 @@ Cherry studio、workbuddy、trae、Claudian
 **扣桑福利入口👇**
 
 [codesome 新人体验额度领取入口](05-兑换码兑换指南.md)
-
-[懒人党福音最简单：通过对话来管理你的 cc 中转站](03-对话管理CC中转站.md)
 
 
 
