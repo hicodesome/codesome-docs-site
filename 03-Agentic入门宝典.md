@@ -70,6 +70,8 @@ Cherry studio、workbuddy、trae、Claudian
 
 [codesome｜使用问题速查](02-使用问题速查.md)
 
+[Codesome V3 / V5 余额、额度和用量查询指南](02-V3-V5余额额度用量查询.md)
+
 [【互救指南】Hermes 坏了别慌：小白也能看懂的 Codex、Claude Code、Hermes 互救指南](https://zvgmnl1sw58.feishu.cn/wiki/TokNdz8whoj6QHxLtwccpsttnIg)
 
 [【故障排查】Codex 桌面版持续 Reconnecting + 502 报错排查](02-Codex桌面版断连和502排查.md)

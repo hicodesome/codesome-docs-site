@@ -82,6 +82,10 @@ export const SITE_ONLY_ARTICLES = [
   {
     site: '02-月卡按量二合一怎么选.md',
     title: '月卡、按量和二合一怎么选（购买前选购指南）'
+  },
+  {
+    site: '02-V3-V5余额额度用量查询.md',
+    title: 'Codesome V3 / V5 余额、额度和用量查询指南'
   }
 ];
 

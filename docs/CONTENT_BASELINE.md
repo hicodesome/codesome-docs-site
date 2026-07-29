@@ -1,6 +1,6 @@
 # 文档内容基准
 
-登记日期：2026-07-26
+登记日期：2026-07-29
 
 ## 当前人工最新基准
 
@@ -31,6 +31,7 @@
 - [GPT Image 2 终端生图备忘录](../03-GPTImage2终端生图备忘录.md)
 - [PIAgent 模型配置示例](../01-PIAgent模型配置示例.md)
 - [月卡、按量和二合一怎么选（购买前选购指南）](../02-月卡按量二合一怎么选.md)
+- [Codesome V3 / V5 余额、额度和用量查询指南](../02-V3-V5余额额度用量查询.md)
 
 机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs) 的 `SITE_ONLY_ARTICLES`。
 
