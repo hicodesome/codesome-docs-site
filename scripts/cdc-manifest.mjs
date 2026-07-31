@@ -30,8 +30,8 @@ export const articles = [
   },
   {
     source: 'Grok Build CLI + Codesome API 配置教程 - Feishu Docs.md',
-    site: '01-GrokBuildCLI配置教程.md',
-    title: 'Grok Build CLI + Codesome API 配置教程'
+    site: '01-V3计划-GrokBuild安装配置.md',
+    title: 'V3 Grok Build 安装与配置指南'
   },
   {
     source: 'No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等） - Feishu Docs.md',
@@ -138,7 +138,7 @@ export const internalDocumentTargets = new Map([
   ['JhAmwSTHaihhTSkOx4BccZg1nec', '01-CCSwitch配置Claude桌面端.md'],
   ['Y5pPdu1tzowi9bx8bMHcCLr9ny4', '02-ClaudeCode上下文压缩配置.md'],
   ['RGfhdruM5ojoZOxD1CbcFZhsnrh', '02-Codex桌面版断连和502排查.md'],
-  ['IUg5daodToF8EmxZEyzcVxiHnFf', '01-GrokBuildCLI配置教程.md'],
+  ['IUg5daodToF8EmxZEyzcVxiHnFf', '01-V3计划-GrokBuild安装配置.md'],
   ['OPm7dQJQ8omtIrxN67DcoX5znrg', '01-OpenClaw配置教程.md'],
   ['IPomwd31niucKwkVIVucP63an1g', '01-V3计划-ClaudeCode安装配置.md'],
   ['O13Yw8j1kiseS4k2TC0c2Qp8nug', '01-V3计划-Codex安装配置.md'],

@@ -7,7 +7,7 @@
   - [Codex 桌面版持续 Reconnecting + 502 报错排查](02-Codex桌面版断连和502排查.md)
   - [GPT Image 2 终端生图备忘录](03-GPTImage2终端生图备忘录.md)
   - [官方地址是多少](01-官方地址.md)
-  - [Grok Build CLI + Codesome API 配置教程](01-GrokBuildCLI配置教程.md)
+  - [V3 Grok Build 安装与配置指南](01-V3计划-GrokBuild安装配置.md)
   - [No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）](03-牛马神器-CC绘制PPT.md)
   - [OpenClaw 最新配置教程](01-OpenClaw配置教程.md)
   - [PIAgent 模型配置示例](01-PIAgent模型配置示例.md)

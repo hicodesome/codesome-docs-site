@@ -36,8 +36,8 @@ export const LATEST_BASELINE_ARTICLES = [
     title: 'codesome｜Agentic 入门宝典'
   },
   {
-    site: '01-GrokBuildCLI配置教程.md',
-    title: 'Grok Build CLI + Codesome API 配置教程'
+    site: '01-V3计划-GrokBuild安装配置.md',
+    title: 'V3 Grok Build 安装与配置指南'
   },
   {
     site: '01-OpenClaw配置教程.md',

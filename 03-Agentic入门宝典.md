@@ -38,7 +38,7 @@ Cherry studio、workbuddy、trae、Claudian
 
 [ 第三方客户端接入 Codesome 配置指南](01-第三方客户端接入配置.md)
 
-[ Grok Build CLI + Codesome API 配置教程](01-GrokBuildCLI配置教程.md)
+[V3 Grok Build 安装与配置指南](01-V3计划-GrokBuild安装配置.md)
 
 1. [【VSCode 教程】如何在 vscode 里面使用 cc](01-第三方客户端接入配置.md)
 

@@ -14,7 +14,7 @@
 - [二合一 OpenCode 配置指南](../01-二合一计划-OpenCode配置.md)
 - [Claude Code 上下文自动压缩配置](../02-ClaudeCode上下文压缩配置.md)
 - [codesome｜Agentic 入门宝典](../03-Agentic入门宝典.md)（2026-07-23 起，因主页需引用站点独有文章转人工维护）
-- [Grok Build CLI + Codesome API 配置教程](../01-GrokBuildCLI配置教程.md)
+- [V3 Grok Build 安装与配置指南](../01-V3计划-GrokBuild安装配置.md)
 - [OpenClaw 最新配置教程](../01-OpenClaw配置教程.md)
 - [【最新】hermes配置教程](../01-二合一计划-Hermes配置-AI自动版.md)
 - [【最新】Hermes 二合一配置教程](../01-二合一计划-Hermes配置-Mac手动版.md)

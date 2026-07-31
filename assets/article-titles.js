@@ -3,11 +3,11 @@
   'use strict';
   root.CODESOME_ARTICLE_TITLES = Object.freeze({
   "01-CCSwitch配置Claude桌面端.md": "CC Switch 配置 Claude 桌面端教程",
-  "01-GrokBuildCLI配置教程.md": "Grok Build CLI + Codesome API 配置教程",
   "01-OpenClaw配置教程.md": "OpenClaw 最新配置教程",
   "01-PIAgent模型配置示例.md": "PIAgent 模型配置示例",
   "01-V3计划-ClaudeCode安装配置.md": "V3 Claude Code 安装与配置指南",
   "01-V3计划-Codex安装配置.md": "V3 Codex 安装与配置指南",
+  "01-V3计划-GrokBuild安装配置.md": "V3 Grok Build 安装与配置指南",
   "01-V3计划-OpenCode配置.md": "V3 OpenCode 配置指南",
   "01-二合一计划-ClaudeCode安装配置.md": "二合一 Claude Code 安装与配置指南",
   "01-二合一计划-Codex安装配置.md": "二合一 Codex 安装与配置指南",
@@ -32,5 +32,5 @@
   "05-AI编程课红包福利.md": "AI 编程课红包福利",
   "05-兑换码兑换指南.md": "cc兑换码兑换指南"
 });
-  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-7fed5156ef11f450";
+  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-9aaf7a622427daab";
 }(window));
