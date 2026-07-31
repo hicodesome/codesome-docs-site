@@ -11,7 +11,8 @@
     "check:titles": "node scripts/generate-title-map.mjs --check",
     "check:links": "node scripts/check-links.mjs",
     "check:images": "node scripts/check-images.mjs",
-    "check": "npm run check:cdc && npm run check:titles && npm run check:links && npm run check:images"
+    "check:secrets": "node scripts/check-secrets.mjs",
+    "check": "npm run check:cdc && npm run check:titles && npm run check:links && npm run check:images && npm run check:secrets"
   },
   "devDependencies": {
     "docsify-cli": "^4.4.4"

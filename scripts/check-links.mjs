@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articles, internalDocumentTargets } from './cdc-manifest.mjs';
@@ -11,8 +11,15 @@ const trackedFiles = new Set(
   execFileSync('git', ['-C', root, 'ls-files', '-z'], { encoding: 'utf8' })
     .split('\0')
     .filter(Boolean)
+    .filter(file => existsSync(resolve(root, file)))
 );
-const discoveredArticles = [...trackedFiles]
+const diskFiles = new Set(
+  readdirSync(root, { withFileTypes: true })
+    .filter(entry => entry.isFile())
+    .map(entry => entry.name)
+);
+const knownFiles = new Set([...trackedFiles, ...diskFiles]);
+const discoveredArticles = [...knownFiles]
   .filter(file => /^\d{2}-.*\.md$/.test(file))
   .sort();
 const expectedArticles = [...articleNames].sort();
@@ -41,7 +48,7 @@ for (const file of files) {
   for (const match of content.matchAll(/(?<!!)\[[^\]]*\]\(([^)]+\.md(?:#[^)]+)?)\)/g)) {
     const target = decodeURIComponent(match[1].split('#')[0]).replace(/^\.\//, '').replace(/^\//, '');
     localLinks++;
-    if (!trackedFiles.has(target)) {
+    if (!knownFiles.has(target)) {
       errors.push(`${file}: Markdown 断链 -> ${match[1]}`);
     }
   }
