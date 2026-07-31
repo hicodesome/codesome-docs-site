@@ -281,10 +281,6 @@ API Key 不对或已过期。检查填写的 Key 是否正确、前后没有多�
 * 检查请求地址 / `base_url` 是否为 `https://cc.codesome.ai/v1`，不要漏掉 `/v1`；
 * 方案 B 中 `api_backend = "responses"` 时，请求会打到 `/v1/responses`。
 
-### 503 Service Unavailable / No available accounts
-
-Codesome 对应分组暂时没有可用账号，稍后重试或联系客服。
-
 ### empty response from model
 
 * 确认账户有可用余额；
