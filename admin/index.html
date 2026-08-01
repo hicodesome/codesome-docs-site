@@ -4,8 +4,97 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Codesome 文档编辑</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    #admin-fallback {
+      align-items: center;
+      background: #f4f6f8;
+      box-sizing: border-box;
+      color: #25323a;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+    }
+
+    #admin-fallback[hidden] {
+      display: none;
+    }
+
+    #admin-fallback-card {
+      background: #fff;
+      border: 1px solid #d7dfe3;
+      border-radius: 8px;
+      box-shadow: 0 10px 32px rgba(29, 43, 52, .12);
+      max-width: 360px;
+      padding: 28px;
+      text-align: center;
+      width: 100%;
+    }
+
+    #admin-fallback-card h1 {
+      font-size: 22px;
+      margin: 0 0 8px;
+    }
+
+    #admin-fallback-card p {
+      color: #5f6d75;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0 0 20px;
+    }
+
+    #admin-token-login {
+      background: #168a58;
+      border-radius: 4px;
+      color: #fff;
+      display: inline-block;
+      font-weight: 600;
+      padding: 11px 16px;
+      text-decoration: none;
+    }
+
+    #admin-token-login:focus-visible {
+      outline: 3px solid rgba(22, 138, 88, .35);
+      outline-offset: 2px;
+    }
+  </style>
 </head>
 <body>
+  <main id="admin-fallback">
+    <section id="admin-fallback-card" aria-live="polite">
+      <h1>Codesome 文档编辑</h1>
+      <p>编辑器正在加载，或浏览器阻止了自动登录入口。</p>
+      <a id="admin-token-login" href="../admin-api/auth?provider=github">输入编辑 Token</a>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const fallback = document.getElementById('admin-fallback');
+      const ready = () => {
+        const root = document.getElementById('nc-root');
+        if (!root || /Loading configuration/i.test(root.textContent || '')) return false;
+        return Boolean(root.querySelector('button, a'));
+      };
+      const hideWhenReady = () => {
+        if (ready()) fallback.hidden = true;
+      };
+      const observer = new MutationObserver(hideWhenReady);
+      observer.observe(document.body, { childList: true, subtree: true });
+      window.setInterval(hideWhenReady, 500);
+    })();
+  </script>
   <script src="./decap-cms.js"></script>
 </body>
 </html>
