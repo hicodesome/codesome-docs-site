@@ -240,6 +240,12 @@ function printChecks(checks) {
   for (const check of checks) console.log(`${check.pass ? 'PASS' : 'FAIL'}: [${check.id}] ${check.detail}`);
 }
 
+export function exitCodeForResult(result) {
+  if (result.status === 'PASS') return EXIT_CODES.PASS;
+  if (result.status === 'SKIP') return EXIT_CODES.SKIP;
+  return EXIT_CODES.FAIL;
+}
+
 export async function run(config) {
   let container;
   try {
@@ -274,17 +280,18 @@ export async function main(argv = process.argv.slice(2)) {
     return EXIT_CODES.PASS;
   }
   const result = await run(config);
+  const exitCode = exitCodeForResult(result);
   if (result.status === 'SKIP') {
     console.log(`SKIP: browser prerequisite unavailable; ${result.reason}`);
-    return EXIT_CODES.SKIP;
+    return exitCode;
   }
   if (result.status === 'FAIL' && !result.checks) {
     console.log(`FAIL: browser runner could not complete page verification; ${result.reason}`);
-    return EXIT_CODES.FAIL;
+    return exitCode;
   }
   printChecks(result.checks);
   console.log(`Evidence: ${result.evidence.summary}`);
-  return result.status === 'PASS' ? EXIT_CODES.PASS : EXIT_CODES.FAIL;
+  return exitCode;
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

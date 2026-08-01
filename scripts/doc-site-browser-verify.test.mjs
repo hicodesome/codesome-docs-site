@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { evaluateBrowserAssertions, parseArgs } from './doc-site-browser-verify.mjs';
+import { evaluateBrowserAssertions, exitCodeForResult, parseArgs } from './doc-site-browser-verify.mjs';
 
 const config = {
   article: '01-V3计划-GrokBuild安装配置.md',
@@ -44,4 +44,11 @@ test('CLI rejects invalid timeout and accepts browser options', () => {
   assert.throws(() => parseArgs(['--timeout', '0']), /timeout must be an integer/);
   const parsed = parseArgs(['--article', config.article, '--title', config.title, '--expect', config.expect]);
   assert.equal(parsed.article, config.article);
+});
+
+test('browser result statuses map to documented exit codes', () => {
+  assert.equal(exitCodeForResult({ status: 'PASS' }), 0);
+  assert.equal(exitCodeForResult({ status: 'FAIL' }), 1);
+  assert.equal(exitCodeForResult({ status: 'SKIP' }), 3);
+  assert.equal(exitCodeForResult({ status: 'unexpected' }), 1);
 });
