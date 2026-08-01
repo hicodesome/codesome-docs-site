@@ -157,21 +157,23 @@ def console_errors(events):
 
 def wait_for_page(cdp: CDP, session_id: str, article: str, deadline: float):
     article_json = json.dumps(article, ensure_ascii=False)
+    article_base_json = json.dumps(article[:-3] if article.lower().endswith('.md') else article, ensure_ascii=False)
     while time.monotonic() < deadline:
         state = evaluate(
             cdp,
             """(() => {
               const article = %s;
+              const articleBase = %s;
               const hash = decodeURIComponent(location.hash || '');
               return {
                 ready: document.readyState === 'complete',
                 sidebar: Boolean(document.querySelector('.sidebar-nav a')),
                 markdown: Boolean(document.querySelector('.markdown-section')),
                 route: hash,
-                article: hash.includes(article),
+                article: hash.includes(article) || hash.includes(articleBase),
                 h1: Boolean(document.querySelector('.markdown-section h1'))
               };
-            })()""" % article_json,
+            })()""" % (article_json, article_base_json),
             session_id,
         ) or {}
         if state.get("ready") and state.get("sidebar") and state.get("markdown"):
