@@ -1,12 +1,12 @@
 # 文档内容基准
 
-登记日期：2026-07-29
+登记日期：2026-08-02
 
 文章新增、替换、改名和删除流程见 [文章生命周期流程](ARTICLE_LIFECYCLE.md)。
 
 ## 当前人工最新基准
 
-以下 15 篇教程以站点当前内容为最新基准，不再与 CDC 快照比较，也不会被 `sync:cdc` 覆盖：
+以下 25 篇 CDC 槽位文章以当前公网版本为最新基准，不再与 CDC 快照正文比较，也不会被 `sync:cdc` 覆盖：
 
 - [V3 Claude Code 安装与配置指南](../01-V3计划-ClaudeCode安装配置.md)
 - [V3 Codex 安装与配置指南](../01-V3计划-Codex安装配置.md)
@@ -23,6 +23,16 @@
 - [第三方客户端接入 Codesome 配置指南](../01-第三方客户端接入配置.md)
 - [codesome｜使用问题速查](../02-使用问题速查.md)
 - [这样做，可以省下大半 Token 账单：长上下文降费执行手册](../03-Token降费执行手册.md)
+- [AI 编程课红包福利](../05-AI编程课红包福利.md)
+- [CC Switch 配置 Claude 桌面端教程](../01-CCSwitch配置Claude桌面端.md)
+- [Codex 桌面版持续 Reconnecting + 502 报错排查](../02-Codex桌面版断连和502排查.md)
+- [官方地址是多少](../01-官方地址.md)
+- [No.1 牛马神器：让 cc 帮你绘制 PPT](../03-牛马神器-CC绘制PPT.md)
+- [cc兑换码兑换指南](../05-兑换码兑换指南.md)
+- [codesome claude code小白课程录播](../04-小白课程录播合集.md)
+- [从用 Agent 到造 Agent：Agentway 学习平台介绍](../03-Agentway学习平台介绍.md)
+- [关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告](../02-平台服务紧张应对方案.md)
+- [通过对话管理 cc 中转站](../03-对话管理CC中转站.md)
 
 机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs)。
 
@@ -37,13 +47,13 @@
 
 机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs) 的 `SITE_ONLY_ARTICLES`。
 
-## 其他教程
+## CDC 来源快照
 
-除上述 15 篇外，文档站其余教程暂时继续以不可变 CDC 快照为准：
+CDC 快照仍是 25 个来源文件和历史图片的不可变 provenance，不再作为当前公网正文的覆盖源：
 
 - CDC 标签：`cdc-snapshot-2026-07-14`
 - CDC 内容清单：[`scripts/cdc-manifest.mjs`](../scripts/cdc-manifest.mjs)
-- `npm run check:cdc` 和 `npm run sync:cdc` 会继续校验或同步其余教程；当前人工最新基准中的 15 篇会被排除。
+- `npm run check:cdc` 会继续校验固定 tag、25 个来源文件和清单；`npm run sync:cdc` 不会覆盖当前 29 篇公网文章。
 
 ## 维护规则
 

@@ -5,7 +5,9 @@
   "description": "Codesome 平台使用文档站（Docsify）",
   "scripts": {
     "dev": "docsify serve . --port 3008",
+    "serve:site": "node server.mjs",
     "sync:cdc": "node scripts/sync-cdc.mjs && npm run generate:titles",
+    "generate:admin-config": "node scripts/generate-admin-config.mjs",
     "generate:titles": "node scripts/generate-title-map.mjs",
     "check:cdc": "node scripts/sync-cdc.mjs --check",
     "check:titles": "node scripts/generate-title-map.mjs --check",
