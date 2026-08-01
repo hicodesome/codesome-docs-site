@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "docsify serve . --port 3008",
     "serve:site": "node server.mjs",
+    "backup:articles": "node scripts/backup-articles.mjs",
+    "check:article-backup": "node scripts/backup-articles.mjs --verify --verify-source",
     "sync:cdc": "node scripts/sync-cdc.mjs && npm run generate:titles",
     "generate:admin-config": "node scripts/generate-admin-config.mjs",
     "generate:titles": "node scripts/generate-title-map.mjs",
@@ -16,8 +18,9 @@
     "check:links": "node scripts/check-links.mjs",
     "check:images": "node scripts/check-images.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
-    "check": "npm run check:cdc && npm run check:titles && npm run check:runtime && npm run check:rendered-titles && npm run check:links && npm run check:images && npm run check:secrets",
+    "check": "npm run check:cdc && npm run check:titles && npm run check:runtime && npm run check:rendered-titles && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup",
     "test:browser": "node --test scripts/doc-site-browser-verify.test.mjs",
+    "test:backup": "node tests/backup-articles.test.mjs",
     "test": "npm run test:browser"
   },
   "devDependencies": {
