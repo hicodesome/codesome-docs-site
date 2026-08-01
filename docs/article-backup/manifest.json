@@ -1,0 +1,1459 @@
+{
+  "format": "codesome-doc-site-article-backup",
+  "formatVersion": 1,
+  "generatedFrom": {
+    "site": {
+      "commit": "a3737520ba2ffe1132924de8f63216647dc63576",
+      "commitDate": "2026-08-02T00:49:01+08:00",
+      "branch": "codex/a05-cdc-backup"
+    },
+    "cdc": {
+      "tag": "cdc-snapshot-2026-07-14",
+      "commit": "4f1256480ad14c4664408227b11ed6cd9b977746",
+      "commitDate": "2026-07-17T00:58:59+08:00",
+      "articleCount": 25,
+      "referencedImageCount": 110
+    }
+  },
+  "scope": {
+    "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
+    "articleCount": 29,
+    "uniqueImageCount": 101,
+    "imageReferenceCount": 113
+  },
+  "articles": [
+    {
+      "sitePath": "01-CCSwitch配置Claude桌面端.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "CC Switch 配置 Claude 桌面端教程 - Feishu Docs.md",
+      "bytes": 6862,
+      "sha256": "756fa139c34fff351a1f001920cb3842a37c682e8868c5bb4afc08525712a923",
+      "backupPath": "articles/01-CCSwitch配置Claude桌面端.md",
+      "imageReferences": [
+        "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-download.png",
+        "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-security.png",
+        "images/CC Switch 配置 Claude 桌面端教程-ccswitch-windows-download.png",
+        "images/CC Switch 配置 Claude 桌面端教程-ccswitch右上角图标.png",
+        "images/CC Switch 配置 Claude 桌面端教程-ccswitch详细配置之v3配置.png",
+        "images/CC Switch 配置 Claude 桌面端教程-ccswitch详细配置之二合一.png",
+        "images/CC Switch 配置 Claude 桌面端教程-ddac61b0-0a8a-4685-aef1-05bf9662c660.png"
+      ]
+    },
+    {
+      "sitePath": "01-OpenClaw配置教程.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "OpenClaw 最新配置教程 - Feishu Docs.md",
+      "bytes": 4172,
+      "sha256": "a25f11bfaf72316c688cde8b3f53846aedb5f37028b26988ccb04cc5b56023c8",
+      "backupPath": "articles/01-OpenClaw配置教程.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "01-PIAgent模型配置示例.md",
+      "kind": "site-only",
+      "baseline": null,
+      "cdcSourcePath": null,
+      "bytes": 1036,
+      "sha256": "0fd61412b8799d9384df97a0f3552b0dad5cc1496dae0e6ba3e1c2e59c115fbc",
+      "backupPath": "articles/01-PIAgent模型配置示例.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "01-V3计划-ClaudeCode安装配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "V3 Claude Code 安装与配置指南 - Feishu Docs.md",
+      "bytes": 18237,
+      "sha256": "2325c5ec5a54825ee445d38373ce72916f01b27319862e2daf86c86553eef158",
+      "backupPath": "articles/01-V3计划-ClaudeCode安装配置.md",
+      "imageReferences": [
+        "images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png",
+        "images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png",
+        "images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png",
+        "images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png",
+        "images/V3 Claude Code 安装与配置指南-image-1.png",
+        "images/V3 Claude Code 安装与配置指南-image-1.png",
+        "images/V3 Claude Code 安装与配置指南-image.png",
+        "images/V3 Claude Code 安装与配置指南-image.png",
+        "images/V3 Claude Code 安装与配置指南-macos-node-installer.png",
+        "images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif",
+        "images/V3 Claude Code 安装与配置指南-test-1.jpg",
+        "images/V3 Claude Code 安装与配置指南-test-2.jpg",
+        "images/V3 Claude Code 安装与配置指南-test-3.jpg",
+        "images/V3 Claude Code 安装与配置指南-test-4.jpg",
+        "images/V3 Claude Code 安装与配置指南-test-5.jpg",
+        "images/V3 Claude Code 安装与配置指南-test-6.jpg",
+        "images/V3 Claude Code 安装与配置指南-test-7.jpg",
+        "images/V3 Claude Code 安装与配置指南-test.jpg"
+      ]
+    },
+    {
+      "sitePath": "01-V3计划-Codex安装配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "V3 Codex 安装与配置指南 - Feishu Docs.md",
+      "bytes": 8378,
+      "sha256": "74ff55df936ff95a8e36c02c5321eebcee210f60a55d7d6ef7138a2ac8e0469e",
+      "backupPath": "articles/01-V3计划-Codex安装配置.md",
+      "imageReferences": [
+        "images/V3 Codex 安装与配置指南-image-009.png",
+        "images/V3 Codex 安装与配置指南-image-009.png",
+        "images/V3 Codex 安装与配置指南-image-010.png",
+        "images/V3 Codex 安装与配置指南-image-010.png",
+        "images/V3 Codex 安装与配置指南-image-011.png",
+        "images/V3 Codex 安装与配置指南-image-1.png",
+        "images/V3 Codex 安装与配置指南-image-1.png",
+        "images/V3 Codex 安装与配置指南-image-2.png",
+        "images/V3 Codex 安装与配置指南-image-2.png",
+        "images/V3 Codex 安装与配置指南-image-3.png",
+        "images/V3 Codex 安装与配置指南-image-3.png",
+        "images/V3 Codex 安装与配置指南-image.png"
+      ]
+    },
+    {
+      "sitePath": "01-V3计划-GrokBuild安装配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "Grok Build CLI + Codesome API 配置教程 - Feishu Docs.md",
+      "bytes": 8422,
+      "sha256": "969f155a5de380497f2b4db3df845c06219f2b2d552780f1a1c3278e66dbefb4",
+      "backupPath": "articles/01-V3计划-GrokBuild安装配置.md",
+      "imageReferences": [
+        "images/V3计划-GrokBuild安装配置-ccswitch右上角选grok图标.png",
+        "images/V3计划-GrokBuild安装配置-ccswitch完整配置.png",
+        "images/V3计划-GrokBuild安装配置-ccswitch新建自定义配置.png"
+      ]
+    },
+    {
+      "sitePath": "01-V3计划-OpenCode配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "V3 如何配置 OpenCode - Feishu Docs.md",
+      "bytes": 11086,
+      "sha256": "9f509a400d2badb1661e01c55d78907b670ba32af94b077aa6e37deba67360bd",
+      "backupPath": "articles/01-V3计划-OpenCode配置.md",
+      "imageReferences": [
+        "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
+        "images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png"
+      ]
+    },
+    {
+      "sitePath": "01-二合一计划-ClaudeCode安装配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "二合一 Claude Code 安装与配置指南 - Feishu Docs.md",
+      "bytes": 13477,
+      "sha256": "f34faffb665274645cf05c4ae7558c41841a930a6713811b77b86df976a18a75",
+      "backupPath": "articles/01-二合一计划-ClaudeCode安装配置.md",
+      "imageReferences": [
+        "images/二合一 Claude Code 安装与配置指南-image.png",
+        "images/二合一 Claude Code 安装与配置指南-test-1.jpg",
+        "images/二合一 Claude Code 安装与配置指南-test-3.jpg",
+        "images/二合一 Claude Code 安装与配置指南-test-4.jpg",
+        "images/二合一 Claude Code 安装与配置指南-test-5.jpg",
+        "images/二合一 Claude Code 安装与配置指南-test-6.jpg",
+        "images/二合一 Claude Code 安装与配置指南-test-6.jpg",
+        "images/二合一 Claude Code 安装与配置指南-test.jpg"
+      ]
+    },
+    {
+      "sitePath": "01-二合一计划-Codex安装配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "二合一 Codex 安装与配置指南 - Feishu Docs.md",
+      "bytes": 8732,
+      "sha256": "4d4ad5d69062cab3cbe78540c8b1fd8e3d7be14a35c77f8d8cb989a8a1d9a1cb",
+      "backupPath": "articles/01-二合一计划-Codex安装配置.md",
+      "imageReferences": [
+        "images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png",
+        "images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png",
+        "images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png",
+        "images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png",
+        "images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png",
+        "images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png",
+        "images/二合一 Codex 安装与配置指南-ccswitch_security.png",
+        "images/二合一 Codex 安装与配置指南-codex_desktop.png",
+        "images/二合一 Codex 安装与配置指南-image.png",
+        "images/二合一 Codex 安装与配置指南-image.png"
+      ]
+    },
+    {
+      "sitePath": "01-二合一计划-Hermes配置-AI自动版.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "【最新】hermes配置教程 - Feishu Docs.md",
+      "bytes": 13067,
+      "sha256": "fd308dbcd0b8b8771ce09a7cfcfbb3f866b394ee00999af7c2f7809e4ecc109d",
+      "backupPath": "articles/01-二合一计划-Hermes配置-AI自动版.md",
+      "imageReferences": [
+        "images/【最新】hermes配置教程-image-1.png",
+        "images/【最新】hermes配置教程-image-2.png",
+        "images/【最新】hermes配置教程-image-3.png",
+        "images/【最新】hermes配置教程-image.png"
+      ]
+    },
+    {
+      "sitePath": "01-二合一计划-Hermes配置-Mac手动版.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "【最新】Hermes 二合一配置教程 - Feishu Docs.md",
+      "bytes": 5233,
+      "sha256": "e85c138e09e57d8d20ccd63273136bd06371e5a39307d72fd807c701c33908ad",
+      "backupPath": "articles/01-二合一计划-Hermes配置-Mac手动版.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "01-二合一计划-OpenCode配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "二合一月卡如何配置 OpenCode - Feishu Docs.md",
+      "bytes": 12692,
+      "sha256": "79fa2ba243b4c0a28652575a0d06d7ea456ce433f8209ad1e587f6e4dc876a56",
+      "backupPath": "articles/01-二合一计划-OpenCode配置.md",
+      "imageReferences": [
+        "images/二合一月卡如何配置 OpenCode-切换模型使用斜杠model命令.png",
+        "images/二合一月卡如何配置 OpenCode-这是命令执行后的选模型界面.png"
+      ]
+    },
+    {
+      "sitePath": "01-官方地址.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "Feishu Docs.md",
+      "bytes": 750,
+      "sha256": "01935446170d1454779009b801c557b0a190b83e762a79189c8463ff08e81438",
+      "backupPath": "articles/01-官方地址.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "01-第三方客户端接入配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "第三方客户端接入 Codesome 配置指南 - Feishu Docs.md",
+      "bytes": 11456,
+      "sha256": "98dcd767e0d04b5a89417c3091448b646b5c2ba1dff4a559d57f6c0a64e53c29",
+      "backupPath": "articles/01-第三方客户端接入配置.md",
+      "imageReferences": [
+        "images/第三方客户端接入 Codesome 配置指南-image-001.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-002.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-003.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-004.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-005.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-006.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-007.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-008.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-1.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-10.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-11.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-2.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-3.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-4.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-5.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-6.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-7.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-8.png",
+        "images/第三方客户端接入 Codesome 配置指南-image-9.png",
+        "images/第三方客户端接入 Codesome 配置指南-image.png"
+      ]
+    },
+    {
+      "sitePath": "02-ClaudeCode上下文压缩配置.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "Claude Code 上下文自动压缩配置 - Feishu Docs.md",
+      "bytes": 3619,
+      "sha256": "89c50e5a0f4e6838ee0e57ea4134abca5094ed70ae89769b5ffb74f5928b3f67",
+      "backupPath": "articles/02-ClaudeCode上下文压缩配置.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "02-Codex桌面版断连和502排查.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "Codex 桌面版持续 Reconnecting + 502 报错排查 - Feishu Docs.md",
+      "bytes": 3778,
+      "sha256": "ca850bbaae325d39c8f3e21dafe1fddfa31c1944a21cab4e551a45c441d5e871",
+      "backupPath": "articles/02-Codex桌面版断连和502排查.md",
+      "imageReferences": [
+        "images/Codex 桌面版持续 Reconnecting + 502 报错排查-image.png",
+        "images/Codex 桌面版持续 Reconnecting + 502 报错排查-屏幕截图 2026-05-28 235350.png"
+      ]
+    },
+    {
+      "sitePath": "02-V3-V5余额额度用量查询.md",
+      "kind": "site-only",
+      "baseline": null,
+      "cdcSourcePath": null,
+      "bytes": 5570,
+      "sha256": "1e221d7d2c104154196c76961c4fa1ac141fb24f5b9d4131c4a6bb72cc124ebe",
+      "backupPath": "articles/02-V3-V5余额额度用量查询.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "02-使用问题速查.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "codesome｜使用问题速查 - Feishu Docs.md",
+      "bytes": 21831,
+      "sha256": "35bf7f3c0aad2599d5d37837da59566107c148e8b3eaa59de0a36b3745ef3e76",
+      "backupPath": "articles/02-使用问题速查.md",
+      "imageReferences": [
+        "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
+        "images/codesome｜使用问题速查-codesome-502.png",
+        "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
+        "images/codesome｜使用问题速查-codesome-503-status.png",
+        "images/codesome｜使用问题速查-econnreset-example.png",
+        "images/codesome｜使用问题速查-opus-46-model-mapping.png",
+        "images/codesome｜使用问题速查-skip-claude-login.jpg",
+        "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
+        "images/codesome｜使用问题速查-重连-大部分情况是您开启了vpn.png"
+      ]
+    },
+    {
+      "sitePath": "02-平台服务紧张应对方案.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告 - Feishu Docs.md",
+      "bytes": 3110,
+      "sha256": "bca830e6405768c1fb949b2ef6cc5d07d60268e263aef46f16b9e7c71d44ebeb",
+      "backupPath": "articles/02-平台服务紧张应对方案.md",
+      "imageReferences": [
+        "images/关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告-image.png"
+      ]
+    },
+    {
+      "sitePath": "02-月卡按量二合一怎么选.md",
+      "kind": "site-only",
+      "baseline": null,
+      "cdcSourcePath": null,
+      "bytes": 6550,
+      "sha256": "059a187ac5ff47769f64f71dfbd84a434f998f8933ca47af4baabdca1ee0e71c",
+      "backupPath": "articles/02-月卡按量二合一怎么选.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "03-Agentic入门宝典.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
+      "bytes": 8021,
+      "sha256": "16d191e887211a3e003ef8143f528aac1922737354875ceefee8941a99027845",
+      "backupPath": "articles/03-Agentic入门宝典.md",
+      "imageReferences": [
+        "images/codesome｜Agentic 入门宝典-image-001.png"
+      ]
+    },
+    {
+      "sitePath": "03-Agentway学习平台介绍.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化 - Feishu Docs.md",
+      "bytes": 3753,
+      "sha256": "d02a99e6246d8968c8cd379e873220e5a58e7dd3b637f354ed5f91bf764913d6",
+      "backupPath": "articles/03-Agentway学习平台介绍.md",
+      "imageReferences": [
+        "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-agentway-invite-codesome.png",
+        "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-image.png"
+      ]
+    },
+    {
+      "sitePath": "03-GPTImage2终端生图备忘录.md",
+      "kind": "site-only",
+      "baseline": null,
+      "cdcSourcePath": null,
+      "bytes": 3738,
+      "sha256": "77807ea078c4367142ac3de2ea585ef3bed519bc8381abf2d3ebfeef4b4212c5",
+      "backupPath": "articles/03-GPTImage2终端生图备忘录.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "03-Token降费执行手册.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "这样做，可以省下大半 Token 账单：长上下文降费执行手册 - Feishu Docs.md",
+      "bytes": 10276,
+      "sha256": "1589c234959b9380ed6a5828a9b522d4d96f79767950a6e43fee95f106049c08",
+      "backupPath": "articles/03-Token降费执行手册.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "03-对话管理CC中转站.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "懒人党福音最简单：通过对话来管理你的 cc 中转站 - Feishu Docs.md",
+      "bytes": 2695,
+      "sha256": "2dc934d7e4ea0b448a2022d8592980d285900868ff618e8292a30942408e8729",
+      "backupPath": "articles/03-对话管理CC中转站.md",
+      "imageReferences": [
+        "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-001.jpg",
+        "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-002.jpg",
+        "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-003.jpg",
+        "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-004.jpg",
+        "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-005.jpg"
+      ]
+    },
+    {
+      "sitePath": "03-牛马神器-CC绘制PPT.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等） - Feishu Docs.md",
+      "bytes": 6038,
+      "sha256": "15d51522047448c921d539251c808c12960b82a8937d78c7f0c109f8ea610c17",
+      "backupPath": "articles/03-牛马神器-CC绘制PPT.md",
+      "imageReferences": [
+        "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-1.png",
+        "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-2.png",
+        "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-3.png",
+        "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-4.png",
+        "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image.png"
+      ]
+    },
+    {
+      "sitePath": "04-小白课程录播合集.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "codesome claude code小白课程录播 - Feishu Docs.md",
+      "bytes": 813,
+      "sha256": "38e919069a66d0b599159741a228648288bd4ef3945e4b13f04047ce8141cc0f",
+      "backupPath": "articles/04-小白课程录播合集.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "05-AI编程课红包福利.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "AI 编程课红包福利 - Feishu Docs.md",
+      "bytes": 223,
+      "sha256": "ce3797a69cb1e95b90f006cd62133f3960cb0eeb95963dc37bcbbc4dd16cb692",
+      "backupPath": "articles/05-AI编程课红包福利.md",
+      "imageReferences": []
+    },
+    {
+      "sitePath": "05-兑换码兑换指南.md",
+      "kind": "cdc-slot",
+      "baseline": "latest",
+      "cdcSourcePath": "cc兑换码兑换指南 - Feishu Docs.md",
+      "bytes": 536,
+      "sha256": "76f039aad06932e16fc43af227f5b22f8319aa36811dc1ade9876412540d21c4",
+      "backupPath": "articles/05-兑换码兑换指南.md",
+      "imageReferences": [
+        "images/cc兑换码兑换指南-image-1.png",
+        "images/cc兑换码兑换指南-image.png"
+      ]
+    }
+  ],
+  "images": [
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-download.png",
+      "bytes": 225557,
+      "sha256": "1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-download.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-security.png",
+      "bytes": 341059,
+      "sha256": "68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-security.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch-windows-download.png",
+      "bytes": 90110,
+      "sha256": "31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch-windows-download.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch右上角图标.png",
+      "bytes": 11557,
+      "sha256": "28115791687214451786d10dce0614d623d76f4765033d33d3003c2d6fb4f9f0",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch右上角图标.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch详细配置之v3配置.png",
+      "bytes": 29165,
+      "sha256": "6e4b55b310ce470cd3bc730db08611c54eae1e90c6231aadfc8663d0bc891583",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch详细配置之v3配置.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch详细配置之二合一.png",
+      "bytes": 23238,
+      "sha256": "7b99950e4603d328aabd202f41721cddb564d5dd3561f89ee401a012ddc99487",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ccswitch详细配置之二合一.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/CC Switch 配置 Claude 桌面端教程-ddac61b0-0a8a-4685-aef1-05bf9662c660.png",
+      "bytes": 88977,
+      "sha256": "01a7a181eaf67b7275119ad931559bd7888bc3ca134591e3266adbf4f204ef39",
+      "backupPath": "images/CC Switch 配置 Claude 桌面端教程-ddac61b0-0a8a-4685-aef1-05bf9662c660.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-CCSwitch配置Claude桌面端.md"
+      ]
+    },
+    {
+      "sitePath": "images/Codex 桌面版持续 Reconnecting + 502 报错排查-image.png",
+      "bytes": 84670,
+      "sha256": "00a9576b04f315f0ce75923b2f139f21d3e8dca8162543b3d23fa78b159c32b0",
+      "backupPath": "images/Codex 桌面版持续 Reconnecting + 502 报错排查-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-Codex桌面版断连和502排查.md"
+      ]
+    },
+    {
+      "sitePath": "images/Codex 桌面版持续 Reconnecting + 502 报错排查-屏幕截图 2026-05-28 235350.png",
+      "bytes": 42015,
+      "sha256": "99825bac29c248c126ec36f451bb8522eb8c987006ba03cd36c0570385db3035",
+      "backupPath": "images/Codex 桌面版持续 Reconnecting + 502 报错排查-屏幕截图 2026-05-28 235350.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-Codex桌面版断连和502排查.md"
+      ]
+    },
+    {
+      "sitePath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-1.png",
+      "bytes": 236656,
+      "sha256": "c8807a0e06a49c11710e6497e01382dd7a12db791b72d857eb4c86ebd03bb789",
+      "backupPath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-1.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-牛马神器-CC绘制PPT.md"
+      ]
+    },
+    {
+      "sitePath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-2.png",
+      "bytes": 239556,
+      "sha256": "f930710d5a175f71fb399262eb79ce415da52cf69b1ae3d05c6b07974204a847",
+      "backupPath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-2.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-牛马神器-CC绘制PPT.md"
+      ]
+    },
+    {
+      "sitePath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-3.png",
+      "bytes": 470309,
+      "sha256": "11210b3268f1132736570d580b2104c7133a9b713443af5b6839fb811e169682",
+      "backupPath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-3.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-牛马神器-CC绘制PPT.md"
+      ]
+    },
+    {
+      "sitePath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-4.png",
+      "bytes": 86423,
+      "sha256": "5a9bbdd979bb5e7e6718af70201393da72c6271b2633543447100680bead1e99",
+      "backupPath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-4.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-牛马神器-CC绘制PPT.md"
+      ]
+    },
+    {
+      "sitePath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image.png",
+      "bytes": 280083,
+      "sha256": "bf20c4af39d6c945a081a2ffbb92ef6419a8aee1dbbb7fa286929b70a6381ad9",
+      "backupPath": "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-牛马神器-CC绘制PPT.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png",
+      "bytes": 225557,
+      "sha256": "1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png",
+      "bytes": 341059,
+      "sha256": "68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-ccswitch-macos-security.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png",
+      "bytes": 40793,
+      "sha256": "3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-claude-macos-welcome.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png",
+      "bytes": 40793,
+      "sha256": "3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-claude-windows-welcome.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-image-1.png",
+      "bytes": 42962,
+      "sha256": "0a2cb18e441bfbaf7943886143cee14c521b067cb78a5503eadf1e264c22accb",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-image-1.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-image.png",
+      "bytes": 5494,
+      "sha256": "f94e070d858fe20a48c89abd5aa037d6c326f9000c16dec35f60e428bdc617ba",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-image.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-macos-node-installer.png",
+      "bytes": 226450,
+      "sha256": "8d2bd4a6accf600e92e47d6774f0f2c17fa95921690c9c23301d4279f6477960",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-macos-node-installer.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif",
+      "bytes": 70637,
+      "sha256": "77a9ae3e3800660be31a4000a43bb562c7a14307c816d120d280b66feb60a178",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-macos-open-terminal.gif",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-1.jpg",
+      "bytes": 75495,
+      "sha256": "734aa79473f4a23c3a3fb79940cdb0474a3309dc1230f0c205e2e92eee189f23",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-1.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-2.jpg",
+      "bytes": 17026,
+      "sha256": "f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-2.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-3.jpg",
+      "bytes": 58098,
+      "sha256": "196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-3.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-4.jpg",
+      "bytes": 68070,
+      "sha256": "af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-4.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-5.jpg",
+      "bytes": 40793,
+      "sha256": "3a32eb6d7560e74d00793fb1e34b250dee7f1733a1a4b626861dbff1b2cba0f7",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-5.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-6.jpg",
+      "bytes": 38994,
+      "sha256": "c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-6.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test-7.jpg",
+      "bytes": 57532,
+      "sha256": "206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test-7.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Claude Code 安装与配置指南-test.jpg",
+      "bytes": 83214,
+      "sha256": "4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383",
+      "backupPath": "images/V3 Claude Code 安装与配置指南-test.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image-009.png",
+      "bytes": 225557,
+      "sha256": "1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493",
+      "backupPath": "images/V3 Codex 安装与配置指南-image-009.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image-010.png",
+      "bytes": 90110,
+      "sha256": "31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49",
+      "backupPath": "images/V3 Codex 安装与配置指南-image-010.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image-011.png",
+      "bytes": 341059,
+      "sha256": "68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d",
+      "backupPath": "images/V3 Codex 安装与配置指南-image-011.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image-1.png",
+      "bytes": 27871,
+      "sha256": "011502a504e04b25a009cf7d72d8bfdc91061bf1b61d190e17889e44fb6613b3",
+      "backupPath": "images/V3 Codex 安装与配置指南-image-1.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image-2.png",
+      "bytes": 43292,
+      "sha256": "0e891fddd0eba743244e85f24ab4207f1746ad791ae24cff0efc746a0b538281",
+      "backupPath": "images/V3 Codex 安装与配置指南-image-2.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image-3.png",
+      "bytes": 26933,
+      "sha256": "2ff353866a05e3177cf80238ca3eb6815a11633d1b1ef556feda91ab345ce5f1",
+      "backupPath": "images/V3 Codex 安装与配置指南-image-3.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 Codex 安装与配置指南-image.png",
+      "bytes": 63842,
+      "sha256": "7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45",
+      "backupPath": "images/V3 Codex 安装与配置指南-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
+      "bytes": 16897,
+      "sha256": "f9efdd9979736c507ba9986e3b9d2c483cc6d4090840311219b53efb281b81fd",
+      "backupPath": "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-OpenCode配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png",
+      "bytes": 12151,
+      "sha256": "e7455b388fd700f3f3d87806783d1ff9af0edf7a536a5a12ec7da3f5b7d4e50b",
+      "backupPath": "images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-OpenCode配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3计划-GrokBuild安装配置-ccswitch右上角选grok图标.png",
+      "bytes": 106357,
+      "sha256": "ad494fe6f1faa5c1e60cd3283c9aa41d9e10ff14866de351cfbe04e8c577124d",
+      "backupPath": "images/V3计划-GrokBuild安装配置-ccswitch右上角选grok图标.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-GrokBuild安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3计划-GrokBuild安装配置-ccswitch完整配置.png",
+      "bytes": 114501,
+      "sha256": "15ca8b67a83de73afb0656731a9d49923b58b3763b64256a7637f9813fd3fe81",
+      "backupPath": "images/V3计划-GrokBuild安装配置-ccswitch完整配置.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-GrokBuild安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/V3计划-GrokBuild安装配置-ccswitch新建自定义配置.png",
+      "bytes": 244661,
+      "sha256": "eb046b4bc97a1e26cd3dd9f1c20f488ea69581b0e901f32253445a383512f2bc",
+      "backupPath": "images/V3计划-GrokBuild安装配置-ccswitch新建自定义配置.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-V3计划-GrokBuild安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/cc兑换码兑换指南-image-1.png",
+      "bytes": 535096,
+      "sha256": "41c88dd39f73e72d6a4bd6bc4152d16f9a37eab8826aedf0f8f7ea3a3c8c6375",
+      "backupPath": "images/cc兑换码兑换指南-image-1.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "05-兑换码兑换指南.md"
+      ]
+    },
+    {
+      "sitePath": "images/cc兑换码兑换指南-image.png",
+      "bytes": 3071,
+      "sha256": "266a735f7f0dec67e44d044e78be927204f980498710e02ccd01b4d3432430d3",
+      "backupPath": "images/cc兑换码兑换指南-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "05-兑换码兑换指南.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜Agentic 入门宝典-image-001.png",
+      "bytes": 3071,
+      "sha256": "266a735f7f0dec67e44d044e78be927204f980498710e02ccd01b4d3432430d3",
+      "backupPath": "images/codesome｜Agentic 入门宝典-image-001.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-Agentic入门宝典.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
+      "bytes": 24850,
+      "sha256": "60e3c386ec035d10d0a279846d04a8de2f94503c29136e4961ccb4122778d931",
+      "backupPath": "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-codesome-502.png",
+      "bytes": 49189,
+      "sha256": "458c33de1a0cb267668d6e96fe3ce8497833900140e0070a0dd18ccef2a8fa7c",
+      "backupPath": "images/codesome｜使用问题速查-codesome-502.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
+      "bytes": 98017,
+      "sha256": "95eaedf69ef36b27da15ad22a12c228161d0fec995a7f31a84af8ea7b7db4665",
+      "backupPath": "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-codesome-503-status.png",
+      "bytes": 189118,
+      "sha256": "dc385e9a80a2ef118228fd466dbcab054f04c207fc5f5af9e3efe7e2b27eda5e",
+      "backupPath": "images/codesome｜使用问题速查-codesome-503-status.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-econnreset-example.png",
+      "bytes": 8240,
+      "sha256": "0c8a1f844c3125ecb304430b8548cafc131ae814a468e1d3d338155775d7ac8b",
+      "backupPath": "images/codesome｜使用问题速查-econnreset-example.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-opus-46-model-mapping.png",
+      "bytes": 68408,
+      "sha256": "5c49a465656c6d6d6c049140062230d6f2671d7debf32188c34241f5c60c976d",
+      "backupPath": "images/codesome｜使用问题速查-opus-46-model-mapping.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-skip-claude-login.jpg",
+      "bytes": 125823,
+      "sha256": "d9a7363cf5ca35983e5cc6abaad18ecf848e999bc5b10f0c945c673a961d110c",
+      "backupPath": "images/codesome｜使用问题速查-skip-claude-login.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
+      "bytes": 58959,
+      "sha256": "79ece3485d4a9a92976079c5e7cd813f8813800f6c80fc7b4da42004c3289a3b",
+      "backupPath": "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/codesome｜使用问题速查-重连-大部分情况是您开启了vpn.png",
+      "bytes": 92604,
+      "sha256": "e3b29b8badb2ce76abae56c4b8495339977e67beb9f8ccf2f9a6848eb6896354",
+      "backupPath": "images/codesome｜使用问题速查-重连-大部分情况是您开启了vpn.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-使用问题速查.md"
+      ]
+    },
+    {
+      "sitePath": "images/【最新】hermes配置教程-image-1.png",
+      "bytes": 46010,
+      "sha256": "b5eb5d9fee1d50756c99799d9db551ef5e63d8e3b9ff314d8fab47d9c5130d3d",
+      "backupPath": "images/【最新】hermes配置教程-image-1.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-AI自动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/【最新】hermes配置教程-image-2.png",
+      "bytes": 54416,
+      "sha256": "8e512b83689e6d45d090a37c0dcee0dd72a35091c0a082de0a5f0fe52b9f9e5a",
+      "backupPath": "images/【最新】hermes配置教程-image-2.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-AI自动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/【最新】hermes配置教程-image-3.png",
+      "bytes": 258369,
+      "sha256": "80dbefbe08cb209350bc3e264fac845512222f449c68e25c94112f5bf6773c55",
+      "backupPath": "images/【最新】hermes配置教程-image-3.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-AI自动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/【最新】hermes配置教程-image.png",
+      "bytes": 57443,
+      "sha256": "ad0affa6eda03d8d270a09f410a8fd5a404631171a81fad16bdb5b4ad04734ca",
+      "backupPath": "images/【最新】hermes配置教程-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-AI自动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-image.png",
+      "bytes": 167129,
+      "sha256": "83aabbfff8128f07a443bf4e496ff532399c7ed6c6ed6662dc6d95822af10009",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-test-1.jpg",
+      "bytes": 38994,
+      "sha256": "c10c60d77afb414f4bc87b1721d738c756e4631ad7b1439fb824c32e86e16a98",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-test-1.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-test-3.jpg",
+      "bytes": 58098,
+      "sha256": "196e3496b6ce91768df9e9b9101bbab1121319172e5e9f6051eba3ab8611844d",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-test-3.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-test-4.jpg",
+      "bytes": 68070,
+      "sha256": "af58e81c21d6f959dc05b55b3814bb39166be887533554b7cde161c39a2f0c46",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-test-4.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-test-5.jpg",
+      "bytes": 17026,
+      "sha256": "f217e037bf086fa6b83944c83185dffe0f931676910dbd09c4e9d6854bb9a6c8",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-test-5.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-test-6.jpg",
+      "bytes": 83214,
+      "sha256": "4ce199f7c38f58a25f2591f563cac2818f608b41ea3150be4be0bf518c182383",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-test-6.jpg",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Claude Code 安装与配置指南-test.jpg",
+      "bytes": 57532,
+      "sha256": "206835720f9055b82c19e3f915085818b179c90c214962e31bcb20b51a022750",
+      "backupPath": "images/二合一 Claude Code 安装与配置指南-test.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-ClaudeCode安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png",
+      "bytes": 3524,
+      "sha256": "f33acb7a6545224ca37ad72ebf60e3db3921e7806449c79fc7e05668e3e9a64c",
+      "backupPath": "images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-二合一计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png",
+      "bytes": 225557,
+      "sha256": "1c51a08f4e1e3e2adc21a6a99af72e8a383e6d6fc3a3b0bc56c5a54f04f86493",
+      "backupPath": "images/二合一 Codex 安装与配置指南-ccswitch_pkg1.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-二合一计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png",
+      "bytes": 90110,
+      "sha256": "31a77070ab75372d5d0a2a331ab182d5e9127aa69ea5fb30d7c19beb449c1c49",
+      "backupPath": "images/二合一 Codex 安装与配置指南-ccswitch_pkg2.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-二合一计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Codex 安装与配置指南-ccswitch_security.png",
+      "bytes": 341059,
+      "sha256": "68b4d462edf23fe04de49e3822644b094c7bec1fc3028aa1a0d9a63bba65a17d",
+      "backupPath": "images/二合一 Codex 安装与配置指南-ccswitch_security.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Codex 安装与配置指南-codex_desktop.png",
+      "bytes": 63842,
+      "sha256": "7cb38254b32756e412a693956fcf22b42ce3c207fef9b02423a0032eadeb7a45",
+      "backupPath": "images/二合一 Codex 安装与配置指南-codex_desktop.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一 Codex 安装与配置指南-image.png",
+      "bytes": 50070,
+      "sha256": "d8c67319fe9b621bd4eea091ee95c0ea7d7b466221037d6f9a9f5d64038a8949",
+      "backupPath": "images/二合一 Codex 安装与配置指南-image.png",
+      "referenceCount": 2,
+      "referencedBy": [
+        "01-二合一计划-Codex安装配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一月卡如何配置 OpenCode-切换模型使用斜杠model命令.png",
+      "bytes": 16897,
+      "sha256": "f9efdd9979736c507ba9986e3b9d2c483cc6d4090840311219b53efb281b81fd",
+      "backupPath": "images/二合一月卡如何配置 OpenCode-切换模型使用斜杠model命令.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-OpenCode配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/二合一月卡如何配置 OpenCode-这是命令执行后的选模型界面.png",
+      "bytes": 12151,
+      "sha256": "e7455b388fd700f3f3d87806783d1ff9af0edf7a536a5a12ec7da3f5b7d4e50b",
+      "backupPath": "images/二合一月卡如何配置 OpenCode-这是命令执行后的选模型界面.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-OpenCode配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-agentway-invite-codesome.png",
+      "bytes": 143413,
+      "sha256": "c9c40c0164c4b6b888834526f241fe950544fef2ff01dbe5fb20ca652c0d9c62",
+      "backupPath": "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-agentway-invite-codesome.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-Agentway学习平台介绍.md"
+      ]
+    },
+    {
+      "sitePath": "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-image.png",
+      "bytes": 183465,
+      "sha256": "bdf2186da19d30874a2eb31cd162e6f474c49e7e2596b6137748ab0a8cf73ef0",
+      "backupPath": "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-Agentway学习平台介绍.md"
+      ]
+    },
+    {
+      "sitePath": "images/关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告-image.png",
+      "bytes": 336443,
+      "sha256": "ad17e242ddfa7d17868c6409f2b3ff7ea04d981c8d9ac94afaab6c10fd9d6535",
+      "backupPath": "images/关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "02-平台服务紧张应对方案.md"
+      ]
+    },
+    {
+      "sitePath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-001.jpg",
+      "bytes": 41931,
+      "sha256": "9419905ba7bf49c701b3ccbad2c2875933554306cee42f47ffab4f52e31e8227",
+      "backupPath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-001.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-对话管理CC中转站.md"
+      ]
+    },
+    {
+      "sitePath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-002.jpg",
+      "bytes": 118910,
+      "sha256": "214eea9d16fa54ce49d7fea54fb4f3ed70754ffbe5a0328bc1af7eba78100c26",
+      "backupPath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-002.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-对话管理CC中转站.md"
+      ]
+    },
+    {
+      "sitePath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-003.jpg",
+      "bytes": 116692,
+      "sha256": "73f3b6770cbae4fbb7b627939b268315b40988895310d39a402e2746d52c1ae3",
+      "backupPath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-003.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-对话管理CC中转站.md"
+      ]
+    },
+    {
+      "sitePath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-004.jpg",
+      "bytes": 127718,
+      "sha256": "7e32a48e8454ecbc1d293a13175091b4b738d58cca478d1b695ecc93ed971478",
+      "backupPath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-004.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-对话管理CC中转站.md"
+      ]
+    },
+    {
+      "sitePath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-005.jpg",
+      "bytes": 143873,
+      "sha256": "c7dd74939c57f104b47383797206ad70f69a0033a347fc6e2b6081f32a9eb4ce",
+      "backupPath": "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-005.jpg",
+      "referenceCount": 1,
+      "referencedBy": [
+        "03-对话管理CC中转站.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-001.png",
+      "bytes": 53188,
+      "sha256": "d2f0d8a4868415d06603b86427810ba7ff0ba2675ca5cf0706d26bd00d93ca34",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-001.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-002.png",
+      "bytes": 26158,
+      "sha256": "da74a6adb71b79a99bec4b211eb81378cbdfd38962ddf699b9b7bb25bd44f51b",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-002.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-003.png",
+      "bytes": 36611,
+      "sha256": "4f6a0388d4db7d8239fff5e1c52adc3a314d2abbf3201d608b2ea385cc7fca4b",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-003.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-004.png",
+      "bytes": 40042,
+      "sha256": "3fa0a3373c3c7b9acf6864d721bff94b650f261f2ffac11b3ec45281666b2716",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-004.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-005.png",
+      "bytes": 97692,
+      "sha256": "db482e24a2a7c90bdb71720f62723d45fb023b50f8988f9d542b5cd8899da2dd",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-005.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-006.png",
+      "bytes": 26272,
+      "sha256": "215c8057f2d90cbafdb0ad2f1077a16415bab661e54432534ff64643f565663f",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-006.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-007.png",
+      "bytes": 94542,
+      "sha256": "98a50cd977613a747e50334d163b38b87f478d3acbbe06c07cf6a2e0e76dbb18",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-007.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-008.png",
+      "bytes": 30863,
+      "sha256": "db9fe102f6040a15412f488cabe0ca8d70fed8d05372453fd80d6ac7cd0226a7",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-008.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-1.png",
+      "bytes": 96546,
+      "sha256": "21cada7b1c15b30b2e861d6a0b72ff9e418caa73179289c8eecdf682ddd2ada6",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-1.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-10.png",
+      "bytes": 98104,
+      "sha256": "b8631b76b4063afa72b43d50056483dc3e82d5ae8076462cdecae6d18b141cce",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-10.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-11.png",
+      "bytes": 103263,
+      "sha256": "647c32b4384f7cdade8dab65f4dfa01698c4f826575b42d6526143fd95b4b96d",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-11.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-2.png",
+      "bytes": 97818,
+      "sha256": "1a2638a3c03d3409e755a139e0864a5d9a80af0649f88fc437111d60503b4666",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-2.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-3.png",
+      "bytes": 48999,
+      "sha256": "a498ea6ce4c2f87cec1923320c9954fef2ae3cf9414144484cfa354888a7d55d",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-3.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-4.png",
+      "bytes": 84844,
+      "sha256": "e84d8ca98160370917bceb1373f443270f373e7e3eab1396372ffaa7d0fbac5f",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-4.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-5.png",
+      "bytes": 44519,
+      "sha256": "569b0dd2b020ad8a1cabdddfcb16d88e548ddd31a48884d3cf2b15709aa40a3b",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-5.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-6.png",
+      "bytes": 28063,
+      "sha256": "7cc9cbc58f8fc8f6666c0dd464d24244a323a685a914dbebca31213a418bb9fe",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-6.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-7.png",
+      "bytes": 100394,
+      "sha256": "61d3481c2dd04eeb535b620a3a083314c9f9f231e587a1a9ac137572ac3eb957",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-7.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-8.png",
+      "bytes": 102206,
+      "sha256": "dcae5972c125035cfbce36c6f8159ad4253d9d1db7773dd8f0d9ecbe614e2254",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-8.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-9.png",
+      "bytes": 99604,
+      "sha256": "84ce94b5c90188b6444091d084bf6ee25fa10c996d662194961ae8dd97ea6598",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-9.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    },
+    {
+      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image.png",
+      "bytes": 98088,
+      "sha256": "f658000b668c23c4ae8f51425dc91b812e514551087be18557e3dc7746b4e3a6",
+      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-第三方客户端接入配置.md"
+      ]
+    }
+  ]
+}
