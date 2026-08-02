@@ -19,6 +19,41 @@
   var ARTICLE_TITLES = window.CODESOME_ARTICLE_TITLES || {};
   var TITLE_MAP_VERSION = window.CODESOME_ARTICLE_TITLES_VERSION || 'missing';
   var SEARCH_NAMESPACE = 'cdc-titles-v4';
+  var pipeline = window.CODESOME_TITLE_PIPELINE = window.CODESOME_TITLE_PIPELINE || {
+    version: TITLE_MAP_VERSION,
+    status: 'initializing',
+    processed: {},
+    failures: [],
+    dom: {}
+  };
+  pipeline.version = TITLE_MAP_VERSION;
+  pipeline.status = 'initializing';
+
+  function fileNameForUrl(url) {
+    try {
+      return decodeURIComponent(String(url || '')).split(/[?#]/)[0].split('/').pop();
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function failPipeline(reason, fileName) {
+    var failure = { reason: String(reason), fileName: fileName || '' };
+    pipeline.status = 'failed';
+    pipeline.failures.push(failure);
+    if (typeof console !== 'undefined' && typeof console.error === 'function') {
+      console.error('[Codesome title pipeline] ' + failure.reason + (failure.fileName ? ': ' + failure.fileName : ''));
+    }
+  }
+
+  function markProcessed(fileName, title) {
+    pipeline.status = 'ready';
+    pipeline.processed[fileName] = {
+      title: title,
+      version: TITLE_MAP_VERSION
+    };
+    pipeline.lastProcessed = fileName;
+  }
 
   /* ── 1. Clear stale search-index caches ─────────────────────────────
  * Old namespaces hold indexes generated before the heading normalization.
@@ -45,7 +80,12 @@
     }
   } catch (e) { /* ignore */ }
 
-  function normalizeHeadings(content, title) {
+  function normalizeHeadings(content, title, fileName) {
+    if (typeof content !== 'string' || content.length === 0) {
+      failPipeline('registered article response is empty or not text', fileName);
+      return content;
+    }
+
     var source = content.charAt(0) === '\uFEFF' ? content.slice(1) : content;
     var lines = source.split(/\r?\n/);
     var fence = null;
@@ -55,6 +95,7 @@
       return match && match[1].trim() === title;
     });
 
+    var exactTitleSeen = false;
     lines = lines.map(function (line) {
       var fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
 
@@ -73,7 +114,11 @@
       if (!fence) {
         var titleMatch = line.match(titleHeadingPattern);
         if (hasExactTitle && titleMatch && titleMatch[1].trim() === title) {
-          return line;
+          if (!exactTitleSeen) {
+            exactTitleSeen = true;
+            return line;
+          }
+          return line.replace(/^( {0,3})#(?=\s+)/, '$1##');
         }
         return line.replace(/^( {0,3})#(?=\s+)/, '$1##');
       }
@@ -81,7 +126,9 @@
       return line;
     });
 
-    return hasExactTitle ? lines.join('\n') : '# ' + title + '\n\n' + lines.join('\n');
+    var normalized = hasExactTitle ? lines.join('\n') : '# ' + title + '\n\n' + lines.join('\n');
+    markProcessed(fileName, title);
+    return normalized;
   }
 
   /* ── 2. Wrap Docsify.get ────────────────────────────────────────────
@@ -93,20 +140,17 @@
    * genIndex sees the corrected content with a real H1.
    */
   if (typeof Docsify === 'undefined' || typeof Docsify.get !== 'function') {
-    // Safety: Docsify hasn't loaded yet (shouldn't happen if script order is correct).
+    failPipeline('Docsify.get is unavailable; title injector script order is invalid');
     return;
   }
+
+  pipeline.status = 'ready';
 
   var origGet = Docsify.get;
 
   Docsify.get = function (url, hasBar, headers) {
     // Decode percent-encoded characters so the URL matches the title map key.
-    var fileName;
-    try {
-      fileName = decodeURIComponent(url).split('?')[0].split('/').pop();
-    } catch (e) {
-      fileName = '';
-    }
+    var fileName = fileNameForUrl(url);
     var articleTitle = ARTICLE_TITLES[fileName];
 
     // If no registered title exists for this file, pass through unchanged.
@@ -119,20 +163,33 @@
 
     // Handle cached content returned directly as a string.
     if (typeof result === 'string') {
-      return normalizeHeadings(result, articleTitle);
+      return normalizeHeadings(result, articleTitle, fileName);
+    }
+
+    if (!result || typeof result.then !== 'function') {
+      failPipeline('Docsify.get returned a non-thenable article response', fileName);
+      return result;
     }
 
     var origThen = result.then;
-
-    result.then = function (success, error) {
-      return origThen.call(result, function (content, opt) {
-        if (content && typeof content === 'string') {
-          return success(normalizeHeadings(content, articleTitle), opt);
-        }
-        return success(content, opt);
-      }, error);
+    var wrappedResult = {
+      then: function (success, error) {
+        return origThen.call(result, function (content, opt) {
+          if (typeof content === 'string') {
+            var normalized = normalizeHeadings(content, articleTitle, fileName);
+            return typeof success === 'function' ? success(normalized, opt) : normalized;
+          }
+          failPipeline('Docsify article response is not text', fileName);
+          return typeof success === 'function' ? success(content, opt) : content;
+        }, function (reason) {
+          failPipeline('Docsify article request failed: ' + (reason && reason.message ? reason.message : reason), fileName);
+          return typeof error === 'function' ? error(reason) : undefined;
+        });
+      }
     };
-
-    return result;
+    if (typeof result.abort === 'function') {
+      wrappedResult.abort = function () { return result.abort.apply(result, arguments); };
+    }
+    return wrappedResult;
   };
 })();

@@ -71,6 +71,8 @@ npm run check
 
 `npm run check` 会启动本地生产服务，逐个请求 `index.html` 引用的本地脚本，并确认 `server.mjs`、`scripts/` 和 `docs/` 仍保持私有；随后用实际的标题注入器遍历全部文章，验证渲染输入恰好包含登记的正式 H1。因此，浏览器脚本路径、私有路径规则、标题映射或注入器行为发生回归时，会在提交和发布前失败。
 
+生产服务还会从同一份标题登记表建立编号文章白名单：未登记的 `NN-*.md` 路径直接返回 `404`，已登记文章必须能够返回非空正文。这样新增或遗漏登记的文章不能靠直接 URL 绕过标题管线公开；标题登记、文章文件、侧边栏和生成映射必须同时更新。
+
 `npm run check:links` 会同时读取 Git 已跟踪文件与磁盘上的根目录文章文件，因此新文章不必先 `git add` 才能检查；`npm run check:secrets` 会扫描已跟踪、已暂存和当前未跟踪的 Markdown/HTML/JS 文件，长 `sk-`、`cr-`、`sk_cr-`、`ghp_` 和 JWT 形态会阻断检查。短占位符如 `sk-xxx` 和 `sk-请替换` 不会命中长 token 规则，但不得把真实 Key 当作占位符提交。
 
 发布前使用 release skill 的 `preflight` 或 `deploy`。该技能调用 `npm run check`，因此敏感 Key 门禁会在 GitHub 推送和生产部署前再次执行。

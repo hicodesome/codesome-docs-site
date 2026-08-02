@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const indexPath = resolve(root, 'index.html');
@@ -106,6 +107,38 @@ async function request(port, pathname) {
   return response.status;
 }
 
+async function requestText(port, pathname) {
+  const response = await fetch(`http://127.0.0.1:${port}${pathname}`, {
+    signal: AbortSignal.timeout(5000)
+  });
+  return { status: response.status, body: await response.text() };
+}
+
+function publicPath(path) {
+  return `/${encodeURIComponent(path).replaceAll('%2F', '/')}`;
+}
+
+function assertScriptOrder() {
+  const indexScripts = scriptPaths.map(path => path.replace(/^\.\//, ''));
+  const position = path => indexScripts.indexOf(path);
+  const required = [
+    'assets/page-title.js',
+    'assets/vendor/docsify.min.js',
+    'assets/article-titles.js',
+    'assets/cdc-title-injector.js',
+    'assets/vendor/search.min.js'
+  ];
+  for (const path of required) {
+    if (position(path) === -1) throw new Error(`index.html is missing the title pipeline script: ${path}`);
+  }
+  if (!(position('assets/page-title.js') < position('assets/vendor/docsify.min.js') &&
+    position('assets/vendor/docsify.min.js') < position('assets/article-titles.js') &&
+    position('assets/article-titles.js') < position('assets/cdc-title-injector.js') &&
+    position('assets/cdc-title-injector.js') < position('assets/vendor/search.min.js'))) {
+    throw new Error('index.html title pipeline script order is invalid');
+  }
+}
+
 async function main() {
   const port = await reservePort();
   const child = spawn(process.execPath, ['server.mjs'], {
@@ -120,12 +153,37 @@ async function main() {
     if (await request(port, '/index.html') !== 200) {
       throw new Error('server did not serve index.html');
     }
+    assertScriptOrder();
 
     for (const path of [...new Set(scriptPaths)]) {
       const status = await request(port, `/${path}`);
       if (status !== 200) {
         throw new Error(`browser resource is not public: ${path} (HTTP ${status})`);
       }
+    }
+
+    const criticalResources = [
+      ['assets/article-titles.js', 'CODESOME_ARTICLE_TITLES'],
+      ['assets/cdc-title-injector.js', 'CODESOME_TITLE_PIPELINE'],
+      ['assets/page-title.js', 'page-title-fallback']
+    ];
+    for (const [path, marker] of criticalResources) {
+      const response = await requestText(port, publicPath(path));
+      if (response.status !== 200 || !response.body.includes(marker)) {
+        throw new Error(`public browser resource content is invalid: ${path} (HTTP ${response.status})`);
+      }
+    }
+
+    for (const { site } of articleTitleEntries) {
+      const response = await requestText(port, publicPath(site));
+      if (response.status !== 200 || !response.body.trim()) {
+        throw new Error(`registered article is not publicly readable: ${site} (HTTP ${response.status})`);
+      }
+    }
+
+    const unregistered = await request(port, '/99-unregistered-title-contract.md');
+    if (unregistered !== 404) {
+      throw new Error(`unregistered numbered article is unexpectedly public (HTTP ${unregistered})`);
     }
 
     for (const path of [

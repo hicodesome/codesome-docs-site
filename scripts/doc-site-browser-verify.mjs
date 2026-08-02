@@ -18,6 +18,7 @@ const DEFAULTS = Object.freeze({
   timeoutMs: Number(process.env.CHROME_TIMEOUT || 30000),
   outputDir: process.env.DOC_SITE_BROWSER_OUTPUT_DIR || 'var/doc-site-browser-verify'
 });
+const HOME_TITLE = 'codesome｜Agentic 入门宝典';
 
 const USAGE = `Usage:
   node scripts/doc-site-browser-verify.mjs [options]
@@ -114,6 +115,10 @@ export function evaluateBrowserAssertions(probe, config) {
   const articleErrors = article.consoleErrors || [];
   const images = article.images || [];
   const articleRoute = normalizeText(navigation.href);
+  const homePipeline = home.titlePipeline || {};
+  const articlePipeline = article.titlePipeline || {};
+  const homeResource = home.articleResource || {};
+  const articleResource = article.articleResource || {};
   const isHomepage = config.article === '03-Agentic入门宝典.md';
   const routeFile = encodeURIComponent(config.article).replaceAll('%2F', '/');
   const routeWithoutExtension = encodeURIComponent(config.article.replace(/\.md$/i, '')).replaceAll('%2F', '/');
@@ -127,6 +132,29 @@ export function evaluateBrowserAssertions(probe, config) {
       id: 'home-console',
       pass: homeErrors.length === 0,
       detail: homeErrors.length ? `首页 console error ${homeErrors.length} 条` : '首页无 console error'
+    },
+    {
+      id: 'home-h1',
+      pass: normalizeText(home.h1) === HOME_TITLE && home.h1Count === 1 && home.h1Sources?.[0] === 'manifest-injector',
+      detail: `首页 H1：${home.h1 || '(空)'}，数量：${home.h1Count || 0}`
+    },
+    {
+      id: 'home-resource',
+      pass: homeResource.status === 200 &&
+        (homeResource.statuses || []).length > 0 &&
+        homeResource.statuses.every(status => status === 200) &&
+        (homeResource.failures || []).length === 0,
+      detail: `首页文章请求状态：${homeResource.status ?? '(未捕获)'}`
+    },
+    {
+      id: 'home-title-pipeline',
+      pass: homePipeline.status === 'ready' &&
+        homePipeline.processed?.title === HOME_TITLE &&
+        homePipeline.dom?.title === HOME_TITLE &&
+        homePipeline.dom?.source === 'manifest-injector' &&
+        (homePipeline.failures || []).length === 0 &&
+        (homePipeline.domFallbacks || 0) === 0,
+      detail: `首页标题管线状态：${homePipeline.status || 'missing'}`
     },
     {
       id: 'sidebar-navigation',
@@ -147,6 +175,29 @@ export function evaluateBrowserAssertions(probe, config) {
       id: 'article-h1',
       pass: normalizeText(article.h1) === normalizeText(config.title),
       detail: `文章 H1：${article.h1 || '(空)'}`
+    },
+    {
+      id: 'article-h1-count',
+      pass: article.h1Count === 1 && article.h1Sources?.[0] === 'manifest-injector',
+      detail: `文章直接 H1 数量：${article.h1Count || 0}，来源：${article.h1Sources?.join(', ') || '(空)'}`
+    },
+    {
+      id: 'article-resource',
+      pass: articleResource.status === 200 &&
+        (articleResource.statuses || []).length > 0 &&
+        articleResource.statuses.every(status => status === 200) &&
+        (articleResource.failures || []).length === 0,
+      detail: `文章请求状态：${articleResource.status ?? '(未捕获)'}`
+    },
+    {
+      id: 'article-title-pipeline',
+      pass: articlePipeline.status === 'ready' &&
+        articlePipeline.processed?.title === config.title &&
+        articlePipeline.dom?.title === config.title &&
+        articlePipeline.dom?.source === 'manifest-injector' &&
+        (articlePipeline.failures || []).length === 0 &&
+        (articlePipeline.domFallbacks || 0) === 0,
+      detail: `文章标题管线状态：${articlePipeline.status || 'missing'}`
     },
     {
       id: 'article-body',

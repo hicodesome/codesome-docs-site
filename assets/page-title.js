@@ -23,6 +23,35 @@
     });
   }
 
+  function pipelineState() {
+    window.CODESOME_TITLE_PIPELINE = window.CODESOME_TITLE_PIPELINE || {
+      version: 'missing',
+      status: 'missing',
+      processed: {},
+      failures: [],
+      dom: {}
+    };
+    window.CODESOME_TITLE_PIPELINE.dom = window.CODESOME_TITLE_PIPELINE.dom || {};
+    return window.CODESOME_TITLE_PIPELINE;
+  }
+
+  function markDom(title, source) {
+    var state = pipelineState();
+    state.dom[window.location.hash || '#/'] = {
+      title: title,
+      source: source
+    };
+  }
+
+  function reportFallback(title) {
+    var state = pipelineState();
+    state.status = 'failed';
+    state.domFallbacks = (state.domFallbacks || 0) + 1;
+    if (typeof console !== 'undefined' && typeof console.error === 'function') {
+      console.error('[Codesome title pipeline] page-title fallback was required for: ' + title);
+    }
+  }
+
   function applyPageTitle() {
     var article = document.querySelector('.markdown-section');
     var title = sidebarTitle();
@@ -38,11 +67,15 @@
 
     if (matchingHeading) {
       matchingHeading.classList.add('page-title');
+      matchingHeading.setAttribute('data-codesome-title-source', 'manifest-injector');
+      markDom(title, 'manifest-injector');
       if (matchingHeading !== first) {
         article.insertBefore(matchingHeading, first);
       }
       return;
     }
+
+    reportFallback(title);
 
     if (isHomeRoute() && first && first.tagName === 'H1' &&
         first.textContent.trim().indexOf('欢迎来到') === 0) {
@@ -52,8 +85,10 @@
 
     var heading = document.createElement('h1');
     heading.className = 'page-title';
+    heading.setAttribute('data-codesome-title-source', 'page-title-fallback');
     heading.textContent = title;
     article.insertBefore(heading, first);
+    markDom(title, 'page-title-fallback');
   }
 
   function pageTitlePlugin(hook) {

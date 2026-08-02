@@ -18,7 +18,7 @@ function createStorage() {
   };
 }
 
-function createContext(asyncMode) {
+function createContext(mode) {
   const context = {
     console,
     Promise,
@@ -26,7 +26,14 @@ function createContext(asyncMode) {
     Docsify: {
       get(url) {
         const source = readFileSync(resolve(root, decodeURIComponent(url).split('?')[0]), 'utf8');
-        return asyncMode ? Promise.resolve(source) : source;
+        if (mode === 'promise') return Promise.resolve(source);
+        if (mode === 'docsify-thenable') {
+          return {
+            then(success) { return success(source, { updatedAt: 'test' }); },
+            abort() {}
+          };
+        }
+        return source;
       }
     }
   };
@@ -57,8 +64,8 @@ async function normalizedMarkdown(context, site) {
   return Promise.resolve(context.Docsify.get(site));
 }
 
-async function checkMode(asyncMode) {
-  const context = createContext(asyncMode);
+async function checkMode(mode) {
+  const context = createContext(mode);
   const actualMap = context.window.CODESOME_ARTICLE_TITLES;
   assert.equal(Object.keys(actualMap).length, articleTitleEntries.length, 'generated title map size drifted');
 
@@ -66,9 +73,17 @@ async function checkMode(asyncMode) {
     const output = await normalizedMarkdown(context, site);
     const h1s = headings(output).filter(heading => heading.level === 1);
     assert.deepEqual(h1s, [{ level: 1, text: title }], `${site}: rendered H1 does not match its registered title`);
+    assert.equal(context.window.CODESOME_TITLE_PIPELINE.status, 'ready', `${site}: title pipeline is not ready`);
+    assert.deepEqual(
+      context.window.CODESOME_TITLE_PIPELINE.processed[site]?.title,
+      title,
+      `${site}: title pipeline did not process the registered title`
+    );
   }
+  assert.equal(context.window.CODESOME_TITLE_PIPELINE.failures.length, 0, 'title pipeline recorded failures');
 }
 
 await checkMode(false);
-await checkMode(true);
-console.log(`Rendered title check passed: ${articleTitleEntries.length} articles in sync and async Docsify.get modes`);
+await checkMode('promise');
+await checkMode('docsify-thenable');
+console.log(`Rendered title check passed: ${articleTitleEntries.length} articles in sync, Promise, and Docsify thenable modes`);

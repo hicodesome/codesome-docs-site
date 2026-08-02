@@ -10,6 +10,7 @@ import socket
 import struct
 import sys
 import time
+from urllib.parse import unquote, urlparse
 from urllib.request import urlopen
 
 
@@ -167,15 +168,26 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
               const title = %s;
               const articleBase = %s;
               const hash = decodeURIComponent(location.hash || '');
-              const h1 = document.querySelector('.markdown-section h1')?.textContent?.trim() || '';
+              const section = document.querySelector('.markdown-section');
+              const h1s = Array.from(section?.children || []).filter(node => node.tagName === 'H1');
+              const pipeline = window.CODESOME_TITLE_PIPELINE || {};
+              const dom = pipeline.dom?.[location.hash || '#/'] || null;
               return {
                 ready: document.readyState === 'complete',
                 sidebar: Boolean(document.querySelector('.sidebar-nav a')),
-                markdown: Boolean(document.querySelector('.markdown-section')),
+                markdown: Boolean(section),
                 route: hash,
                 article: hash.includes(article) || hash.includes(articleBase),
-                h1: h1,
-                title: title
+                h1: h1s[0]?.textContent?.trim() || '',
+                h1Count: h1s.length,
+                title: title,
+                titlePipeline: {
+                  status: pipeline.status || 'missing',
+                  processed: pipeline.processed?.[article] || null,
+                  dom: dom,
+                  failures: pipeline.failures || [],
+                  domFallbacks: pipeline.domFallbacks || 0
+                }
               };
             })()""" % (article_json, title_json, article_base_json),
             session_id,
@@ -187,6 +199,35 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
                 return state
         time.sleep(0.25)
     raise RuntimeError("timed out waiting for Docsify content")
+
+
+def resource_observation(events, article: str):
+    target_paths = {article}
+    if article.lower().endswith('.md'):
+        target_paths.add(article[:-3])
+    request_urls = {}
+    statuses = []
+    failures = []
+    for event in events:
+        method = event.get("method")
+        params = event.get("params", {})
+        if method == "Network.requestWillBeSent":
+            request = params.get("request", {})
+            request_urls[params.get("requestId")] = request.get("url", "")
+        elif method == "Network.responseReceived":
+            response = params.get("response", {})
+            path = unquote(urlparse(response.get("url", "")).path).lstrip("/")
+            if path in target_paths:
+                statuses.append(int(response.get("status", 0)))
+        elif method == "Network.loadingFailed":
+            path = unquote(urlparse(request_urls.get(params.get("requestId"), "")).path).lstrip("/")
+            if path in target_paths:
+                failures.append(params.get("errorText") or "article request failed")
+    return {
+        "status": statuses[-1] if statuses else None,
+        "statuses": statuses,
+        "failures": failures
+    }
 
 
 def prepare_and_wait_for_images(cdp: CDP, session_id: str, deadline: float):
@@ -218,22 +259,35 @@ def prepare_and_wait_for_images(cdp: CDP, session_id: str, deadline: float):
     raise RuntimeError("timed out waiting for article images")
 
 
-def snapshot(cdp: CDP, session_id: str, article: str):
+def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | None = None):
     article_json = json.dumps(article, ensure_ascii=False)
+    pipeline_article_json = json.dumps(pipeline_article or article, ensure_ascii=False)
     return evaluate(
         cdp,
         """(() => {
           const article = %s;
+          const pipelineArticle = %s;
           const links = Array.from(document.querySelectorAll('.sidebar-nav a'));
           const target = links.find(link => {
             const href = decodeURIComponent(link.getAttribute('href') || '');
             return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
           });
           const section = document.querySelector('.markdown-section');
+          const h1s = Array.from(section?.children || []).filter(node => node.tagName === 'H1');
+          const pipeline = window.CODESOME_TITLE_PIPELINE || {};
           return {
             sidebarTitles: links.map(link => (link.textContent || '').trim()).filter(Boolean),
             targetLink: target ? {text: target.textContent.trim(), href: target.getAttribute('href')} : null,
-            h1: section?.querySelector('h1')?.textContent?.trim() || '',
+            h1: h1s[0]?.textContent?.trim() || '',
+            h1Count: h1s.length,
+            h1Sources: h1s.map(node => node.getAttribute('data-codesome-title-source') || ''),
+            titlePipeline: {
+              status: pipeline.status || 'missing',
+              processed: pipeline.processed?.[pipelineArticle] || null,
+              dom: pipeline.dom?.[location.hash || '#/'] || null,
+              failures: pipeline.failures || [],
+              domFallbacks: pipeline.domFallbacks || 0
+            },
             bodyText: section?.textContent || '',
             images: Array.from(section?.querySelectorAll('img') || []).map(image => ({
               src: image.currentSrc || image.src,
@@ -242,7 +296,7 @@ def snapshot(cdp: CDP, session_id: str, article: str):
             })),
             href: location.href
           };
-        })()""" % article_json,
+        })()""" % (article_json, pipeline_article_json),
         session_id,
     ) or {}
 
@@ -262,6 +316,7 @@ def run(config, websocket_url):
         cdp.call("Page.enable", session_id=session_id)
         cdp.call("Runtime.enable", session_id=session_id)
         cdp.call("Log.enable", session_id=session_id)
+        cdp.call("Network.enable", session_id=session_id)
         cdp.call("Emulation.setDeviceMetricsOverride", {
             "width": 1280, "height": 900, "deviceScaleFactor": 1, "mobile": False
         }, session_id=session_id)
@@ -271,9 +326,10 @@ def run(config, websocket_url):
         cdp.call("Page.navigate", {"url": base_url + "/#/"}, session_id=session_id)
         wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s)
         home_events = cdp.drain_events()
-        home = snapshot(cdp, session_id, config["article"])
+        home = snapshot(cdp, session_id, config["article"], "03-Agentic入门宝典.md")
         home_events += cdp.drain_events()
         home["consoleErrors"] = console_errors(home_events)
+        home["articleResource"] = resource_observation(home_events, "03-Agentic入门宝典.md")
         home["html"] = evaluate(cdp, "document.documentElement.outerHTML", session_id)
         home["screenshot"] = capture(cdp, session_id)
 
@@ -302,6 +358,7 @@ def run(config, websocket_url):
         article = snapshot(cdp, session_id, config["article"])
         article_events += cdp.drain_events()
         article["consoleErrors"] = console_errors(article_events)
+        article["articleResource"] = resource_observation(home_events + article_events, config["article"])
         article["html"] = evaluate(cdp, "document.documentElement.outerHTML", session_id)
         article["screenshot"] = capture(cdp, session_id)
         return {"status": "PASS", "home": home, "navigation": navigation, "article": article}

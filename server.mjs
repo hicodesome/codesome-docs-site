@@ -4,6 +4,7 @@ import { stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { extname, relative, resolve } from 'node:path';
+import { articleTitleEntries } from './scripts/title-metadata.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const PORT = Number(process.env.PORT || process.env.PM2_SERVE_PORT || 3009);
@@ -25,6 +26,7 @@ const PRIVATE_STATIC_FILES = new Set([
   'package-lock.json',
   'server.mjs'
 ]);
+const PUBLIC_ARTICLE_FILES = new Set(articleTitleEntries.map(article => article.site));
 
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
@@ -438,6 +440,9 @@ async function serveStatic(req, res, url) {
   const isHiddenPath = relativePath.split('/').some(segment => segment.startsWith('.') && segment !== '.nojekyll');
   if (isHiddenPath && !PUBLIC_STATIC_PLACEHOLDERS.has(relativePath)) return text(res, 404, 'Not Found');
   if (PRIVATE_STATIC_FILES.has(relativePath) || PRIVATE_STATIC_PREFIXES.some(prefix => relativePath.startsWith(prefix))) {
+    return text(res, 404, 'Not Found');
+  }
+  if (/^\d{2}-.*\.md$/i.test(relativePath) && !PUBLIC_ARTICLE_FILES.has(relativePath)) {
     return text(res, 404, 'Not Found');
   }
 
