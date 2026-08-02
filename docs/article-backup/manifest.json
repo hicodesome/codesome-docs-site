@@ -3,9 +3,9 @@
   "formatVersion": 1,
   "generatedFrom": {
     "site": {
-      "commit": "af1efd666d03814ee15bd12d8c214b89d19fb5fe",
-      "commitDate": "2026-08-02T23:50:30+08:00",
-      "branch": "main"
+      "commit": "9a880f6b5ee84d64fe3926309b934479871656de",
+      "commitDate": "2026-08-03T00:03:34+08:00",
+      "branch": "codex/group-guide-home-link-20260803"
     },
     "cdc": {
       "tag": "cdc-snapshot-2026-07-14",
@@ -348,8 +348,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 8058,
-      "sha256": "f410611e3b3ce5989b2aea52d53edea03c56d9c7c94d93f16485ac7b72b8d4d3",
+      "bytes": 8255,
+      "sha256": "daadf1eb18aabee37b86bfa8076a477f1d1f83aafdbeda434c4c65e3a7014888",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"
