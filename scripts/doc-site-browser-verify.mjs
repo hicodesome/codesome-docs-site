@@ -114,6 +114,7 @@ export function evaluateBrowserAssertions(probe, config) {
   const articleErrors = article.consoleErrors || [];
   const images = article.images || [];
   const articleRoute = normalizeText(navigation.href);
+  const isHomepage = config.article === '03-Agentic入门宝典.md';
   const routeFile = encodeURIComponent(config.article).replaceAll('%2F', '/');
   const routeWithoutExtension = encodeURIComponent(config.article.replace(/\.md$/i, '')).replaceAll('%2F', '/');
   return [
@@ -129,12 +130,16 @@ export function evaluateBrowserAssertions(probe, config) {
     },
     {
       id: 'sidebar-navigation',
-      pass: navigation.clicked === true && (
-        articleRoute.includes(config.article) ||
-        articleRoute.includes(routeFile) ||
-        articleRoute.includes(routeWithoutExtension)
-      ),
-      detail: navigation.clicked
+      pass: isHomepage
+        ? navigation.clicked === false && /#\/?$/.test(articleRoute)
+        : navigation.clicked === true && (
+          articleRoute.includes(config.article) ||
+          articleRoute.includes(routeFile) ||
+          articleRoute.includes(routeWithoutExtension)
+        ),
+      detail: isHomepage
+        ? (navigation.clicked === false ? '首页文章保持首页路由，无需侧栏跳转' : `首页文章被错误导航到：${navigation.href || '(空)'}`)
+        : navigation.clicked
         ? `侧栏目标链接进入路由：${navigation.href || '(空)'}`
         : `未找到可进入目标文章的侧栏链接：${config.article}`
     },
@@ -184,7 +189,12 @@ function encodeConfig(config) {
 function runRemoteProbe(config, container) {
   const scriptPath = join(dirname(fileURLToPath(import.meta.url)), 'doc-site-browser-runner.py');
   const runner = readFileSync(scriptPath, 'utf8');
-  const payload = encodeConfig({ url: config.url.replace(/\/$/, ''), article: config.article, timeout_ms: config.timeoutMs });
+  const payload = encodeConfig({
+    url: config.url.replace(/\/$/, ''),
+    article: config.article,
+    title: config.title,
+    timeout_ms: config.timeoutMs
+  });
   const remoteCommand = `lzc-docker exec -i ${shellQuote(container)} python3 - ${shellQuote(payload)}`;
   const result = spawnSync('ssh', [config.sshHost, remoteCommand], {
     input: runner,

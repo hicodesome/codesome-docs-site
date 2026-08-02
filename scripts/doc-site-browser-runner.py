@@ -155,31 +155,35 @@ def console_errors(events):
     return [str(error) for error in errors if str(error).strip()]
 
 
-def wait_for_page(cdp: CDP, session_id: str, article: str, deadline: float):
+def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline: float, require_article: bool = False):
     article_json = json.dumps(article, ensure_ascii=False)
+    title_json = json.dumps(title, ensure_ascii=False)
     article_base_json = json.dumps(article[:-3] if article.lower().endswith('.md') else article, ensure_ascii=False)
     while time.monotonic() < deadline:
         state = evaluate(
             cdp,
             """(() => {
               const article = %s;
+              const title = %s;
               const articleBase = %s;
               const hash = decodeURIComponent(location.hash || '');
+              const h1 = document.querySelector('.markdown-section h1')?.textContent?.trim() || '';
               return {
                 ready: document.readyState === 'complete',
                 sidebar: Boolean(document.querySelector('.sidebar-nav a')),
                 markdown: Boolean(document.querySelector('.markdown-section')),
                 route: hash,
                 article: hash.includes(article) || hash.includes(articleBase),
-                h1: Boolean(document.querySelector('.markdown-section h1'))
+                h1: h1,
+                title: title
               };
-            })()""" % (article_json, article_base_json),
+            })()""" % (article_json, title_json, article_base_json),
             session_id,
         ) or {}
         if state.get("ready") and state.get("sidebar") and state.get("markdown"):
-            if state.get("article") and state.get("h1"):
+            if require_article and state.get("article") and state.get("h1") == state.get("title"):
                 return state
-            if not state.get("article"):
+            if not require_article and not state.get("article"):
                 return state
         time.sleep(0.25)
     raise RuntimeError("timed out waiting for Docsify content")
@@ -265,7 +269,7 @@ def run(config, websocket_url):
         base_url = config["url"].rstrip("/")
         timeout_s = max(10, config["timeout_ms"] / 1000)
         cdp.call("Page.navigate", {"url": base_url + "/#/"}, session_id=session_id)
-        wait_for_page(cdp, session_id, config["article"], time.monotonic() + timeout_s)
+        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s)
         home_events = cdp.drain_events()
         home = snapshot(cdp, session_id, config["article"])
         home_events += cdp.drain_events()
@@ -282,13 +286,17 @@ def run(config, websocket_url):
                 const href = decodeURIComponent(link.getAttribute('href') || '');
                 return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
               });
-              if (!target) return {clicked: false, href: ''};
+              if (!target) return {clicked: false, href: location.href};
               target.click();
               return {clicked: true, href: target.href};
             })()""" % json.dumps(config["article"], ensure_ascii=False),
             session_id,
         ) or {"clicked": False, "href": ""}
-        wait_for_page(cdp, session_id, config["article"], time.monotonic() + timeout_s)
+        is_homepage = config["article"] == "03-Agentic入门宝典.md"
+        if navigation.get("clicked"):
+            wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
+        elif not is_homepage:
+            wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
         prepare_and_wait_for_images(cdp, session_id, time.monotonic() + timeout_s)
         article_events = cdp.drain_events()
         article = snapshot(cdp, session_id, config["article"])
