@@ -163,6 +163,7 @@
       var articleTitle = ARTICLE_TITLES[fileName];
 
       if (!articleTitle) {
+        failPipeline('main-render article has no registered title', fileName);
         return content;
       }
 

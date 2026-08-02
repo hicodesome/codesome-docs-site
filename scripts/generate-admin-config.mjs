@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articles } from './cdc-manifest.mjs';
@@ -9,6 +9,7 @@ import {
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const output = resolve(root, 'admin/config.yml');
+const checkOnly = process.argv.includes('--check');
 const baselineTitles = new Map(
   LATEST_BASELINE_ARTICLES.map(article => [article.site, article.title])
 );
@@ -68,5 +69,19 @@ for (const [index, article] of allArticles.entries()) {
   lines.push('              - code-block');
 }
 
-writeFileSync(output, `${lines.join('\n')}\n`, 'utf8');
-console.log(`Generated ${allArticles.length} Decap article entries: ${output}`);
+const expected = `${lines.join('\n')}\n`;
+if (checkOnly) {
+  let current;
+  try {
+    current = readFileSync(output, 'utf8');
+  } catch {
+    throw new Error('admin/config.yml is missing; run npm run generate:admin-config');
+  }
+  if (current !== expected) {
+    throw new Error('admin/config.yml is stale; run npm run generate:admin-config');
+  }
+  console.log(`Decap config check passed: ${allArticles.length} article entries`);
+} else {
+  writeFileSync(output, expected, 'utf8');
+  console.log(`Generated ${allArticles.length} Decap article entries: ${output}`);
+}
