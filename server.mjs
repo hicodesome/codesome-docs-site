@@ -521,7 +521,12 @@ async function handleRequest(req, res) {
   return serveStatic(req, res, url);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+export function isServerEntrypoint(argvPath = process.argv[1], pmExecPath = process.env.pm_exec_path) {
+  const modulePath = fileURLToPath(import.meta.url);
+  return [argvPath, pmExecPath].some(candidate => candidate && resolve(candidate) === modulePath);
+}
+
+if (isServerEntrypoint()) {
   const server = createServer((req, res) => {
     handleRequest(req, res).catch(error => {
       if (!res.headersSent) json(res, 500, { message: '服务内部错误' });

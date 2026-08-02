@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isAllowedContentWriteBody, isAllowedGitHubPath } from '../server.mjs';
+import { fileURLToPath } from 'node:url';
+import { isAllowedContentWriteBody, isAllowedGitHubPath, isServerEntrypoint } from '../server.mjs';
 
 const contentPath = '/repos/hicodesome/codesome-docs-site/contents/01-example.md';
 
@@ -24,4 +25,11 @@ test('read-only contents requests and non-contents writes retain their route pol
   assert.equal(isAllowedGitHubPath(contentPath, 'GET'), true);
   assert.equal(isAllowedGitHubPath('/repos/hicodesome/codesome-docs-site/pulls', 'POST'), true);
   assert.equal(isAllowedGitHubPath(contentPath, 'POST'), false);
+});
+
+test('server starts under direct Node and PM2 entrypoints but not test imports', () => {
+  const serverPath = fileURLToPath(new URL('../server.mjs', import.meta.url));
+  assert.equal(isServerEntrypoint(serverPath, ''), true);
+  assert.equal(isServerEntrypoint('/usr/local/lib/node_modules/pm2/lib/ProcessContainerFork.js', serverPath), true);
+  assert.equal(isServerEntrypoint('/tmp/node-test-runner.mjs', ''), false);
 });
