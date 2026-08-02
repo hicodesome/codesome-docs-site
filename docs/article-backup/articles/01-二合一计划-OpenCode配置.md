@@ -1,4 +1,6 @@
-# 二合一月卡如何配置 OpenCode
+# 二合一 OpenCode 配置指南
+
+## 二合一月卡如何配置 OpenCode
 
 二合一月卡如何配置希望在 **OpenCode** 中使用 Claude 或 GPT 模型的用户。
 

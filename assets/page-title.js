@@ -46,35 +46,24 @@
     state.status = 'failed';
     state.domFallbacks = (state.domFallbacks || 0) + 1;
     state.failures = state.failures || [];
-    state.failures.push({ reason: 'page-title fallback was required', title: title });
+    state.failures.push({ reason: 'registered DOM H1 is missing', title: title });
     if (typeof console !== 'undefined' && typeof console.error === 'function') {
-      console.error('[Codesome title pipeline] page-title fallback was required for: ' + title);
+      console.error('[Codesome title pipeline] registered DOM H1 is missing: ' + title);
     }
   }
 
-  function demoteHeading(node) {
-    var replacement = document.createElement('h2');
-    Array.from(node.attributes).forEach(function (attribute) {
-      replacement.setAttribute(attribute.name, attribute.value);
-    });
-    while (node.firstChild) {
-      replacement.appendChild(node.firstChild);
-    }
-    node.parentNode.replaceChild(replacement, node);
-  }
-
-  function reportDomRepair(title, count) {
+  function reportDomViolation(title, reason, count) {
     var state = pipelineState();
     state.status = 'failed';
-    state.domRepairs = (state.domRepairs || 0) + count;
+    state.domViolations = (state.domViolations || 0) + 1;
     state.failures = state.failures || [];
     state.failures.push({
-      reason: 'extra DOM H1 headings were demoted',
+      reason: reason,
       title: title,
-      count: count
+      count: count || 0
     });
     if (typeof console !== 'undefined' && typeof console.error === 'function') {
-      console.error('[Codesome title pipeline] demoted ' + count + ' extra DOM H1 heading(s): ' + title);
+      console.error('[Codesome title pipeline] ' + reason + ': ' + title);
     }
   }
 
@@ -94,36 +83,20 @@
     if (matchingHeading) {
       var extraHeadings = headings.filter(function (node) { return node !== matchingHeading; });
       if (extraHeadings.length) {
-        extraHeadings.forEach(demoteHeading);
-        reportDomRepair(title, extraHeadings.length);
+        reportDomViolation(title, 'extra DOM H1 headings violate the article contract', extraHeadings.length);
+        return;
+      }
+      if (matchingHeading !== article.firstElementChild) {
+        reportDomViolation(title, 'registered DOM H1 is not the first article element');
+        return;
       }
       matchingHeading.classList.add('page-title');
       matchingHeading.setAttribute('data-codesome-title-source', 'manifest-injector');
       markDom(title, 'manifest-injector');
-      var first = article.firstElementChild;
-      if (matchingHeading !== first) {
-        article.insertBefore(matchingHeading, first);
-      }
       return;
     }
 
     reportFallback(title);
-
-    if (isHomeRoute() && first && first.tagName === 'H1' &&
-        first.textContent.trim().indexOf('欢迎来到') === 0) {
-      first.remove();
-      first = article.firstElementChild;
-    }
-
-    articleHeadings(article).forEach(demoteHeading);
-    first = article.firstElementChild;
-
-    var heading = document.createElement('h1');
-    heading.className = 'page-title';
-    heading.setAttribute('data-codesome-title-source', 'page-title-fallback');
-    heading.textContent = title;
-    article.insertBefore(heading, first);
-    markDom(title, 'page-title-fallback');
   }
 
   function pageTitlePlugin(hook) {

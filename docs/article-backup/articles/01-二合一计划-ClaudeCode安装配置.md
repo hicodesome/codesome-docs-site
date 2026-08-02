@@ -1,3 +1,5 @@
+# 二合一 Claude Code 安装与配置指南
+
 > 这篇只适用于二合一 + Claude Code。二合一不走 V3 主站兑换，也不要使用 V3 的 `https://cc.codesome.ai` 地址。
 
 ## 适合谁读

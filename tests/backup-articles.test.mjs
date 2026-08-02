@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const siteRoot = fileURLToPath(new URL('..', import.meta.url));
 const script = join(siteRoot, 'scripts/backup-articles.mjs');
-const cdcSource = join(siteRoot, '..', '..', 'hicodesome-docs-source');
+const cdcSource = process.env.CDC_SOURCE || join(siteRoot, '..', '..', 'hicodesome-docs-source');
 const fixture = mkdtempSync(join(tmpdir(), 'codesome-article-backup-'));
 const output = join(fixture, 'docs/article-backup');
 
@@ -29,7 +29,7 @@ try {
   writeFileSync(join(fixture, 'images/sample.png'), Buffer.from('fixture-image\n'));
   writeFileSync(
     join(fixture, '01-PIAgent模型配置示例.md'),
-    '# Fixture\n\n![sample](images/sample.png)\n\n![sample again](images/sample.png)\n'
+    '# PIAgent 模型配置示例\n\n![sample](images/sample.png)\n\n![sample again](images/sample.png)\n'
   );
   execFileSync('git', ['init', '-q', '-b', 'main'], { cwd: fixture });
   execFileSync('git', ['config', 'user.name', 'backup-test'], { cwd: fixture });

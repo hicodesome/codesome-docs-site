@@ -11,6 +11,8 @@ import {
   internalTargetForUrl
 } from './cdc-manifest.mjs';
 import { LATEST_BASELINE_SITES } from './content-baseline.mjs';
+import { articleTitleMap } from './title-metadata.mjs';
+import { normalizeArticleMarkdown } from './markdown-headings.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const checkOnly = process.argv.includes('--check');
@@ -117,7 +119,8 @@ for (const imagePath of [...imagePaths].sort()) {
   snapshotImages.set(imagePath, { content, hash: sha256(content) });
 }
 
-function renderArticle(source) {
+function renderArticle(source, title) {
+  if (!title) throw new Error('CDC article is missing its registered publication title');
   let rewrites = 0;
   let content = source.replace(imagePattern(), (match, prefix, bracketed, bare, suffix) => {
     const imagePath = imagePathFromTarget(bracketed ?? bare);
@@ -148,7 +151,10 @@ function renderArticle(source) {
     return `[站内文章](${target})`;
   });
 
-  return { content: content.replace(/\s*$/, '\n'), rewrites };
+  return {
+    content: normalizeArticleMarkdown(content.replace(/\s*$/, '\n'), title),
+    rewrites
+  };
 }
 
 let changedArticles = 0;
@@ -159,7 +165,7 @@ const imageMismatches = [];
 
 for (const article of cdcArticles) {
   const source = sourceArticles.get(article.source);
-  const rendered = renderArticle(source);
+  const rendered = renderArticle(source, articleTitleMap.get(article.site));
   const destination = resolve(root, article.site);
   const current = readFileSync(destination, 'utf8');
   totalRewrites += rendered.rewrites;

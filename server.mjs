@@ -4,7 +4,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { extname, relative, resolve } from 'node:path';
-import { normalizeArticleMarkdown } from './scripts/markdown-headings.mjs';
+import { assertCanonicalArticleMarkdown } from './scripts/markdown-headings.mjs';
 import { articleTitleEntries } from './scripts/title-metadata.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
@@ -355,6 +355,55 @@ export function isAllowedContentWriteBody(method, body) {
   }
 }
 
+function contentPathFromApiPath(pathname) {
+  const prefix = `${REPO_API_ROOT}/contents/`;
+  if (!pathname.startsWith(prefix)) return null;
+  try {
+    return decodeURIComponent(pathname.slice(prefix.length));
+  } catch {
+    return '';
+  }
+}
+
+function parseContentPayload(body) {
+  if (!body) return null;
+  try {
+    const payload = JSON.parse(Buffer.from(body).toString('utf8'));
+    return payload && typeof payload === 'object' ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
+function decodeGitHubContent(value) {
+  if (typeof value !== 'string') return null;
+  const compact = value.replace(/\s+/g, '');
+  if (!compact || !/^[A-Za-z0-9+/]*={0,2}$/.test(compact) || compact.length % 4 !== 0) return null;
+  const content = Buffer.from(compact, 'base64');
+  if (content.toString('base64') !== compact) return null;
+  return content.toString('utf8');
+}
+
+export function isAllowedArticleContentWrite(pathname, method, body) {
+  if (!['PUT', 'DELETE'].includes(method)) return true;
+  const articlePath = contentPathFromApiPath(pathname);
+  if (articlePath === null || articlePath.startsWith('images/uploads/')) return true;
+  if (PUBLIC_DOCUMENT_FILES.has(articlePath)) return true;
+
+  const title = PUBLIC_ARTICLE_TITLES.get(articlePath);
+  if (!title || method === 'DELETE') return false;
+  const payload = parseContentPayload(body);
+  const content = decodeGitHubContent(payload?.content);
+  if (content === null) return false;
+
+  try {
+    assertCanonicalArticleMarkdown(content, title);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function isAllowedGitHubPath(pathname, method) {
   if (!ALLOWED_PROXY_METHODS.has(method)) return false;
   if (!pathname || pathname.includes('\\') || pathname.includes('\0') || /(?:^|\/)\.\.(?:\/|$)/.test(pathname) || /%2e(?:%2e)?/i.test(pathname)) return false;
@@ -410,8 +459,11 @@ async function handleGitHubProxy(req, res, url) {
 
   const isContentsPath = pathname === `${REPO_API_ROOT}/contents` ||
     pathname.startsWith(`${REPO_API_ROOT}/contents/`);
-  if (isContentsPath && !isAllowedContentWriteBody(req.method, body)) {
-    return json(res, 403, { message: 'contents writes must target a cms/* branch' });
+  if (isContentsPath && (
+    !isAllowedContentWriteBody(req.method, body) ||
+    !isAllowedArticleContentWrite(pathname, req.method, body)
+  )) {
+    return json(res, 403, { message: 'contents writes must target a cms/* branch and canonical registered article' });
   }
 
   if (req.method === 'POST' && pathname.endsWith('/git/refs')) {
@@ -498,9 +550,9 @@ async function serveStatic(req, res, url) {
   if (articleTitle) {
     try {
       const source = await readFile(absolutePath, 'utf8');
-      responseBody = Buffer.from(normalizeArticleMarkdown(source, articleTitle), 'utf8');
+      responseBody = Buffer.from(assertCanonicalArticleMarkdown(source, articleTitle), 'utf8');
     } catch {
-      return text(res, 500, 'Article could not be normalized');
+      return text(res, 500, 'Article title contract failed');
     }
   }
 

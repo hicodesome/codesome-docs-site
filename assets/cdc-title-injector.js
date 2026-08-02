@@ -1,10 +1,10 @@
 /**
  * CDC Title Injector
  *
- * Normalizes article headings before Docsify compiles the main article and
- * wraps Docsify.get for the search plugin. Each article receives one manifest
- * H1, while source H1 headings become H2 sections. This keeps the rendered
- * page and search results at article level without changing Markdown on disk.
+ * Validates the canonical article heading before Docsify compiles the main
+ * article and wraps Docsify.get for the search plugin. The source file must
+ * already contain exactly one manifest H1; this browser layer never repairs a
+ * bad article because a repair would hide a broken publication source.
  *
  * Must be loaded AFTER docsify.min.js (so the plugin can be registered before
  * DOMContentLoaded) and BEFORE search.min.js (which calls Docsify.get during
@@ -141,6 +141,11 @@
     var normalized = canonicalPrefix
       ? ['# ' + title].concat(normalizedLines).join('\n')
       : ['# ' + title, ''].concat(normalizedLines).join('\n');
+    if (normalized !== source) {
+      failPipeline('registered article source is not canonical', fileName);
+      return content;
+    }
+
     markProcessed(fileName, title);
     return normalized;
   }
@@ -197,8 +202,8 @@
   pipeline.status = 'ready';
 
   /* ── 3. Wrap Docsify.get ────────────────────────────────────────────
-   * Intercept every Docsify fetch for a registered article. Prepend the formal
-   * article title for search indexing and demote source H1 headings to H2.
+   * Intercept every Docsify fetch for a registered article. Validate the exact
+   * source used by search indexing so it cannot diverge from the main render.
    *
    * The search plugin runs in a later lifecycle and calls Docsify.get, so this
    * wrapper keeps its index consistent with the main-render path above.
@@ -215,7 +220,7 @@
       return origGet(url, hasBar, headers);
     }
 
-    // Fetch the raw content and normalize its heading hierarchy.
+    // Fetch the raw content and validate its heading hierarchy.
     var result = origGet(url, hasBar, headers);
 
     // Handle cached content returned directly as a string.

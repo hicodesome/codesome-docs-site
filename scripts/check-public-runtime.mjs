@@ -170,7 +170,7 @@ async function main() {
     const criticalResources = [
       ['assets/article-titles.js', 'CODESOME_ARTICLE_TITLES'],
       ['assets/cdc-title-injector.js', 'CODESOME_TITLE_PIPELINE'],
-      ['assets/page-title.js', 'page-title-fallback']
+      ['assets/page-title.js', 'reportFallback']
     ];
     for (const [path, marker] of criticalResources) {
       const response = await requestText(port, publicPath(path));
@@ -179,10 +179,19 @@ async function main() {
       }
     }
 
+    const pageTitleSource = (await requestText(port, publicPath('assets/page-title.js'))).body;
+    if (/<h1\b/i.test(pageTitleSource) || /createElement\s*\(\s*['"]h1['"]\s*\)/i.test(pageTitleSource) || pageTitleSource.includes('page-title-fallback')) {
+      throw new Error('browser page-title layer must not synthesize a fallback H1');
+    }
+
     for (const { site, title } of articleTitleEntries) {
       const response = await requestText(port, publicPath(site));
       if (response.status !== 200 || !response.body.trim()) {
         throw new Error(`registered article is not publicly readable: ${site} (HTTP ${response.status})`);
+      }
+      const source = readFileSync(resolve(root, site), 'utf8');
+      if (response.body !== source) {
+        throw new Error(`public article response differs from its canonical source: ${site}`);
       }
       const h1s = headings(response.body).filter(heading => heading.level === 1);
       if (h1s.length !== 1 || h1s[0].text !== title) {

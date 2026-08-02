@@ -2,7 +2,11 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { headings, normalizeArticleMarkdown } from './markdown-headings.mjs';
+import {
+  assertCanonicalArticleMarkdown,
+  headings,
+  normalizeArticleMarkdown
+} from './markdown-headings.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(fileURLToPath(new URL('../', import.meta.url)));
@@ -25,22 +29,21 @@ for (const { site, title } of articleTitleEntries) {
   const source = readFileSync(path, 'utf8');
   if (!source.trim()) errors.push(`${site}: article source is empty`);
 
-  let normalized;
   try {
-    normalized = normalizeArticleMarkdown(source, title);
+    assertCanonicalArticleMarkdown(source, title);
     assert.equal(
-      normalizeArticleMarkdown(normalized, title),
-      normalized,
-      `${site}: article title normalization is not idempotent`
+      normalizeArticleMarkdown(source, title),
+      source,
+      `${site}: article source is not in canonical title format`
     );
   } catch (error) {
     errors.push(`${site}: ${error.message}`);
     continue;
   }
 
-  const h1s = headings(normalized).filter(heading => heading.level === 1);
+  const h1s = headings(source).filter(heading => heading.level === 1);
   try {
-    assert.deepEqual(h1s, [{ level: 1, text: title }], `${site}: normalized article must contain one registered H1`);
+    assert.deepEqual(h1s, [{ level: 1, text: title }], `${site}: source article must contain one registered H1`);
   } catch (error) {
     errors.push(error.message);
   }
@@ -61,4 +64,4 @@ if (articleSidebarLinks.length !== articleTitleEntries.length) {
 }
 
 if (errors.length) throw new Error(errors.join('\n'));
-console.log(`Article title contract passed: ${articleTitleEntries.length} source articles, normalized H1 and sidebar entries in sync`);
+console.log(`Article title contract passed: ${articleTitleEntries.length} canonical source H1 and sidebar entries in sync`);

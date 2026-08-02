@@ -1,4 +1,6 @@
-# 一、适用场景
+# CC Switch 配置 Claude 桌面端教程
+
+## 一、适用场景
 
 本文档适用于需要通过 CC Switch 配置 Claude 桌面端（Cowork）的用户。
 
@@ -6,7 +8,7 @@ CC Switch 是用来管理 Claude Code 和 Claude 桌面端接入地址、API Key
 
 ***
 
-# 二、准备工作
+## 二、准备工作
 
 开始前请先准备好以下内容：
 
@@ -20,7 +22,7 @@ CC Switch 是用来管理 Claude Code 和 Claude 桌面端接入地址、API Key
 
 ***
 
-# 三、下载并安装 CC Switch
+## 三、下载并安装 CC Switch
 
 **重要提示**：CC Switch 不是 Claude Code 或 Claude 桌面端本体，而是用来管理它们的配置工具。请先完成 Claude 桌面端安装，再下载并打开 CC Switch。
 
@@ -50,7 +52,7 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 ***
 
-# 四、使用 CC Switch 配置 Claude 桌面端
+## 四、使用 CC Switch 配置 Claude 桌面端
 
 ## 4.1 V3 产品线配置
 
@@ -99,7 +101,7 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 ***
 
-# 五、验证配置
+## 五、验证配置
 
 ## 5.1 Windows 验证
 
@@ -119,7 +121,7 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 ***
 
-# 六、常见问题
+## 六、常见问题
 
 ## 6.1 配置不生效
 
@@ -173,7 +175,7 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 ***
 
-# 七、参考文档
+## 七、参考文档
 
 * Claude Cowork 官方配置文档：https://claude.com/docs/cowork/3p/configuration
 
@@ -183,7 +185,7 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 ***
 
-# 八、遇到报错怎么办
+## 八、遇到报错怎么办
 
 如果配置过程中遇到报错，请查看：
 

@@ -3,7 +3,7 @@
 本教程适用于 Codesome 二合一版本（V5）
 \</quote-container>
 
-# Mac 小白版：从零配好 Hermes（二合一版本）
+## Mac 小白版：从零配好 Hermes（二合一版本）
 
 ## 一、安装 Git
 

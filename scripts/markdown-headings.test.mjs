@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { headings, normalizeArticleMarkdown } from './markdown-headings.mjs';
+import {
+  assertCanonicalArticleMarkdown,
+  headings,
+  normalizeArticleMarkdown
+} from './markdown-headings.mjs';
 
 test('heading scanner includes Setext and nested HTML H1 elements', () => {
   const result = headings([
@@ -46,4 +50,21 @@ test('article title normalization is unique and idempotent', () => {
   assert.match(normalized, /## Source title/);
   assert.match(normalized, /<h1>code sample<\/h1>/);
   assert.equal(normalizeArticleMarkdown(normalized, 'Fixture title'), normalized);
+});
+
+test('canonical article validation rejects missing, duplicate, or mismatched H1 sources', () => {
+  const valid = '# Fixture title\n\n## Body\n';
+  assert.equal(assertCanonicalArticleMarkdown(valid, 'Fixture title'), valid);
+  assert.throws(
+    () => assertCanonicalArticleMarkdown('Body\n', 'Fixture title'),
+    /must start with the registered H1/
+  );
+  assert.throws(
+    () => assertCanonicalArticleMarkdown('# Fixture title\n\n# Duplicate\n', 'Fixture title'),
+    /must contain exactly one registered H1/
+  );
+  assert.throws(
+    () => assertCanonicalArticleMarkdown('# Fixture title\r\n', 'Fixture title'),
+    /LF line endings/
+  );
 });

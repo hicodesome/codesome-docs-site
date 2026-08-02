@@ -86,12 +86,15 @@ async function checkMode(mode) {
   assert.equal(Object.keys(actualMap).length, articleTitleEntries.length, 'generated title map size drifted');
 
   for (const { site, title } of articleTitleEntries) {
+    const source = readFileSync(resolve(root, site), 'utf8');
     const output = await normalizedMarkdown(context, site);
+    assert.equal(output, source, `${site}: browser title pipeline must not repair source Markdown`);
     const h1s = headings(output).filter(heading => heading.level === 1);
     assert.deepEqual(h1s, [{ level: 1, text: title }], `${site}: rendered H1 does not match its registered title`);
 
     // Docsify's main renderer bypasses Docsify.get and enters beforeEach.
     const mainOutput = await renderedMarkdownThroughMainHook(context, site);
+    assert.equal(mainOutput, source, `${site}: main-render title pipeline must not repair source Markdown`);
     const mainH1s = headings(mainOutput).filter(heading => heading.level === 1);
     assert.deepEqual(mainH1s, [{ level: 1, text: title }], `${site}: main-render beforeEach H1 does not match its registered title`);
 

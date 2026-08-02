@@ -22,6 +22,8 @@ import {
   LATEST_BASELINE_SITES,
   SITE_ONLY_SITES
 } from './content-baseline.mjs';
+import { articleTitleMap } from './title-metadata.mjs';
+import { assertCanonicalArticleMarkdown } from './markdown-headings.mjs';
 
 const scriptRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const imagePattern = /!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^)]+?))\s*\)/g;
@@ -211,6 +213,13 @@ function discoverArticles() {
       throw new Error(`site article is not registered in CDC or site-only baseline: ${sitePath}`);
     }
     const content = readFileSync(join(root, sitePath), 'utf8');
+    const title = articleTitleMap.get(sitePath);
+    if (!title) throw new Error(`site article has no registered publication title: ${sitePath}`);
+    try {
+      assertCanonicalArticleMarkdown(content, title);
+    } catch (error) {
+      throw new Error(`${sitePath}: ${error.message}`);
+    }
     const imageReferences = extractImagePaths(content, sitePath);
     for (const imagePath of imageReferences) {
       const users = imageUsers.get(imagePath) ?? new Map();

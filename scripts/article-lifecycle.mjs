@@ -9,6 +9,7 @@ import {
 } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { assertCanonicalArticleMarkdown } from './markdown-headings.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const manifestPath = resolve(root, 'scripts/cdc-manifest.mjs');
@@ -66,6 +67,14 @@ function jsString(value) {
 
 function read(path) {
   return readFileSync(path, 'utf8');
+}
+
+function assertArticleSource(site, title) {
+  try {
+    assertCanonicalArticleMarkdown(read(resolve(root, site)), title);
+  } catch (error) {
+    fail(`${site} 标题契约不通过: ${error.message}`);
+  }
 }
 
 function write(path, content) {
@@ -238,6 +247,7 @@ function addArticle(options) {
   const type = required(options, 'type');
   if (!['slot', 'site-only'].includes(type)) fail('--type 只能是 slot 或 site-only');
   if (!existsSync(resolve(root, site))) fail(`文章文件不存在: ${site}`);
+  assertArticleSource(site, title);
   if (hasSiteRegistration(site)) fail(`文章已登记: ${site}`);
 
   if (type === 'slot') {
@@ -267,6 +277,7 @@ function replaceArticle(options) {
   if (from === to) fail('--site 与 --to 不能相同');
   if (!existsSync(resolve(root, to))) fail(`新文章文件不存在: ${to}`);
   if (existsSync(resolve(root, from))) fail(`旧文章文件仍存在，请先移除或归档: ${from}`);
+  assertArticleSource(to, title);
   if (hasSiteRegistration(to)) fail(`新文章已登记: ${to}`);
 
   updateRegisteredArticle(from, to, title);
@@ -293,6 +304,8 @@ function renameArticle(options) {
     : findEntry(read(baselinePath), from, 'content baseline').text.match(/^    title: (.*?),?$/m)?.[1];
   const title = options.title ?? (oldTitle ? oldTitle.slice(1, -1).replaceAll("\\'", "'") : undefined);
   if (!title) fail('无法读取旧标题，请提供 --title');
+
+  assertArticleSource(existsSync(resolve(root, from)) ? from : to, title);
 
   if (existsSync(resolve(root, from))) renameSync(resolve(root, from), resolve(root, to));
   if (read(manifestPath).includes(`site: ${jsString(from)},`)) {

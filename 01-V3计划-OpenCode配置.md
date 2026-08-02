@@ -1,4 +1,6 @@
-# V3 如何配置 OpenCode
+# V3 OpenCode 配置指南
+
+## V3 如何配置 OpenCode
 
 V3 如何配置希望在 **OpenCode** 中使用 Claude 或 GPT 模型的用户。
 

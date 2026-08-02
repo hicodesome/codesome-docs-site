@@ -3,9 +3,9 @@
   "formatVersion": 1,
   "generatedFrom": {
     "site": {
-      "commit": "20c358d7e4006bfc1aacf222789b228d9fa761c5",
-      "commitDate": "2026-08-02T18:16:58+08:00",
-      "branch": "codex/merge-docsite-20260802"
+      "commit": "67edc52543643e2311340314fabd9e71e32f17ec",
+      "commitDate": "2026-08-02T20:47:50+08:00",
+      "branch": "codex/title-invariant-20260802"
     },
     "cdc": {
       "tag": "cdc-snapshot-2026-07-14",
@@ -27,8 +27,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "CC Switch 配置 Claude 桌面端教程 - Feishu Docs.md",
-      "bytes": 6862,
-      "sha256": "756fa139c34fff351a1f001920cb3842a37c682e8868c5bb4afc08525712a923",
+      "bytes": 6913,
+      "sha256": "1b440cd41c5ef411215cb24ca6b71625b312b35590edd00fcfdfcfe9c6e9cc90",
       "backupPath": "articles/01-CCSwitch配置Claude桌面端.md",
       "imageReferences": [
         "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-download.png",
@@ -65,8 +65,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "V3 Claude Code 安装与配置指南 - Feishu Docs.md",
-      "bytes": 18237,
-      "sha256": "2325c5ec5a54825ee445d38373ce72916f01b27319862e2daf86c86553eef158",
+      "bytes": 18277,
+      "sha256": "f37f51f6a982d69d14496728a72e9137fc1f16c5265d2eeb450e55417c342982",
       "backupPath": "articles/01-V3计划-ClaudeCode安装配置.md",
       "imageReferences": [
         "images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png",
@@ -94,8 +94,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "V3 Codex 安装与配置指南 - Feishu Docs.md",
-      "bytes": 8378,
-      "sha256": "74ff55df936ff95a8e36c02c5321eebcee210f60a55d7d6ef7138a2ac8e0469e",
+      "bytes": 8412,
+      "sha256": "afe37b2ac23a2493866ec820ccf33f183f616b724d902f207cdfdaf5bda6ab24",
       "backupPath": "articles/01-V3计划-Codex安装配置.md",
       "imageReferences": [
         "images/V3 Codex 安装与配置指南-image-009.png",
@@ -131,8 +131,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "V3 如何配置 OpenCode - Feishu Docs.md",
-      "bytes": 11086,
-      "sha256": "9f509a400d2badb1661e01c55d78907b670ba32af94b077aa6e37deba67360bd",
+      "bytes": 11115,
+      "sha256": "ae462d34e2e0bc549601990b1ee66a72b363a339d9128158dc669e8c86b69955",
       "backupPath": "articles/01-V3计划-OpenCode配置.md",
       "imageReferences": [
         "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
@@ -144,8 +144,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "二合一 Claude Code 安装与配置指南 - Feishu Docs.md",
-      "bytes": 13477,
-      "sha256": "f34faffb665274645cf05c4ae7558c41841a930a6713811b77b86df976a18a75",
+      "bytes": 13524,
+      "sha256": "7779882ce477dbac544e6cab4929bf8c64ef251906c0113c23b70ab741a9992c",
       "backupPath": "articles/01-二合一计划-ClaudeCode安装配置.md",
       "imageReferences": [
         "images/二合一 Claude Code 安装与配置指南-image.png",
@@ -163,8 +163,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "二合一 Codex 安装与配置指南 - Feishu Docs.md",
-      "bytes": 8732,
-      "sha256": "4d4ad5d69062cab3cbe78540c8b1fd8e3d7be14a35c77f8d8cb989a8a1d9a1cb",
+      "bytes": 8773,
+      "sha256": "7503da49b45ec507bde11dc844d194e0ef5d4a2fad6748be020279bc2e11e110",
       "backupPath": "articles/01-二合一计划-Codex安装配置.md",
       "imageReferences": [
         "images/二合一 Codex 安装与配置指南-Screenshot 2026-07-11 215853.png",
@@ -184,8 +184,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "【最新】hermes配置教程 - Feishu Docs.md",
-      "bytes": 13067,
-      "sha256": "fd308dbcd0b8b8771ce09a7cfcfbb3f866b394ee00999af7c2f7809e4ecc109d",
+      "bytes": 13103,
+      "sha256": "4f52628e5a4f731b07839a959d4cadbfd8142003fd001159a0507edb0e887672",
       "backupPath": "articles/01-二合一计划-Hermes配置-AI自动版.md",
       "imageReferences": [
         "images/【最新】hermes配置教程-image-1.png",
@@ -199,8 +199,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "【最新】Hermes 二合一配置教程 - Feishu Docs.md",
-      "bytes": 5233,
-      "sha256": "e85c138e09e57d8d20ccd63273136bd06371e5a39307d72fd807c701c33908ad",
+      "bytes": 5234,
+      "sha256": "96f34f53ba6a4a67290c67fa5e3d91df6d22683a9a76dba97cc0bd33b94ca80a",
       "backupPath": "articles/01-二合一计划-Hermes配置-Mac手动版.md",
       "imageReferences": []
     },
@@ -209,8 +209,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "二合一月卡如何配置 OpenCode - Feishu Docs.md",
-      "bytes": 12692,
-      "sha256": "79fa2ba243b4c0a28652575a0d06d7ea456ce433f8209ad1e587f6e4dc876a56",
+      "bytes": 12728,
+      "sha256": "2da73dbbe50a9690d26bcb2571fb5f5e03dfde213984dd02a40f8863811454c1",
       "backupPath": "articles/01-二合一计划-OpenCode配置.md",
       "imageReferences": [
         "images/二合一月卡如何配置 OpenCode-切换模型使用斜杠model命令.png",
@@ -222,8 +222,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "Feishu Docs.md",
-      "bytes": 750,
-      "sha256": "01935446170d1454779009b801c557b0a190b83e762a79189c8463ff08e81438",
+      "bytes": 775,
+      "sha256": "6e2c1d0a483c70b97ebf5640248ab84d9c4a1e6c4367e8c5fdb39a1c192fb9ca",
       "backupPath": "articles/01-官方地址.md",
       "imageReferences": []
     },
@@ -232,8 +232,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "第三方客户端接入 Codesome 配置指南 - Feishu Docs.md",
-      "bytes": 11456,
-      "sha256": "98dcd767e0d04b5a89417c3091448b646b5c2ba1dff4a559d57f6c0a64e53c29",
+      "bytes": 11507,
+      "sha256": "fb22c2dd677eb1848654e83c94a7c7bb92a152a4e3be95937c70b2f7e945b601",
       "backupPath": "articles/01-第三方客户端接入配置.md",
       "imageReferences": [
         "images/第三方客户端接入 Codesome 配置指南-image-001.png",
@@ -263,8 +263,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "Claude Code 上下文自动压缩配置 - Feishu Docs.md",
-      "bytes": 3619,
-      "sha256": "89c50e5a0f4e6838ee0e57ea4134abca5094ed70ae89769b5ffb74f5928b3f67",
+      "bytes": 3662,
+      "sha256": "3c47af30c35757afaf98f87302ba5823630453fc2e13c2a552c7db4a58f9635d",
       "backupPath": "articles/02-ClaudeCode上下文压缩配置.md",
       "imageReferences": []
     },
@@ -273,8 +273,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "Codex 桌面版持续 Reconnecting + 502 报错排查 - Feishu Docs.md",
-      "bytes": 3778,
-      "sha256": "ca850bbaae325d39c8f3e21dafe1fddfa31c1944a21cab4e551a45c441d5e871",
+      "bytes": 3835,
+      "sha256": "9053b8cfbb66bad78dd5bbda020947a3d0d90a526b4532d67b00bd199bb661e6",
       "backupPath": "articles/02-Codex桌面版断连和502排查.md",
       "imageReferences": [
         "images/Codex 桌面版持续 Reconnecting + 502 报错排查-image.png",
@@ -316,8 +316,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告 - Feishu Docs.md",
-      "bytes": 3110,
-      "sha256": "bca830e6405768c1fb949b2ef6cc5d07d60268e263aef46f16b9e7c71d44ebeb",
+      "bytes": 3185,
+      "sha256": "6d873156a27157191c46e8fafee093413c7684a03b18142034eaedd998c56580",
       "backupPath": "articles/02-平台服务紧张应对方案.md",
       "imageReferences": [
         "images/关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告-image.png"
@@ -338,8 +338,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 8021,
-      "sha256": "16d191e887211a3e003ef8143f528aac1922737354875ceefee8941a99027845",
+      "bytes": 8058,
+      "sha256": "f410611e3b3ce5989b2aea52d53edea03c56d9c7c94d93f16485ac7b72b8d4d3",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"
@@ -350,8 +350,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化 - Feishu Docs.md",
-      "bytes": 3753,
-      "sha256": "d02a99e6246d8968c8cd379e873220e5a58e7dd3b637f354ed5f91bf764913d6",
+      "bytes": 3843,
+      "sha256": "604f7855ccb483a6f23c9532d8d5c194a0aa3291fa06da4b08fbede211271fcb",
       "backupPath": "articles/03-Agentway学习平台介绍.md",
       "imageReferences": [
         "images/从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化-agentway-invite-codesome.png",
@@ -373,8 +373,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "这样做，可以省下大半 Token 账单：长上下文降费执行手册 - Feishu Docs.md",
-      "bytes": 10276,
-      "sha256": "1589c234959b9380ed6a5828a9b522d4d96f79767950a6e43fee95f106049c08",
+      "bytes": 10356,
+      "sha256": "89abb90bacc5598f0ebbe281f39b2c634e660e49c37e5acd6ad45d0697ba7206",
       "backupPath": "articles/03-Token降费执行手册.md",
       "imageReferences": []
     },
@@ -383,8 +383,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "懒人党福音最简单：通过对话来管理你的 cc 中转站 - Feishu Docs.md",
-      "bytes": 2695,
-      "sha256": "2dc934d7e4ea0b448a2022d8592980d285900868ff618e8292a30942408e8729",
+      "bytes": 2766,
+      "sha256": "5c804d6542d2f4399689346209f0da96e8cf6bef27a9d0bc6afbf47af8326ae8",
       "backupPath": "articles/03-对话管理CC中转站.md",
       "imageReferences": [
         "images/懒人党福音最简单：通过对话来管理你的 cc 中转站-image-001.jpg",
@@ -399,8 +399,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等） - Feishu Docs.md",
-      "bytes": 6032,
-      "sha256": "a611a78de9308337bf0783177f81c0911ce74ab7b3141bfcbe51fbf9bf22103b",
+      "bytes": 6164,
+      "sha256": "9689d4114629c36ff4f2a8bca16ae198944024e8655124a79d1b6668334e626b",
       "backupPath": "articles/03-牛马神器-CC绘制PPT.md",
       "imageReferences": [
         "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-1.png",
@@ -415,8 +415,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "codesome claude code小白课程录播 - Feishu Docs.md",
-      "bytes": 813,
-      "sha256": "38e919069a66d0b599159741a228648288bd4ef3945e4b13f04047ce8141cc0f",
+      "bytes": 855,
+      "sha256": "5209bf4132b8d151db5a135240f500ff515becb0420a131643656c29d09d1dab",
       "backupPath": "articles/04-小白课程录播合集.md",
       "imageReferences": []
     },
@@ -425,8 +425,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "AI 编程课红包福利 - Feishu Docs.md",
-      "bytes": 223,
-      "sha256": "ce3797a69cb1e95b90f006cd62133f3960cb0eeb95963dc37bcbbc4dd16cb692",
+      "bytes": 251,
+      "sha256": "aac511c2cadfe6810db3d2b3095bd62abb81cf918ec3ef5226d380b5fd72d5a8",
       "backupPath": "articles/05-AI编程课红包福利.md",
       "imageReferences": []
     },
@@ -435,8 +435,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "cc兑换码兑换指南 - Feishu Docs.md",
-      "bytes": 536,
-      "sha256": "76f039aad06932e16fc43af227f5b22f8319aa36811dc1ade9876412540d21c4",
+      "bytes": 563,
+      "sha256": "fe70b6c75165b8ddfcc885c238610bb91262277f40d2513b3b46b89e09ba85b7",
       "backupPath": "articles/05-兑换码兑换指南.md",
       "imageReferences": [
         "images/cc兑换码兑换指南-image-1.png",

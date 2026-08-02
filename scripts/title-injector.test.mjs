@@ -9,7 +9,7 @@ import { headings } from './markdown-headings.mjs';
 const root = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const injector = readFileSync(resolve(root, 'assets/cdc-title-injector.js'), 'utf8');
 
-function normalize(source) {
+function run(source) {
   const context = {
     console,
     Promise,
@@ -32,30 +32,35 @@ function normalize(source) {
     plugin({ beforeEach(callback) { hooks.push(callback); } });
   }
   assert.equal(hooks.length, 1);
-  return hooks[0](source);
+  return { context, output: hooks[0](source) };
 }
 
-test('title injector demotes ATX, Setext and HTML H1 sources', () => {
+test('title injector accepts a canonical article source unchanged', () => {
   const source = [
-    '<section><h1>Nested title</h1></section>',
+    '# Fixture title',
     '',
-    'Setext title',
-    '============',
-    '',
-    '# Source title',
+    '## Body section',
     '',
     '```html',
     '<h1>code sample</h1>',
-    '```'
+    '```',
+    ''
   ].join('\n');
-  const normalized = normalize(source);
+  const { context, output } = run(source);
 
-  assert.deepEqual(headings(normalized).filter(heading => heading.level === 1), [
+  assert.equal(output, source);
+  assert.deepEqual(headings(output).filter(heading => heading.level === 1), [
     { level: 1, text: 'Fixture title' }
   ]);
-  assert.match(normalized, /<h2>Nested title<\/h2>/);
-  assert.match(normalized, /## Setext title/);
-  assert.match(normalized, /## Source title/);
-  assert.match(normalized, /<h1>code sample<\/h1>/);
-  assert.equal(normalize(normalized), normalized);
+  assert.equal(context.CODESOME_TITLE_PIPELINE.status, 'ready');
+  assert.equal(context.CODESOME_TITLE_PIPELINE.failures.length, 0);
+});
+
+test('title injector fails closed for a non-canonical source', () => {
+  const source = '# Wrong title\n\n正文\n';
+  const { context, output } = run(source);
+
+  assert.equal(output, source);
+  assert.equal(context.CODESOME_TITLE_PIPELINE.status, 'failed');
+  assert.equal(context.CODESOME_TITLE_PIPELINE.failures.length, 1);
 });

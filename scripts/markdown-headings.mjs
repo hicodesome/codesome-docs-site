@@ -13,6 +13,34 @@ function fenceMarker(line) {
 }
 
 /**
+ * Assert that an article source is already in its publishable form.
+ *
+ * Runtime layers may validate this contract, but they must not repair a bad
+ * source file silently: doing so would let an invalid article pass CI and
+ * return later through another serving path.
+ */
+export function assertCanonicalArticleMarkdown(markdown, title) {
+  if (typeof markdown !== 'string' || typeof title !== 'string' || !title.trim()) {
+    throw new TypeError('article Markdown and title must be non-empty strings');
+  }
+  if (markdown.startsWith('\uFEFF') || markdown.includes('\r')) {
+    throw new Error('article Markdown must be UTF-8 without BOM and use LF line endings');
+  }
+
+  const expectedPrefix = `# ${title}`;
+  if (markdown.split('\n', 1)[0] !== expectedPrefix) {
+    throw new Error(`article Markdown must start with the registered H1: ${title}`);
+  }
+
+  const h1s = headings(markdown).filter(heading => heading.level === 1);
+  if (h1s.length !== 1 || h1s[0].text !== title) {
+    throw new Error(`article Markdown must contain exactly one registered H1: ${title}`);
+  }
+
+  return markdown;
+}
+
+/**
  * Make the registered article title the only level-one heading.
  *
  * The browser title injector mirrors this deliberately small transformation.
@@ -63,9 +91,10 @@ export function normalizeArticleMarkdown(markdown, title) {
   }
 
   const prefix = `# ${title}`;
-  return canonicalPrefix
+  const normalized = canonicalPrefix
     ? [prefix, ...normalizedLines].join('\n')
     : [prefix, '', ...normalizedLines].join('\n');
+  return assertCanonicalArticleMarkdown(normalized, title);
 }
 
 export function headings(markdown) {

@@ -67,21 +67,21 @@ npm run check
 
 `npm run check` 已包含缓存版本、服务公开资源、标题输入、真实 Docsify 渲染和内容完整性门禁。若只修改浏览器资源或检查发布链路，可单独运行 `npm run check:cache`；它会要求 `index.html` 中的项目自有资源带非空 `?v=`，并在存在 Git 基线时阻止资源变更但缓存版本未变。
 
-`npm run check:article-titles` 还会逐篇核对文章文件、登记标题和侧栏入口。标题登记表是文章正式标题的唯一来源；文章源文档可以没有 H1，也可以包含正文 H1，但公开服务端会在 Markdown 响应边界将正文规范化为一个登记 H1，并把其他 ATX、Setext 和 HTML H1 降为 H2。该规范化是幂等的，浏览器层只作同样规则的防御性复核。
+`npm run check:article-titles` 还会逐篇核对文章文件、登记标题和侧栏入口。每篇公开文章源文件必须以登记标题作为第一行的唯一 H1，不能缺少 H1、使用其他标题或把正文小节写成 H1。检查器会拒绝依赖运行时修复才能通过的源文件；正文标题统一使用 H2 或更低级别。
 
 ## 浏览器运行时资源
 
 生产服务会整体屏蔽 `scripts/`；该目录只放生成、检查和管理脚本。`index.html` 直接加载的浏览器脚本必须放在公开的 `assets/` 下，并同步更新对应的 `?v=` 缓存版本。这样公开脚本不会依赖服务端私有目录的例外白名单。
 
-`npm run check` 会启动本地生产服务，逐个请求 `index.html` 引用的本地脚本，并确认 `server.mjs`、`scripts/` 和 `docs/` 仍保持私有；随后用实际的标题注入器遍历全部文章，验证渲染输入恰好包含登记的正式 H1。浏览器验收会统计文章区域的全部后代 `h1`，因此嵌套 HTML H1、Setext H1 和直接子节点之外的重复标题也会失败。标题管线会把源文章中的 ATX、Setext 和 HTML H1 降为 H2，再插入唯一的登记标题。因此，浏览器脚本路径、缓存版本、私有路径规则、标题映射或注入器行为发生回归时，会在提交和发布前失败。
+`npm run check` 会启动本地生产服务，逐个请求 `index.html` 引用的本地脚本，并确认 `server.mjs`、`scripts/` 和 `docs/` 仍保持私有；随后用实际的标题注入器遍历全部文章，验证渲染输入仍是这份规范源文件。浏览器验收会统计文章区域的全部后代 `h1`，因此嵌套 HTML H1、Setext H1 和重复标题都会失败。标题管线只验证 canonical source，不再把坏源文件临时修好或静默插入 fallback 标题；浏览器脚本路径、缓存版本、私有路径规则、标题映射或注入器行为发生回归时，会在提交和发布前失败。
 
-服务端对公开文章 Markdown 和 `index.html` 使用 `no-cache, must-revalidate`，避免部署后继续使用没有标题的旧响应；版本化的浏览器资源仍通过 `index.html` 的 `?v=` 变更缓存键。运行时检查同时验证直接 Markdown 响应的 H1 和缓存头，不只验证 Docsify 最终 DOM。
+服务端对公开文章 Markdown 和 `index.html` 使用 `no-cache, must-revalidate`，避免部署后继续使用旧响应；版本化的浏览器资源仍通过 `index.html` 的 `?v=` 变更缓存键。服务端只返回通过 canonical 标题契约的原始 Markdown 字节，源文件不合格时返回失败而不是修复后继续发布。运行时检查同时验证直接 Markdown 响应与源文件字节一致、唯一 H1 和缓存头，不只验证 Docsify 最终 DOM。
 
 生产服务还会从同一份标题登记表建立编号文章白名单：未登记的 `NN-*.md` 路径直接返回 `404`，已登记文章必须能够返回非空正文。这样新增或遗漏登记的文章不能靠直接 URL 绕过标题管线公开；标题登记、文章文件、侧边栏和生成映射必须同时更新。
 
 ## 在线编辑写入边界
 
-Decap 的 `main` 是审核基线，编辑内容必须先写入 `cms/*` 草稿分支，再通过 editorial workflow 的 Pull Request 合并。站点后台代理会拒绝对 `contents/*.md` 和 `images/uploads/*` 的 `PUT/DELETE` 请求写入 `main` 或其他非 `cms/*` 分支；这条边界与标题和发布门禁一起防止后台编辑绕过审核、生成映射和浏览器验收。
+Decap 的 `main` 是审核基线，编辑内容必须先写入 `cms/*` 草稿分支，再通过 editorial workflow 的 Pull Request 合并。站点后台代理会拒绝对公开登记文章写入非 canonical Markdown、删除已登记文章，或写入 `main`/其他非 `cms/*` 分支；图片上传仍走 `images/uploads/*`。新增、改名和删除文章必须使用文章生命周期脚本并通过完整门禁。这条边界与标题和发布门禁一起防止后台编辑绕过源文件契约、生成映射和浏览器验收。
 
 `npm run check:links` 会同时读取 Git 已跟踪文件与磁盘上的根目录文章文件，因此新文章不必先 `git add` 才能检查；`npm run check:secrets` 会扫描已跟踪、已暂存和当前未跟踪的 Markdown/HTML/JS 文件，长 `sk-`、`cr-`、`sk_cr-`、`ghp_` 和 JWT 形态会阻断检查。短占位符如 `sk-xxx` 和 `sk-请替换` 不会命中长 token 规则，但不得把真实 Key 当作占位符提交。
 

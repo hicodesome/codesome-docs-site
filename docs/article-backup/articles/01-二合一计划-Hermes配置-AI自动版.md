@@ -1,6 +1,8 @@
+# 【最新】hermes配置教程
+
 》》[ codesome｜Claude code 小白无门槛宝典](03-Agentic入门宝典.md) （点击扫码进群一起畅玩 cc）
 
-# 有手就行，如何使用skill全自动配置hermes
+## 有手就行，如何使用skill全自动配置hermes
 
 首先安装trae等ai agent软件
 
@@ -375,7 +377,7 @@ Rollback:
 
 最后告诉ai，在这台电脑上帮我配置
 
-# Mac 小白版：从零配好 hermes
+## Mac 小白版：从零配好 hermes
 
 ## 一、安装 Git
 

@@ -1,3 +1,5 @@
+# V3 Claude Code 安装与配置指南
+
 > 这篇只适用于 V3 + Claude Code。不要拿这篇配置 Codex，也不要拿这篇配置二合一。
 
 ## 适合谁读
