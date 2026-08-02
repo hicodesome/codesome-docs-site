@@ -53,19 +53,30 @@ try {
   assert.equal(manifest.scope.imageReferenceCount, 2);
   assert.equal(manifest.images[0].referenceCount, 2);
   assert.equal(manifest.images[0].sha256.length, 64);
+  assert.deepEqual(Object.keys(manifest.generatedFrom.site).sort(), ['contentFingerprint', 'repository']);
+  assert.equal(manifest.generatedFrom.site.repository, 'hicodesome/codesome-docs-site');
+  assert.match(manifest.generatedFrom.site.contentFingerprint, /^[0-9a-f]{64}$/);
   const imageBackup = join(output, 'images/sample.png');
   const imageMtime = statSync(imageBackup).mtimeMs;
 
   const secondResult = run('--root', fixture, '--output', output);
   assert.match(secondResult, /0 files changed/);
   assert.equal(statSync(imageBackup).mtimeMs, imageMtime);
+  const manifestPath = join(output, 'manifest.json');
+  const manifestBytes = readFileSync(manifestPath);
+
+  writeFileSync(join(fixture, 'unrelated.txt'), 'unrelated Git content\n');
+  execFileSync('git', ['add', 'unrelated.txt'], { cwd: fixture });
+  execFileSync('git', ['commit', '-qm', 'unrelated Git commit'], { cwd: fixture });
+  const afterUnrelatedCommit = run('--root', fixture, '--output', output);
+  assert.match(afterUnrelatedCommit, /0 files changed/);
+  assert.deepEqual(readFileSync(manifestPath), manifestBytes);
+
   assert.match(
     run('--verify', '--verify-source', '--root', fixture, '--output', output),
     /backup verify passed with source hashes: 1 articles, 1 unique images/
   );
 
-  const manifestPath = join(output, 'manifest.json');
-  const manifestBytes = readFileSync(manifestPath);
   const incompleteManifest = JSON.parse(manifestBytes);
   incompleteManifest.articles = [];
   incompleteManifest.scope.articleCount = 0;

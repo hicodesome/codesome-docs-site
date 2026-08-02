@@ -4,10 +4,10 @@
 
 ## 边界
 
-  - manifest.json 是当前站点真值的来源、提交信息、文章/图片路径、大小和 SHA-256 清单。
+  - manifest.json 是当前站点真值的来源、稳定内容指纹、文章/图片路径、大小和 SHA-256 清单。
   - articles/ 与 images/ 只保存站点当前文件的副本，不复制 CDC 原始集合。
   - generatedFrom.cdc 仅记录固定 tag 的 provenance 状态，不会切换真值或改写正文；验证需显式提供 CDC checkout。
-  - 清单中的站点提交信息来自站点 Git HEAD；备份命令不写入运行时间，因此重复执行不会产生无意义差异。
+  - generatedFrom.site 只由当前公开文章和引用图片的稳定路径、哈希及引用关系计算，不写 Git HEAD、commitDate 或运行时间；无关 Git 提交不会改变清单。
 
 ## 运行
 

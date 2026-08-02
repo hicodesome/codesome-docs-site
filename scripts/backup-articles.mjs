@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   existsSync,
@@ -70,18 +69,6 @@ const cdcSourceOption = option('--cdc-source', undefined);
 const cdcSource = cdcSourceOption || process.env.CDC_SOURCE
   ? resolve(cdcSourceOption || process.env.CDC_SOURCE)
   : undefined;
-
-function gitText(repository, ...gitArgs) {
-  try {
-    return execFileSync('git', ['-C', repository, ...gitArgs], {
-      encoding: 'utf8',
-      maxBuffer: 32 * 1024 * 1024
-    });
-  } catch (error) {
-    const detail = String(error.stderr || error.message).split('\n')[0];
-    throw new Error(`git ${gitArgs.join(' ')} failed in ${repository}: ${detail}`);
-  }
-}
 
 function sha256(content) {
   return createHash('sha256').update(content).digest('hex');
@@ -191,11 +178,27 @@ function discoverArticles() {
   return { articles: records, images };
 }
 
-function siteMetadata() {
-  const commit = gitText(root, 'rev-parse', 'HEAD').trim();
+function contentFingerprint(discovered) {
+  const stableContent = {
+    articles: discovered.articles.map(article => ({
+      sitePath: article.sitePath,
+      sha256: article.sha256,
+      imageReferences: article.imageReferences
+    })),
+    images: discovered.images.map(image => ({
+      sitePath: image.sitePath,
+      sha256: image.sha256,
+      referenceCount: image.referenceCount,
+      referencedBy: image.referencedBy
+    }))
+  };
+  return sha256(Buffer.from(JSON.stringify(stableContent), 'utf8'));
+}
+
+function siteMetadata(discovered) {
   return {
-    commit,
-    commitDate: gitText(root, 'show', '-s', '--format=%cI', 'HEAD').trim()
+    repository: 'hicodesome/codesome-docs-site',
+    contentFingerprint: contentFingerprint(discovered)
   };
 }
 
@@ -244,10 +247,10 @@ const backupReadme = `# 文档站文章备份
 
 ## 边界
 
-  - manifest.json 是当前站点真值的来源、提交信息、文章/图片路径、大小和 SHA-256 清单。
+  - manifest.json 是当前站点真值的来源、稳定内容指纹、文章/图片路径、大小和 SHA-256 清单。
   - articles/ 与 images/ 只保存站点当前文件的副本，不复制 CDC 原始集合。
   - generatedFrom.cdc 仅记录固定 tag 的 provenance 状态，不会切换真值或改写正文；验证需显式提供 CDC checkout。
-  - 清单中的站点提交信息来自站点 Git HEAD；备份命令不写入运行时间，因此重复执行不会产生无意义差异。
+  - generatedFrom.site 只由当前公开文章和引用图片的稳定路径、哈希及引用关系计算，不写 Git HEAD、commitDate 或运行时间；无关 Git 提交不会改变清单。
 
 ## 运行
 
@@ -415,8 +418,8 @@ function createBackup() {
   assertInside(root, output, 'backup output');
   if (output === root) throw new Error('backup output cannot be the site repository root');
   const cdc = cdcSource ? verifyCdcProvenance(cdcSource) : unverifiedCdcProvenance();
-  const site = siteMetadata();
   const discovered = discoverArticles();
+  const site = siteMetadata(discovered);
   const manifest = buildManifest(cdc, site, discovered);
   if (dryRun) {
     console.log(

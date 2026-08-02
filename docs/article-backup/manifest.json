@@ -3,8 +3,8 @@
   "formatVersion": 2,
   "generatedFrom": {
     "site": {
-      "commit": "da5e8eb9560aea247edc50b6c1d8f7fae8ff41ce",
-      "commitDate": "2026-08-03T00:31:28+08:00"
+      "repository": "hicodesome/codesome-docs-site",
+      "contentFingerprint": "b3b7d7d3f061da00d114c42549889ed0840cca1a1590dfc54051f776283dceb7"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
