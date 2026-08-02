@@ -6,6 +6,7 @@
 - 首页 Markdown 请求必须收到 `HTTP 200`，且首页恰好有一个由标题注入器产生的正式 H1；
 - 侧栏目标链接能进入目标文章路由；
 - 文章 Markdown 请求必须为 `HTTP 200`，标题管线必须实际处理当前文章；
+- 直接读取文章 Markdown 响应时，必须已经包含登记标题且恰好一个 H1；
 - 文章区域必须有且仅有一个由标题注入器产生的正式 H1；检查统计全部后代 `h1`，不会被嵌套 HTML H1 或 Setext H1 绕过；同时检查关键正文文字和正文图片 `naturalWidth > 0`；
 - 文章页没有 `console error`。
 
@@ -40,6 +41,8 @@ Chrome DRM 前置由 `chrome-drm-fetch` 技能定义：本机需要能通过 `ss
 ## CI 前置集成门禁
 
 `npm run check` 还会运行 `npm run check:rendered-titles:browser`。该命令启动临时本地站点，用 Playwright Chromium 真实加载 `index.html` 和 Docsify，并逐篇切换全部公开文章路由。它会在带有旧搜索缓存的浏览器上下文中验证 Markdown `200`、侧栏链接、唯一 `manifest-injector` H1、标题管线状态、无 fallback、无 console/network error 和图片加载。
+
+`npm run check:article-titles` 在浏览器验收前检查 29 篇文章的文件、登记标题和侧栏入口；`npm run check:runtime` 另外检查生产服务返回的每篇 Markdown 已在服务端完成标题规范化，以及 `index.html` 和 Markdown 使用重新校验的缓存策略。这样客户端脚本失效、缓存旧版本或 CMS 写入正文时，不能只靠页面 fallback 把问题隐藏过去。
 
 CI 先执行 `npx playwright install --with-deps chromium`，再运行 `npm run check:ci`。该 CI 契约不依赖私有的 `hicodesome-docs-source`，但仍包含标题元数据、真实 Docsify Chromium、链接、图片、敏感信息和文章备份清单校验；浏览器无法安装、无法启动或任一文章断言失败，均以非零状态结束。正式发布 preflight 另外运行完整 `npm run check`，并在有 `CDC_SOURCE` 的受控工作区校验固定 CDC tag 和来源哈希，不能把源校验静默跳过。
 

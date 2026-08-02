@@ -5,6 +5,7 @@ import { createServer } from 'node:net';
 import { once } from 'node:events';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { headings } from './markdown-headings.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const ROOT = new URL('../', import.meta.url);
@@ -152,7 +153,8 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
   const articleResponses = responses.filter(response => decodedPath(response.url()) === article);
   const statuses = articleResponses.map(response => response.status());
   const directResponse = await fetch(`${baseUrl}/${encodeURIComponent(article).replaceAll('%2F', '/')}`);
-  await directResponse.text();
+  const directBody = await directResponse.text();
+  const directH1s = headings(directBody).filter(heading => heading.level === 1);
   const observedStatuses = articleResponses.length ? statuses : [directResponse.status];
   const failures = [
     ...networkFailures,
@@ -164,6 +166,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
       : decodeURIComponent(state.href).includes(article.replace(/\.md$/i, '')),
     sidebar: Boolean(state.sidebarLink),
     markdown200: directResponse.status === 200 && observedStatuses.every(status => status === 200),
+    markdownTitle: directH1s.length === 1 && directH1s[0].text === title,
     h1: state.h1.length === 1 && state.h1[0] === title,
     h1Source: state.h1Sources.length === 1 && state.h1Sources[0] === 'manifest-injector',
     pipeline: state.titlePipeline.status === 'ready' &&

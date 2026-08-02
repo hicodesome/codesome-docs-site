@@ -57,4 +57,5 @@ test('title injector demotes ATX, Setext and HTML H1 sources', () => {
   assert.match(normalized, /## Setext title/);
   assert.match(normalized, /## Source title/);
   assert.match(normalized, /<h1>code sample<\/h1>/);
+  assert.equal(normalize(normalized), normalized);
 });

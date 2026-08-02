@@ -1,0 +1,64 @@
+import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { basename, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { headings, normalizeArticleMarkdown } from './markdown-headings.mjs';
+import { articleTitleEntries } from './title-metadata.mjs';
+
+const root = resolve(fileURLToPath(new URL('../', import.meta.url)));
+const homeArticle = '03-Agentic入门宝典.md';
+const sidebar = readFileSync(resolve(root, '_sidebar.md'), 'utf8');
+const sidebarLinks = [...sidebar.matchAll(/^\s*-\s*\[([^\]]+)\]\(([^)]+)\)/gm)]
+  .map(([, title, href]) => ({ title: title.trim(), href: href.trim() }));
+const articleSidebarLinks = sidebarLinks.filter(({ href }) =>
+  href === '/' || /^\d{2}-.*\.md$/i.test(basename(href.split(/[?#]/)[0]))
+);
+const errors = [];
+
+for (const { site, title } of articleTitleEntries) {
+  const path = resolve(root, site);
+  if (!existsSync(path)) {
+    errors.push(`${site}: article file is missing`);
+    continue;
+  }
+
+  const source = readFileSync(path, 'utf8');
+  if (!source.trim()) errors.push(`${site}: article source is empty`);
+
+  let normalized;
+  try {
+    normalized = normalizeArticleMarkdown(source, title);
+    assert.equal(
+      normalizeArticleMarkdown(normalized, title),
+      normalized,
+      `${site}: article title normalization is not idempotent`
+    );
+  } catch (error) {
+    errors.push(`${site}: ${error.message}`);
+    continue;
+  }
+
+  const h1s = headings(normalized).filter(heading => heading.level === 1);
+  try {
+    assert.deepEqual(h1s, [{ level: 1, text: title }], `${site}: normalized article must contain one registered H1`);
+  } catch (error) {
+    errors.push(error.message);
+  }
+
+  const matchingLinks = articleSidebarLinks.filter(({ href }) => site === homeArticle
+    ? href === '/'
+    : basename(href.split(/[?#]/)[0]) === site
+  );
+  if (matchingLinks.length !== 1) {
+    errors.push(`${site}: sidebar must contain exactly one article link (found ${matchingLinks.length})`);
+  } else if (matchingLinks[0].title !== title) {
+    errors.push(`${site}: sidebar title drifted from the registered title`);
+  }
+}
+
+if (articleSidebarLinks.length !== articleTitleEntries.length) {
+  errors.push(`sidebar article link count drifted: expected ${articleTitleEntries.length}, found ${articleSidebarLinks.length}`);
+}
+
+if (errors.length) throw new Error(errors.join('\n'));
+console.log(`Article title contract passed: ${articleTitleEntries.length} source articles, normalized H1 and sidebar entries in sync`);

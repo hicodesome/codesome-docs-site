@@ -95,10 +95,13 @@
 
     var source = content.charAt(0) === '\uFEFF' ? content.slice(1) : content;
     var lines = source.split(/\r?\n/);
-    var fence = null;
+    var canonicalPrefix = lines[0] === '# ' + title;
+    var firstBodyLine = canonicalPrefix ? 1 : 0;
     var normalizedLines = [];
+    var fence = null;
 
-    lines.forEach(function (line, index) {
+    for (var index = firstBodyLine; index < lines.length; index += 1) {
+      var line = lines[index];
       var fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
 
       if (fenceMatch) {
@@ -111,32 +114,33 @@
           fence = null;
         }
         normalizedLines.push(line);
-        return;
+        continue;
       }
 
       if (fence) {
         normalizedLines.push(line);
-        return;
+        continue;
       }
 
-      var setextH1 = /^ {0,3}=+\s*$/.test(line);
-      if (setextH1 && index > 0) {
+      if (/^ {0,3}=+\s*$/.test(line) && index > 0) {
         var previousSourceLine = lines[index - 1];
         var previousLine = normalizedLines[normalizedLines.length - 1] || '';
         var previousIsHeading = /^ {0,3}#{1,6}(?:\s|$)/.test(previousSourceLine);
         var previousIsFence = /^ {0,3}(`{3,}|~{3,})/.test(previousSourceLine);
         if (previousLine.trim() && !previousIsHeading && !previousIsFence) {
           normalizedLines[normalizedLines.length - 1] = '## ' + previousLine.trim();
-          return;
+          continue;
         }
       }
 
       normalizedLines.push(
         demoteHtmlHeadings(line).replace(/^( {0,3})#(?=\s+)/, '$1##')
       );
-    });
+    }
 
-    var normalized = '# ' + title + '\n\n' + normalizedLines.join('\n');
+    var normalized = canonicalPrefix
+      ? ['# ' + title].concat(normalizedLines).join('\n')
+      : ['# ' + title, ''].concat(normalizedLines).join('\n');
     markProcessed(fileName, title);
     return normalized;
   }

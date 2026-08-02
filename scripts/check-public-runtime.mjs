@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createServer } from 'node:net';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headings } from './markdown-headings.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -111,7 +112,7 @@ async function requestText(port, pathname) {
   const response = await fetch(`http://127.0.0.1:${port}${pathname}`, {
     signal: AbortSignal.timeout(5000)
   });
-  return { status: response.status, body: await response.text() };
+  return { status: response.status, body: await response.text(), headers: response.headers };
 }
 
 function publicPath(path) {
@@ -150,8 +151,12 @@ async function main() {
   try {
     await waitForServer(child, port);
 
-    if (await request(port, '/index.html') !== 200) {
+    const indexResponse = await requestText(port, '/index.html');
+    if (indexResponse.status !== 200) {
       throw new Error('server did not serve index.html');
+    }
+    if (!/no-cache/i.test(indexResponse.headers.get('cache-control') || '')) {
+      throw new Error('index.html must be revalidated after releases');
     }
     assertScriptOrder();
 
@@ -174,10 +179,17 @@ async function main() {
       }
     }
 
-    for (const { site } of articleTitleEntries) {
+    for (const { site, title } of articleTitleEntries) {
       const response = await requestText(port, publicPath(site));
       if (response.status !== 200 || !response.body.trim()) {
         throw new Error(`registered article is not publicly readable: ${site} (HTTP ${response.status})`);
+      }
+      const h1s = headings(response.body).filter(heading => heading.level === 1);
+      if (h1s.length !== 1 || h1s[0].text !== title) {
+        throw new Error(`public article title contract failed: ${site}`);
+      }
+      if (!/no-cache/i.test(response.headers.get('cache-control') || '')) {
+        throw new Error(`public article must be revalidated after releases: ${site}`);
       }
     }
 

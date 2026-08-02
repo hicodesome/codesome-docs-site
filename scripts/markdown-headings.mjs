@@ -2,6 +2,72 @@ function isHeadingLine(line) {
   return /^ {0,3}#{1,6}(?:\s|$)/.test(line);
 }
 
+function demoteHtmlHeadings(line) {
+  return line
+    .replace(/<h1\b/gi, '<h2')
+    .replace(/<\/h1\s*>/gi, '</h2>');
+}
+
+function fenceMarker(line) {
+  return line.match(/^ {0,3}(`{3,}|~{3,})/);
+}
+
+/**
+ * Make the registered article title the only level-one heading.
+ *
+ * The browser title injector mirrors this deliberately small transformation.
+ * Keeping it idempotent matters because the public server and Docsify can
+ * both touch the same Markdown response during one page load.
+ */
+export function normalizeArticleMarkdown(markdown, title) {
+  if (typeof markdown !== 'string' || typeof title !== 'string' || !title.trim()) {
+    throw new TypeError('article Markdown and title must be non-empty strings');
+  }
+
+  const source = markdown.replace(/^\uFEFF/, '');
+  const lines = source.split(/\r?\n/);
+  const canonicalPrefix = lines[0] === `# ${title}`;
+  const firstBodyLine = canonicalPrefix ? 1 : 0;
+  const normalizedLines = [];
+  let fence = null;
+
+  for (let index = firstBodyLine; index < lines.length; index += 1) {
+    const line = lines[index];
+    const fenceMatch = fenceMarker(line);
+
+    if (fenceMatch) {
+      if (!fence) fence = fenceMatch[1];
+      else if (fenceMatch[1][0] === fence[0] && fenceMatch[1].length >= fence.length) fence = null;
+      normalizedLines.push(line);
+      continue;
+    }
+
+    if (fence) {
+      normalizedLines.push(line);
+      continue;
+    }
+
+    if (/^ {0,3}=+\s*$/.test(line) && index > 0) {
+      const previousSourceLine = lines[index - 1];
+      const previousLine = normalizedLines.at(-1) || '';
+      const previousIsFence = fenceMarker(previousSourceLine);
+      if (previousLine.trim() && !isHeadingLine(previousSourceLine) && !previousIsFence) {
+        normalizedLines[normalizedLines.length - 1] = `## ${previousLine.trim()}`;
+        continue;
+      }
+    }
+
+    normalizedLines.push(
+      demoteHtmlHeadings(line).replace(/^( {0,3})#(?=\s+)/, '$1##')
+    );
+  }
+
+  const prefix = `# ${title}`;
+  return canonicalPrefix
+    ? [prefix, ...normalizedLines].join('\n')
+    : [prefix, '', ...normalizedLines].join('\n');
+}
+
 export function headings(markdown) {
   const result = [];
   let fence = null;
@@ -10,7 +76,7 @@ export function headings(markdown) {
 
   for (let index = 0; index < lines.length; index += 1) {
     const line = lines[index];
-    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+    const fenceMatch = fenceMarker(line);
     if (fenceMatch) {
       if (!fence) fence = fenceMatch[1];
       else if (fenceMatch[1][0] === fence[0] && fenceMatch[1].length >= fence.length) fence = null;

@@ -1,9 +1,10 @@
 import { createServer } from 'node:http';
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
-import { stat } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { extname, relative, resolve } from 'node:path';
+import { normalizeArticleMarkdown } from './scripts/markdown-headings.mjs';
 import { articleTitleEntries } from './scripts/title-metadata.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
@@ -29,7 +30,8 @@ const PRIVATE_STATIC_FILES = new Set([
   'server.mjs'
 ]);
 const PUBLIC_DOCUMENT_FILES = new Set(['README.md', '_sidebar.md']);
-const PUBLIC_ARTICLE_FILES = new Set(articleTitleEntries.map(article => article.site));
+const PUBLIC_ARTICLE_TITLES = new Map(articleTitleEntries.map(article => [article.site, article.title]));
+const PUBLIC_ARTICLE_FILES = new Set(PUBLIC_ARTICLE_TITLES.keys());
 
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
@@ -490,12 +492,28 @@ async function serveStatic(req, res, url) {
   } catch {
     return text(res, 404, 'Not Found');
   }
+
+  let responseBody;
+  const articleTitle = PUBLIC_ARTICLE_TITLES.get(relativePath);
+  if (articleTitle) {
+    try {
+      const source = await readFile(absolutePath, 'utf8');
+      responseBody = Buffer.from(normalizeArticleMarkdown(source, articleTitle), 'utf8');
+    } catch {
+      return text(res, 500, 'Article could not be normalized');
+    }
+  }
+
+  const cacheControl = isAdmin || relativePath === 'index.html' || articleTitle
+    ? 'no-cache, must-revalidate'
+    : 'public, max-age=300';
   res.writeHead(200, {
     'Content-Type': MIME_TYPES[extname(absolutePath).toLowerCase()] || 'application/octet-stream',
-    'Content-Length': fileStat.size,
-    'Cache-Control': isAdmin ? 'no-store' : 'public, max-age=300'
+    'Content-Length': responseBody ? responseBody.length : fileStat.size,
+    'Cache-Control': cacheControl
   });
   if (req.method === 'HEAD') return res.end();
+  if (responseBody) return res.end(responseBody);
   createReadStream(absolutePath).pipe(res);
 }
 
