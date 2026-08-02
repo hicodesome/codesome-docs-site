@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articleTitleEntries as defaultArticleTitleEntries } from './title-metadata.mjs';
@@ -78,15 +78,19 @@ export function parseGeneratedTitleAsset(source) {
   return { map, version };
 }
 
-function readRuntimeFile(root, path) {
+function readRuntimeFile(root, path, readFile) {
   try {
-    return readFileSync(resolve(root, path), 'utf8');
+    const source = readFile
+      ? readFile(path)
+      : readFileSync(resolve(root, path), 'utf8');
+    if (typeof source !== 'string') throw new Error('runtime reader returned non-text content');
+    return source;
   } catch (error) {
     throw new Error(`${path}: cannot read runtime file (${error.message})`);
   }
 }
 
-function parseIndexScripts(index, root) {
+function parseIndexScripts(index, root, readFile) {
   const sourcePattern = /<script\b[^>]*\bsrc="([^"]+)"/g;
   const baseUrl = new URL('http://codesome-runtime.local/');
   const scripts = [];
@@ -107,7 +111,7 @@ function parseIndexScripts(index, root) {
       throw new Error(`index.html has an invalid local script path: ${source}`);
     }
     try {
-      statSync(absolutePath);
+      readRuntimeFile(root, path, readFile);
     } catch {
       throw new Error(`index.html references a missing browser resource: ${path}`);
     }
@@ -116,8 +120,8 @@ function parseIndexScripts(index, root) {
   return scripts;
 }
 
-function assertIndexTitlePipeline(index, root, expectedVersion) {
-  const scripts = parseIndexScripts(index, root);
+function assertIndexTitlePipeline(index, root, expectedVersion, readFile) {
+  const scripts = parseIndexScripts(index, root, readFile);
   const positions = new Map();
   for (const path of REQUIRED_TITLE_PIPELINE_SCRIPTS) {
     const matches = scripts.filter(script => script.path === path);
@@ -166,8 +170,8 @@ function assertSidebar(sidebar, entries) {
   if (errors.length) throw new Error(errors.join('\n'));
 }
 
-function assertTitlePipelineAssets(root) {
-  const injector = readRuntimeFile(root, 'assets/cdc-title-injector.js');
+function assertTitlePipelineAssets(root, readFile) {
+  const injector = readRuntimeFile(root, 'assets/cdc-title-injector.js', readFile);
   const requiredInjectorMarkers = [
     'CODESOME_TITLE_PIPELINE',
     'hook.beforeEach',
@@ -181,7 +185,7 @@ function assertTitlePipelineAssets(root) {
     }
   }
 
-  const pageTitle = readRuntimeFile(root, 'assets/page-title.js');
+  const pageTitle = readRuntimeFile(root, 'assets/page-title.js', readFile);
   if (!pageTitle.includes('reportFallback')) throw new Error('page-title layer has no fail-closed fallback check');
   if (/<h1\b/i.test(pageTitle) || /createElement\s*\(\s*['"]h1['"]\s*\)/i.test(pageTitle)) {
     throw new Error('page-title layer must not synthesize an H1');
@@ -222,7 +226,12 @@ export function assertPublicArticleSources(
   return entries.length;
 }
 
-export function assertPublicRuntimeContract({ root = MODULE_ROOT, entries = defaultArticleTitleEntries, readSource } = {}) {
+export function assertPublicRuntimeContract({
+  root = MODULE_ROOT,
+  entries = defaultArticleTitleEntries,
+  readSource,
+  readRuntimeFile: readRuntimeFileOption
+} = {}) {
   const runtimeRoot = resolve(root);
   const sourceReader = readSource || (site => defaultReadSource(runtimeRoot, site));
   const titleMap = expectedTitleMap(entries);
@@ -236,7 +245,9 @@ export function assertPublicRuntimeContract({ root = MODULE_ROOT, entries = defa
   }
 
   try {
-    const generated = parseGeneratedTitleAsset(readRuntimeFile(runtimeRoot, 'assets/article-titles.js'));
+    const generated = parseGeneratedTitleAsset(
+      readRuntimeFile(runtimeRoot, 'assets/article-titles.js', readRuntimeFileOption)
+    );
     assertEqualTitleMaps(generated.map, titleMap);
     if (generated.version !== expectedVersion) {
       throw new Error(`generated title asset version differs: expected ${expectedVersion}, found ${generated.version}`);
@@ -248,22 +259,23 @@ export function assertPublicRuntimeContract({ root = MODULE_ROOT, entries = defa
   let scripts;
   try {
     scripts = assertIndexTitlePipeline(
-      readRuntimeFile(runtimeRoot, 'index.html'),
+      readRuntimeFile(runtimeRoot, 'index.html', readRuntimeFileOption),
       runtimeRoot,
-      expectedVersion
+      expectedVersion,
+      readRuntimeFileOption
     );
   } catch (error) {
     errors.push(error.message);
   }
 
   try {
-    assertTitlePipelineAssets(runtimeRoot);
+    assertTitlePipelineAssets(runtimeRoot, readRuntimeFileOption);
   } catch (error) {
     errors.push(error.message);
   }
 
   try {
-    assertSidebar(readRuntimeFile(runtimeRoot, '_sidebar.md'), entries);
+    assertSidebar(readRuntimeFile(runtimeRoot, '_sidebar.md', readRuntimeFileOption), entries);
   } catch (error) {
     errors.push(error.message);
   }

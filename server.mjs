@@ -9,7 +9,8 @@ import { articleTitleEntries } from './scripts/title-metadata.mjs';
 import {
   assertPublicArticleSources,
   assertPublicRuntimeContract,
-  publicRuntimeHealth
+  publicRuntimeHealth,
+  REQUIRED_TITLE_PIPELINE_SCRIPTS
 } from './scripts/public-runtime-contract.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
@@ -39,6 +40,7 @@ const PUBLIC_ARTICLE_TITLES = new Map(articleTitleEntries.map(article => [articl
 const PUBLIC_ARTICLE_FILES = new Set(PUBLIC_ARTICLE_TITLES.keys());
 const PULL_REQUEST_PATH_PATTERN = new RegExp(`^${REPO_API_ROOT}/pulls/\\d+$`);
 const PULL_REQUEST_MERGE_PATH_PATTERN = new RegExp(`^${REPO_API_ROOT}/pulls/\\d+/merge$`);
+const COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
 
 export { assertPublicArticleSources };
 
@@ -464,7 +466,7 @@ export function isAllowedPullRequestMutation(pathname, method, body) {
   }
 
   if (PULL_REQUEST_MERGE_PATH_PATTERN.test(pathname) && method === 'PUT') {
-    return !body?.length || Boolean(payload);
+    return Boolean(payload && isCommitSha(payload.sha));
   }
 
   return true;
@@ -519,7 +521,49 @@ async function githubApiJSON(pathname) {
   }
 }
 
-async function assertPublicArticleTree(tree) {
+async function readProposedTreeFiles(files, paths) {
+  const contents = await Promise.all([...paths].map(async path => {
+    const treeEntry = files.get(path);
+    if (!treeEntry || treeEntry.type !== 'blob' || typeof treeEntry.sha !== 'string') {
+      return { path, error: 'runtime file is missing from proposed commit' };
+    }
+    try {
+      const blob = await githubApiJSON(`${REPO_API_ROOT}/git/blobs/${encodeURIComponent(treeEntry.sha)}`);
+      const content = decodeGitHubContent(blob.content);
+      if (content === null) return { path, error: 'runtime blob is not valid UTF-8 base64' };
+      return { path, content };
+    } catch (error) {
+      return { path, error: error.message };
+    }
+  }));
+
+  const fetchErrors = contents
+    .filter(result => result.error)
+    .map(result => `${result.path}: ${result.error}`);
+  if (fetchErrors.length) {
+    throw new Error(`public runtime title contract failed for proposed merge:\n${fetchErrors.join('\n')}`);
+  }
+  return new Map(contents.map(result => [result.path, result.content]));
+}
+
+function localScriptPathsFromIndex(index) {
+  const paths = new Set();
+  const sourcePattern = /<script\b[^>]*\bsrc="([^"]+)"/g;
+  const baseUrl = new URL('http://codesome-runtime.local/');
+  for (const match of index.matchAll(sourcePattern)) {
+    try {
+      const url = new URL(match[1], baseUrl);
+      if (url.origin !== baseUrl.origin) continue;
+      const path = decodeURIComponent(url.pathname).replace(/^\/+/, '');
+      if (path) paths.add(path);
+    } catch {
+      // The shared runtime contract reports malformed URLs with a precise error.
+    }
+  }
+  return paths;
+}
+
+async function assertPublicRuntimeTree(tree) {
   if (!tree || tree.truncated || !Array.isArray(tree.tree)) {
     throw new Error('proposed commit tree is incomplete');
   }
@@ -527,26 +571,35 @@ async function assertPublicArticleTree(tree) {
   const files = new Map(tree.tree
     .filter(entry => entry && typeof entry.path === 'string')
     .map(entry => [entry.path, entry]));
-  const contents = await Promise.all(articleTitleEntries.map(async ({ site, title }) => {
-    const treeEntry = files.get(site);
-    if (!treeEntry || treeEntry.type !== 'blob' || typeof treeEntry.sha !== 'string') {
-      return { site, title, error: 'article file is missing from proposed commit' };
-    }
-    try {
-      const blob = await githubApiJSON(`${REPO_API_ROOT}/git/blobs/${encodeURIComponent(treeEntry.sha)}`);
-      const content = decodeGitHubContent(blob.content);
-      if (content === null) return { site, title, error: 'article blob is not valid UTF-8 base64' };
-      return { site, title, content };
-    } catch (error) {
-      return { site, title, error: error.message };
-    }
-  }));
+  const paths = new Set([
+    'index.html',
+    '_sidebar.md',
+    ...REQUIRED_TITLE_PIPELINE_SCRIPTS,
+    ...articleTitleEntries.map(({ site }) => site)
+  ]);
+  const runtimeContents = await readProposedTreeFiles(files, paths);
+  const index = runtimeContents.get('index.html');
+  if (typeof index === 'string') {
+    for (const path of localScriptPathsFromIndex(index)) paths.add(path);
+  }
+  const referencedFiles = [...paths].filter(path => !runtimeContents.has(path));
+  const referencedContents = await readProposedTreeFiles(files, referencedFiles);
+  for (const [path, content] of referencedContents) runtimeContents.set(path, content);
 
-  const fetchErrors = contents
-    .filter(result => result.error)
-    .map(result => `${result.site}: ${result.error}`);
-  if (fetchErrors.length) throw new Error(`public article title contract failed for proposed merge:\n${fetchErrors.join('\n')}`);
-  assertPublicArticleContents(new Map(contents.map(result => [result.site, result.content])));
+  try {
+    assertPublicRuntimeContract({
+      root: ROOT,
+      entries: articleTitleEntries,
+      readSource: site => runtimeContents.get(site),
+      readRuntimeFile: path => runtimeContents.get(path)
+    });
+  } catch (error) {
+    throw new Error(`public runtime title contract failed for proposed merge:\n${error.message}`);
+  }
+}
+
+function isCommitSha(value) {
+  return typeof value === 'string' && COMMIT_SHA_PATTERN.test(value);
 }
 
 // This is the last server-side gate before an authenticated editor can ask GitHub to merge into main.
@@ -558,13 +611,16 @@ async function assertPublicMergeGate(pullNumber, body) {
     pull.base?.repo?.full_name !== REPO ||
     !isAllowedCmsBranch(pull.head?.ref) ||
     pull.head?.repo?.full_name !== REPO ||
-    typeof pull.head?.sha !== 'string'
+    !isCommitSha(pull.head?.sha)
   ) {
     throw new Error('only an open cms/* pull request into main can be merged');
   }
 
   const payload = body?.length ? parseContentPayload(body) : null;
-  if (payload?.sha && payload.sha !== pull.head.sha) {
+  if (!payload || !isCommitSha(payload.sha)) {
+    throw new Error('merge request must include the full pull request head SHA');
+  }
+  if (payload.sha !== pull.head.sha) {
     throw new Error('pull request head changed; refresh before merging');
   }
 
@@ -572,7 +628,7 @@ async function assertPublicMergeGate(pullNumber, body) {
     `${REPO_API_ROOT}/commits/${encodeURIComponent(pull.head.sha)}/check-runs?per_page=100`
   );
   const contractRuns = Array.isArray(checkData.check_runs)
-    ? checkData.check_runs.filter(run => run?.name === 'contract')
+    ? checkData.check_runs.filter(run => run?.name === 'contract' && run?.head_sha === pull.head.sha)
     : [];
   const latestContract = [...contractRuns]
     .sort((left, right) => {
@@ -585,7 +641,7 @@ async function assertPublicMergeGate(pullNumber, body) {
   }
 
   const tree = await githubApiJSON(`${REPO_API_ROOT}/git/trees/${encodeURIComponent(pull.head.sha)}?recursive=1`);
-  await assertPublicArticleTree(tree);
+  await assertPublicRuntimeTree(tree);
 }
 
 function refFromGitHubPath(repoPath) {

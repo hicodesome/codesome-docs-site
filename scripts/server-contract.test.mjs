@@ -18,7 +18,12 @@ import {
   publicArticleTitleHealth,
   publicRuntimeTitleHealth
 } from '../server.mjs';
-import { publicRuntimeHealth, runtimeFingerprint } from './public-runtime-contract.mjs';
+import {
+  assertPublicRuntimeContract,
+  publicRuntimeHealth,
+  REQUIRED_TITLE_PIPELINE_SCRIPTS,
+  runtimeFingerprint
+} from './public-runtime-contract.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const contentPath = '/repos/hicodesome/codesome-docs-site/contents/01-example.md';
@@ -33,6 +38,24 @@ function articleBody(branch, content) {
     branch,
     content: Buffer.from(content, 'utf8').toString('base64')
   }));
+}
+
+function currentRuntimeFiles() {
+  const root = fileURLToPath(new URL('../', import.meta.url));
+  const index = readFileSync(join(root, 'index.html'), 'utf8');
+  const paths = new Set([
+    'index.html',
+    '_sidebar.md',
+    ...REQUIRED_TITLE_PIPELINE_SCRIPTS,
+    ...articleTitleEntries.map(({ site }) => site)
+  ]);
+  for (const [, source] of index.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)) {
+    const url = new URL(source, 'http://codesome-runtime.local/');
+    if (url.origin === 'http://codesome-runtime.local') {
+      paths.add(decodeURIComponent(url.pathname).replace(/^\/+/, ''));
+    }
+  }
+  return new Map([...paths].map(path => [path, readFileSync(join(root, path), 'utf8')]));
 }
 
 test('GitHub contents writes are limited to CMS branches', () => {
@@ -98,7 +121,10 @@ test('editorial workflow pull requests can only target main from a CMS branch', 
     base: 'develop'
   }))), false);
   assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from('{')), false);
-  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({ sha: 'head-sha' }))), true);
+  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', undefined), false);
+  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({}))), false);
+  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({ sha: 'head-sha' }))), false);
+  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({ sha: 'a'.repeat(40) }))), true);
 });
 
 test('the proposed merge tree validator rejects missing or malformed public articles', () => {
@@ -118,6 +144,37 @@ test('the proposed merge tree validator rejects missing or malformed public arti
     () => assertPublicArticleContents(contents),
     /article file is missing from proposed commit/
   );
+});
+
+test('the proposed merge runtime contract covers the complete public title tree', () => {
+  const files = currentRuntimeFiles();
+  const validate = proposal => assertPublicRuntimeContract({
+    root: fileURLToPath(new URL('../', import.meta.url)),
+    entries: articleTitleEntries,
+    readSource: site => proposal.get(site),
+    readRuntimeFile: path => proposal.get(path)
+  });
+
+  assert.doesNotThrow(() => validate(files));
+
+  const missingIndex = new Map(files);
+  missingIndex.delete('index.html');
+  assert.throws(() => validate(missingIndex), /public runtime title contract failed/);
+
+  const alteredIndex = new Map(files);
+  alteredIndex.set('index.html', files.get('index.html').replace('assets/vendor/docsify.min.js', 'assets/missing-docsify.js'));
+  assert.throws(() => validate(alteredIndex), /public runtime title contract failed/);
+
+  const alteredSidebar = new Map(files);
+  alteredSidebar.set('_sidebar.md', '# invalid sidebar\n');
+  assert.throws(() => validate(alteredSidebar), /public runtime title contract failed/);
+
+  const alteredInjector = new Map(files);
+  alteredInjector.set(
+    'assets/cdc-title-injector.js',
+    files.get('assets/cdc-title-injector.js').replaceAll('CODESOME_TITLE_PIPELINE', 'BROKEN_TITLE_PIPELINE')
+  );
+  assert.throws(() => validate(alteredInjector), /public runtime title contract failed/);
 });
 
 test('CMS cannot write a non-canonical public article or delete a registered article', () => {

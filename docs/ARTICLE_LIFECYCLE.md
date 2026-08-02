@@ -96,8 +96,9 @@ npm run check
 3. 浏览器标题脚本曾经在运行时补 H1、降级正文 H1。它能让部分 Docsify 页面看起来正常，却掩盖了直接 Markdown 响应和源文件的缺陷；脚本顺序、缓存或其他访问路径变化后，缺陷就会重新暴露。仅统计 DOM 里的 H1 也不够，CSS 隐藏或零尺寸的“幽灵标题”仍可能让检查误报通过。
 4. 发布脚本过去只检查首页可达。首页能打开不等于 29 篇公开文章都满足标题契约，生产服务也可能在坏文件存在时继续被认为是 online。
 5. 后台代理过去只在 `contents` API 入口检查文章正文；Decap editorial workflow 还会调用 Git blobs/trees/commits 和 PR merge API，低层入口若只依赖 GitHub 保护而不在代理最后一跳复核，管理员令牌或错误的强制合并路径仍可能把坏树带到 `main`。运行时健康缓存若只看文件元数据，也可能漏掉“内容变了但大小和时间戳恢复”的漂移。
+6. 合并门禁过去只从拟合并 tree 读取文章文件，没有用同一份运行时契约验证 `index.html`、`_sidebar.md` 和入口页引用的浏览器脚本；同时 merge 请求允许省略 `sha`，检查完成后 PR head 发生变化时仍可能把未验证的新 head 交给 GitHub 合并。这两个缺口让标题问题可以从 CMS 的低层 Git API 或检查与合并之间的时间窗口重新进入发布链路。
 
-当前的不可复发约束是分层的：登记表定义唯一标题；CDC 同步、生命周期脚本和 CMS 代理只接受 canonical 源文件；`npm run check` 和 GitHub `contract` 检查逐篇拒绝坏源文件；PR 代理只允许 `cms/* -> main`，合并前重新读取目标提交的完整文章树、要求该提交的 `contract` check 成功，并再次逐篇验证 canonical H1；`server.mjs` 启动前验证全部文章、标题映射、入口脚本顺序、注入器和侧栏，运行中的 `/admin-api/healthz` 以文件内容 SHA-256 指纹复核同一运行时契约；本地和公网真实浏览器验收还检查 H1 未被祖先样式隐藏、具有非零尺寸，并覆盖桌面和移动视口；release skill 还必须验证生产和公网健康接口报告 `titleContract=ready`、文章数和 `titleMapVersion` 均与目标提交一致。任一层失败都应停止后续发布，而不是靠浏览器 fallback 掩盖。
+当前的不可复发约束是分层的：登记表定义唯一标题；CDC 同步、生命周期脚本和 CMS 代理只接受 canonical 源文件；`npm run check` 和 GitHub `contract` 检查逐篇拒绝坏源文件；PR 代理只允许 `cms/* -> main`，merge 必须携带 40 位当前 PR head SHA，服务端只接受与该 head 完全一致的请求，并要求 `contract` check 的 `head_sha` 也一致；合并前再从该精确 SHA 读取完整运行时 tree，使用同一份契约验证全部文章、`index.html`、侧栏和入口页引用的脚本；`server.mjs` 启动前验证全部文章、标题映射、入口脚本顺序、注入器和侧栏，运行中的 `/admin-api/healthz` 以文件内容 SHA-256 指纹复核同一运行时契约；本地和公网真实浏览器验收还检查 H1 未被祖先样式隐藏、具有非零尺寸，并覆盖桌面和移动视口；release skill 还必须验证生产和公网健康接口报告 `titleContract=ready`、文章数和 `titleMapVersion` 均与目标提交一致。任一层失败都应停止后续发布，而不是靠浏览器 fallback 掩盖。
 
 ## 浏览器运行时资源
 
@@ -113,7 +114,7 @@ npm run check
 
 ## 在线编辑写入边界
 
-Decap 的 `main` 是审核基线，编辑内容必须先写入 `cms/*` 草稿分支，再通过 editorial workflow 的 Pull Request 合并。站点后台代理会拒绝对公开登记文章写入非 canonical Markdown、删除已登记文章，或写入 `main`/其他非 `cms/*` 分支；图片上传仍走 `images/uploads/*`。低层 Git 对象 API 仍保留给 Decap 组装草稿提交，但 PR 只能从本站 `cms/*` 指向 `main`，合并接口会读取 PR 实际 head、`contract` check 和完整文章树，任何缺标题、重复 H1 或缺文件的提交都会被拒绝。新增、改名和删除文章必须使用文章生命周期脚本并通过完整门禁。这条边界与标题和发布门禁一起防止后台编辑绕过源文件契约、生成映射和浏览器验收。
+Decap 的 `main` 是审核基线，编辑内容必须先写入 `cms/*` 草稿分支，再通过 editorial workflow 的 Pull Request 合并。站点后台代理会拒绝对公开登记文章写入非 canonical Markdown、删除已登记文章，或写入 `main`/其他非 `cms/*` 分支；图片上传仍走 `images/uploads/*`。低层 Git 对象 API 仍保留给 Decap 组装草稿提交，但 PR 只能从本站 `cms/*` 指向 `main`，合并请求必须携带当前 PR head 的完整 SHA；合并接口会读取该精确 head 的 `contract` check 和完整运行时文章树，任何缺标题、重复 H1、缺文章、缺入口资源或运行时脚本漂移的提交都会被拒绝，且同一 SHA 会原样交给 GitHub 作为最终合并条件。新增、改名和删除文章必须使用文章生命周期脚本并通过完整门禁。这条边界与标题和发布门禁一起防止后台编辑绕过源文件契约、生成映射和浏览器验收。
 
 `npm run check:links` 会同时读取 Git 已跟踪文件与磁盘上的根目录文章文件，因此新文章不必先 `git add` 才能检查；`npm run check:secrets` 会扫描已跟踪、已暂存和当前未跟踪的 Markdown/HTML/JS 文件，长 `sk-`、`cr-`、`sk_cr-`、`ghp_` 和 JWT 形态会阻断检查。短占位符如 `sk-xxx` 和 `sk-请替换` 不会命中长 token 规则，但不得把真实 Key 当作占位符提交。
 
