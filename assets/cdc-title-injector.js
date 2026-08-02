@@ -1,13 +1,14 @@
 /**
  * CDC Title Injector
  *
- * Wraps Docsify.get to normalize article headings for the Docsify
- * search plugin. Each article receives one manifest H1, while source H1
- * headings become H2 sections. This keeps search results at article level
- * without changing the Markdown files on disk.
+ * Normalizes article headings before Docsify compiles the main article and
+ * wraps Docsify.get for the search plugin. Each article receives one manifest
+ * H1, while source H1 headings become H2 sections. This keeps the rendered
+ * page and search results at article level without changing Markdown on disk.
  *
- * Must be loaded AFTER docsify.min.js (Docsify.get must exist) and
- * BEFORE search.min.js (which calls Docsify.get during init).
+ * Must be loaded AFTER docsify.min.js (so the plugin can be registered before
+ * DOMContentLoaded) and BEFORE search.min.js (which calls Docsify.get during
+ * init).
  *
  * Also clears stale search-index caches to force a fresh rebuild on
  * the first load after deployment.
@@ -131,21 +132,63 @@
     return normalized;
   }
 
-  /* ── 2. Wrap Docsify.get ────────────────────────────────────────────
-   * Intercept every Docsify fetch for a registered article. Prepend the formal
-   * article title as the only H1 and demote source H1 headings to H2.
-   *
-   * The search plugin runs in a later lifecycle and calls Docsify.get
-   * during its init; by the time it runs, this wrapper is in place, so
-   * genIndex sees the corrected content with a real H1.
+  function currentArticleFileFromHash() {
+    var hash = String(window.location && window.location.hash || '');
+    var route = hash.replace(/^#\/?/, '').split(/[?#]/)[0];
+
+    if (!route) {
+      route = window.$docsify && window.$docsify.homepage || '';
+    }
+
+    try {
+      route = decodeURIComponent(route);
+    } catch (e) { /* fileNameForUrl performs the same safe decode below. */ }
+
+    if (!route || !/\.md$/i.test(route)) {
+      route += '.md';
+    }
+
+    return fileNameForUrl(route);
+  }
+
+  /* ── 2. Normalize the Docsify main-render path ──────────────────────
+   * Docsify's renderer fetches through its private Kn/X path, so wrapping
+   * Docsify.get alone cannot affect the article displayed on screen. The
+   * public beforeEach lifecycle hook receives the exact Markdown that will be
+   * compiled, making it the authoritative page-render boundary.
    */
+  function titlePipelinePlugin(hook) {
+    hook.beforeEach(function (content) {
+      var fileName = currentArticleFileFromHash();
+      var articleTitle = ARTICLE_TITLES[fileName];
+
+      if (!articleTitle) {
+        return content;
+      }
+
+      return normalizeHeadings(content, articleTitle, fileName);
+    });
+  }
+
   if (typeof Docsify === 'undefined' || typeof Docsify.get !== 'function') {
     failPipeline('Docsify.get is unavailable; title injector script order is invalid');
     return;
   }
 
+  window.$docsify = window.$docsify || {};
+  window.$docsify.plugins = [].concat(
+    titlePipelinePlugin,
+    window.$docsify.plugins || []
+  );
   pipeline.status = 'ready';
 
+  /* ── 3. Wrap Docsify.get ────────────────────────────────────────────
+   * Intercept every Docsify fetch for a registered article. Prepend the formal
+   * article title for search indexing and demote source H1 headings to H2.
+   *
+   * The search plugin runs in a later lifecycle and calls Docsify.get, so this
+   * wrapper keeps its index consistent with the main-render path above.
+   */
   var origGet = Docsify.get;
 
   Docsify.get = function (url, hasBar, headers) {
