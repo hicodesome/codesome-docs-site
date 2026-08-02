@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
-import { createReadStream } from 'node:fs';
+import { createReadStream, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { extname, relative, resolve } from 'node:path';
 import { assertCanonicalArticleMarkdown } from './scripts/markdown-headings.mjs';
@@ -32,6 +32,33 @@ const PRIVATE_STATIC_FILES = new Set([
 const PUBLIC_DOCUMENT_FILES = new Set(['README.md', '_sidebar.md']);
 const PUBLIC_ARTICLE_TITLES = new Map(articleTitleEntries.map(article => [article.site, article.title]));
 const PUBLIC_ARTICLE_FILES = new Set(PUBLIC_ARTICLE_TITLES.keys());
+
+function readPublicArticleSource(site) {
+  return readFileSync(resolve(ROOT, site), 'utf8');
+}
+
+export function assertPublicArticleSources(entries = articleTitleEntries, readSource = readPublicArticleSource) {
+  const errors = [];
+  for (const { site, title } of entries) {
+    try {
+      assertCanonicalArticleMarkdown(readSource(site), title);
+    } catch (error) {
+      errors.push(`${site}: ${error.message}`);
+    }
+  }
+  if (errors.length) {
+    throw new Error(`public article title contract failed:\n${errors.join('\n')}`);
+  }
+  return entries.length;
+}
+
+export function publicArticleTitleHealth(entries = articleTitleEntries, readSource = readPublicArticleSource) {
+  try {
+    return { ok: true, articleCount: assertPublicArticleSources(entries, readSource) };
+  } catch {
+    return { ok: false, articleCount: 0 };
+  }
+}
 
 const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
@@ -571,7 +598,15 @@ async function serveStatic(req, res, url) {
 
 async function handleRequest(req, res) {
   const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
-  if (url.pathname === '/admin-api/healthz') return json(res, 200, { ok: true, configured: configReady() });
+  if (url.pathname === '/admin-api/healthz') {
+    const titleContract = publicArticleTitleHealth();
+    return json(res, titleContract.ok ? 200 : 503, {
+      ok: titleContract.ok,
+      configured: configReady(),
+      titleContract: titleContract.ok ? 'ready' : 'failed',
+      articleCount: titleContract.articleCount
+    });
+  }
   if (url.pathname === '/admin-api/auth') {
     if (req.method !== 'GET') return text(res, 405, 'Method Not Allowed');
     res.writeHead(200, {
@@ -597,21 +632,31 @@ export function isServerEntrypoint(argvPath = process.argv[1], pmExecPath = proc
 }
 
 if (isServerEntrypoint()) {
-  const server = createServer((req, res) => {
-    handleRequest(req, res).catch(error => {
-      if (!res.headersSent) json(res, 500, { message: '服务内部错误' });
+  const titleContract = publicArticleTitleHealth();
+  if (!titleContract.ok) {
+    try {
+      assertPublicArticleSources();
+    } catch (error) {
+      console.error(`doc-site title contract failed; refusing to start: ${error.message}`);
+    }
+    process.exitCode = 1;
+  } else {
+    const server = createServer((req, res) => {
+      handleRequest(req, res).catch(error => {
+        if (!res.headersSent) json(res, 500, { message: '服务内部错误' });
+      });
     });
-  });
 
-  server.listen(PORT, '0.0.0.0', () => {
-    const missing = [];
-    if (!SESSION_SECRET) missing.push('CODESOME_DOC_ADMIN_SESSION_SECRET');
-    if (!EDITOR_TOKEN_HASH) missing.push('CODESOME_DOC_ADMIN_TOKEN_HASH');
-    if (!GITHUB_TOKEN) missing.push('CODESOME_DOC_ADMIN_GITHUB_TOKEN');
-    if (missing.length) console.warn(`doc-site admin disabled; missing environment: ${missing.join(', ')}`);
-    console.log(`doc-site serving ${ROOT} on port ${PORT}`);
-  });
+    server.listen(PORT, '0.0.0.0', () => {
+      const missing = [];
+      if (!SESSION_SECRET) missing.push('CODESOME_DOC_ADMIN_SESSION_SECRET');
+      if (!EDITOR_TOKEN_HASH) missing.push('CODESOME_DOC_ADMIN_TOKEN_HASH');
+      if (!GITHUB_TOKEN) missing.push('CODESOME_DOC_ADMIN_GITHUB_TOKEN');
+      if (missing.length) console.warn(`doc-site admin disabled; missing environment: ${missing.join(', ')}`);
+      console.log(`doc-site serving ${ROOT} on port ${PORT}`);
+    });
 
-  const authStatePruner = setInterval(pruneAuthState, 15 * 60 * 1000);
-  authStatePruner.unref();
+    const authStatePruner = setInterval(pruneAuthState, 15 * 60 * 1000);
+    authStatePruner.unref();
+  }
 }

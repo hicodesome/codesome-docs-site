@@ -160,6 +160,17 @@ async function main() {
     }
     assertScriptOrder();
 
+    const healthResponse = await requestText(port, '/admin-api/healthz');
+    let health;
+    try {
+      health = JSON.parse(healthResponse.body);
+    } catch {
+      throw new Error('health check did not return JSON');
+    }
+    if (healthResponse.status !== 200 || health.ok !== true || health.titleContract !== 'ready' || health.articleCount !== articleTitleEntries.length) {
+      throw new Error(`health check did not prove the full title contract: HTTP ${healthResponse.status}`);
+    }
+
     for (const path of [...new Set(scriptPaths)]) {
       const status = await request(port, `/${path}`);
       if (status !== 200) {
