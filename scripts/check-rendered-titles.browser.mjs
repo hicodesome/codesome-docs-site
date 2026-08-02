@@ -89,6 +89,16 @@ function decodedPath(value) {
 async function waitForReady(page, article, title) {
   const expectedRoute = article === HOME_ARTICLE ? '' : article.replace(/\.md$/i, '');
   await page.waitForFunction(({ articleName, expectedTitle, expectedRouteName }) => {
+    const isVisible = node => {
+      if (!node || node.getClientRects().length === 0) return false;
+      for (let current = node; current; current = current.parentElement) {
+        const style = window.getComputedStyle(current);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+        if (Number.parseFloat(style.opacity || '1') <= 0) return false;
+      }
+      const rect = node.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
     const hash = decodeURIComponent(window.location.hash || '#/')
       .replace(/^#\/?/, '')
       .split(/[?#]/)[0];
@@ -101,6 +111,7 @@ async function waitForReady(page, article, title) {
       (expectedRouteName ? hash === expectedRouteName : hash === '') &&
       h1s.length === 1 &&
       h1s[0].textContent.trim() === expectedTitle &&
+      isVisible(h1s[0]) &&
       h1s[0].getAttribute('data-codesome-title-source') === 'manifest-injector' &&
       pipeline.status === 'ready' &&
       pipeline.processed?.[articleName]?.title === expectedTitle &&
@@ -118,6 +129,16 @@ async function waitForReady(page, article, title) {
 
 async function inspectPage(page, article, title, responses, consoleErrors, networkFailures, baseUrl) {
   const state = await page.evaluate(({ articleName, expectedTitle, homeArticle }) => {
+    const isVisible = node => {
+      if (!node || node.getClientRects().length === 0) return false;
+      for (let current = node; current; current = current.parentElement) {
+        const style = window.getComputedStyle(current);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+        if (Number.parseFloat(style.opacity || '1') <= 0) return false;
+      }
+      const rect = node.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
     const section = document.querySelector('.markdown-section');
     const h1s = Array.from(section?.querySelectorAll('h1') || []);
     const pipeline = window.CODESOME_TITLE_PIPELINE || {};
@@ -134,6 +155,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
       href: window.location.href,
       h1: h1s.map(node => node.textContent.trim()),
       h1Sources: h1s.map(node => node.getAttribute('data-codesome-title-source') || ''),
+      h1Visible: h1s.length === 1 && isVisible(h1s[0]),
       titlePipeline: {
         status: pipeline.status || 'missing',
         processed: pipeline.processed?.[articleName] || null,
@@ -169,6 +191,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
     markdownTitle: directH1s.length === 1 && directH1s[0].text === title,
     h1: state.h1.length === 1 && state.h1[0] === title,
     h1Source: state.h1Sources.length === 1 && state.h1Sources[0] === 'manifest-injector',
+    h1Visibility: state.h1Visible === true,
     pipeline: state.titlePipeline.status === 'ready' &&
       state.titlePipeline.processed?.title === title &&
       state.titlePipeline.dom?.title === title &&
@@ -186,7 +209,8 @@ function formatFailure(result) {
   const failedChecks = Object.entries(result.checks)
     .filter(([, pass]) => !pass)
     .map(([name]) => name);
-  return `${result.article}: ${failedChecks.join(', ') || 'unknown failure'}${result.failures.length ? `; ${result.failures.join(' | ')}` : ''}`;
+  const viewport = result.viewport ? ` [${result.viewport}]` : '';
+  return `${result.article}${viewport}: ${failedChecks.join(', ') || 'unknown failure'}${result.failures.length ? `; ${result.failures.join(' | ')}` : ''}`;
 }
 
 async function main() {
@@ -201,7 +225,6 @@ async function main() {
       localStorage.setItem('docsify.search.index/cdc-titles-v3', 'stale');
       localStorage.setItem('docsify.search.expires/cdc-titles-v3', 'stale');
     });
-    const page = await context.newPage();
     const siteOrigin = new URL(site.baseUrl).origin;
     const entries = [
       ...articleTitleEntries.filter(entry => entry.site === HOME_ARTICLE),
@@ -209,56 +232,68 @@ async function main() {
     ];
     const results = [];
 
-    for (const entry of entries) {
-      const responses = [];
-      const consoleErrors = [];
-      const networkFailures = [];
-      const onResponse = response => responses.push(response);
-      const onConsole = message => {
-        if (message.type() === 'error') consoleErrors.push(message.text());
-      };
-      const onPageError = error => consoleErrors.push(`pageerror: ${error.message}`);
-      const onRequestFailed = request => {
-        if (new URL(request.url()).origin === siteOrigin) {
-          networkFailures.push(`${request.method()} ${request.url()}: ${request.failure()?.errorText || 'failed'}`);
+    for (const viewport of [
+      { name: 'desktop', width: 1280, height: 900 },
+      { name: 'mobile', width: 390, height: 844 }
+    ]) {
+      const page = await context.newPage();
+      await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      for (const entry of entries) {
+        const responses = [];
+        const consoleErrors = [];
+        const networkFailures = [];
+        const onResponse = response => responses.push(response);
+        const onConsole = message => {
+          if (message.type() === 'error') consoleErrors.push(message.text());
+        };
+        const onPageError = error => consoleErrors.push(`pageerror: ${error.message}`);
+        const onRequestFailed = request => {
+          if (new URL(request.url()).origin === siteOrigin) {
+            networkFailures.push(`${request.method()} ${request.url()}: ${request.failure()?.errorText || 'failed'}`);
+          }
+        };
+        page.on('response', onResponse);
+        page.on('console', onConsole);
+        page.on('pageerror', onPageError);
+        page.on('requestfailed', onRequestFailed);
+        try {
+          await page.goto(`${site.baseUrl}/${routeFor(entry.site)}`, {
+            waitUntil: 'domcontentloaded',
+            timeout: TIMEOUT_MS
+          });
+          await waitForReady(page, entry.site, entry.title);
+          results.push({
+            ...(await inspectPage(page, entry.site, entry.title, responses, consoleErrors, networkFailures, site.baseUrl)),
+            viewport: viewport.name
+          });
+        } catch (error) {
+          results.push({
+            article: entry.site,
+            title: entry.title,
+            viewport: viewport.name,
+            failures: [error.message],
+            checks: { pageReady: false }
+          });
+        } finally {
+          page.off('response', onResponse);
+          page.off('console', onConsole);
+          page.off('pageerror', onPageError);
+          page.off('requestfailed', onRequestFailed);
         }
-      };
-      page.on('response', onResponse);
-      page.on('console', onConsole);
-      page.on('pageerror', onPageError);
-      page.on('requestfailed', onRequestFailed);
-      try {
-        await page.goto(`${site.baseUrl}/${routeFor(entry.site)}`, {
-          waitUntil: 'domcontentloaded',
-          timeout: TIMEOUT_MS
-        });
-        await waitForReady(page, entry.site, entry.title);
-        results.push(await inspectPage(page, entry.site, entry.title, responses, consoleErrors, networkFailures, site.baseUrl));
-      } catch (error) {
-        results.push({
-          article: entry.site,
-          title: entry.title,
-          failures: [error.message],
-          checks: { pageReady: false }
-        });
-      } finally {
-        page.off('response', onResponse);
-        page.off('console', onConsole);
-        page.off('pageerror', onPageError);
-        page.off('requestfailed', onRequestFailed);
+        const result = results.at(-1);
+        console.log(`${Object.values(result.checks).every(Boolean) ? 'PASS' : 'FAIL'}: ${entry.site} [${viewport.name}] (${entry.title})`);
+        if (result.failures?.length || !Object.values(result.checks).every(Boolean)) {
+          console.log(`  ${formatFailure(result)}`);
+        }
       }
-      const result = results.at(-1);
-      console.log(`${Object.values(result.checks).every(Boolean) ? 'PASS' : 'FAIL'}: ${entry.site} (${entry.title})`);
-      if (result.failures?.length || !Object.values(result.checks).every(Boolean)) {
-        console.log(`  ${formatFailure(result)}`);
-      }
+      await page.close();
     }
 
     const failed = results.filter(result => !Object.values(result.checks).every(Boolean));
     if (failed.length) {
-      throw new Error(`Rendered title browser check failed: ${failed.length}/${results.length} articles\n${failed.map(formatFailure).join('\n')}`);
+      throw new Error(`Rendered title browser check failed: ${failed.length}/${results.length} article-viewport checks\n${failed.map(formatFailure).join('\n')}`);
     }
-    console.log(`Rendered title browser check passed: ${results.length}/${articleTitleEntries.length} articles through local Docsify`);
+    console.log(`Rendered title browser check passed: ${results.length}/${articleTitleEntries.length * 2} desktop/mobile article checks through local Docsify`);
   } finally {
     if (browser) await browser.close();
     await stopSite(site.child);

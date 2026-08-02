@@ -1,22 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import {
   assertPublicArticleSources,
+  assertPublicArticleContents,
   isAllowedArticleContentWrite,
   isAllowedContentWriteBody,
   isAllowedContentWriteRequest,
   isAllowedGitRef,
   isAllowedGitHubPath,
+  isAllowedPullRequestMutation,
   isServerEntrypoint,
   publicArticleTitleHealth,
   publicRuntimeTitleHealth
 } from '../server.mjs';
-import { publicRuntimeHealth } from './public-runtime-contract.mjs';
+import { publicRuntimeHealth, runtimeFingerprint } from './public-runtime-contract.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const contentPath = '/repos/hicodesome/codesome-docs-site/contents/01-example.md';
@@ -70,6 +72,54 @@ test('read-only contents requests and non-contents writes retain their route pol
   assert.equal(isAllowedGitHubPath(contentPath, 'POST'), false);
 });
 
+test('editorial workflow pull requests can only target main from a CMS branch', () => {
+  const pullPath = '/repos/hicodesome/codesome-docs-site/pulls';
+  const pullNumberPath = `${pullPath}/42`;
+  const mergePath = `${pullNumberPath}/merge`;
+
+  assert.equal(isAllowedPullRequestMutation(pullPath, 'POST', Buffer.from(JSON.stringify({
+    title: 'Editorial draft',
+    head: 'hicodesome:cms/article-42',
+    base: 'main'
+  }))), true);
+  assert.equal(isAllowedPullRequestMutation(pullPath, 'POST', Buffer.from(JSON.stringify({
+    head: 'hicodesome:cms/article-42',
+    base: 'develop'
+  }))), false);
+  assert.equal(isAllowedPullRequestMutation(pullPath, 'POST', Buffer.from(JSON.stringify({
+    head: 'attacker:cms/article-42',
+    base: 'main'
+  }))), false);
+  assert.equal(isAllowedPullRequestMutation(pullNumberPath, 'PATCH', Buffer.from(JSON.stringify({
+    base: 'main',
+    state: 'open'
+  }))), true);
+  assert.equal(isAllowedPullRequestMutation(pullNumberPath, 'PATCH', Buffer.from(JSON.stringify({
+    base: 'develop'
+  }))), false);
+  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from('{')), false);
+  assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({ sha: 'head-sha' }))), true);
+});
+
+test('the proposed merge tree validator rejects missing or malformed public articles', () => {
+  const contents = new Map(articleTitleEntries.map(({ site }) => [
+    site,
+    readFileSync(fileURLToPath(new URL(`../${site}`, import.meta.url)), 'utf8')
+  ]));
+  assert.doesNotThrow(() => assertPublicArticleContents(contents));
+
+  contents.set(articleTitleEntries[0].site, '# 错误标题\n\n正文\n');
+  assert.throws(
+    () => assertPublicArticleContents(contents),
+    /public article title contract failed for proposed merge[\s\S]*registered H1/
+  );
+  contents.delete(articleTitleEntries[1].site);
+  assert.throws(
+    () => assertPublicArticleContents(contents),
+    /article file is missing from proposed commit/
+  );
+});
+
 test('CMS cannot write a non-canonical public article or delete a registered article', () => {
   const valid = '# V3 Claude Code 安装与配置指南\n\n正文\n';
   const invalid = '# 错误标题\n\n正文\n';
@@ -119,6 +169,30 @@ test('runtime health detects a title pipeline asset drift after startup', () => 
     const health = publicRuntimeHealth({ root: temporaryRoot });
     assert.equal(health.ok, false);
     assert.match(health.error, /title map script version is stale/);
+  } finally {
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+});
+
+test('runtime fingerprint changes when file content changes with stable metadata', () => {
+  const sourceRoot = fileURLToPath(new URL('../', import.meta.url));
+  const temporaryRoot = mkdtempSync(join(tmpdir(), 'codesome-runtime-fingerprint-'));
+  try {
+    cpSync(join(sourceRoot, 'assets'), join(temporaryRoot, 'assets'), { recursive: true });
+    cpSync(join(sourceRoot, 'index.html'), join(temporaryRoot, 'index.html'));
+    cpSync(join(sourceRoot, '_sidebar.md'), join(temporaryRoot, '_sidebar.md'));
+    for (const { site } of articleTitleEntries) cpSync(join(sourceRoot, site), join(temporaryRoot, site));
+
+    const indexPath = join(temporaryRoot, 'index.html');
+    const original = readFileSync(indexPath, 'utf8');
+    const originalStat = statSync(indexPath);
+    writeFileSync(indexPath, original.replace('<html lang="zh-CN">', '<html lang="zh-TW">'));
+    utimesSync(indexPath, originalStat.atime, originalStat.mtime);
+
+    assert.notEqual(
+      runtimeFingerprint(temporaryRoot, articleTitleEntries),
+      runtimeFingerprint(sourceRoot, articleTitleEntries)
+    );
   } finally {
     rmSync(temporaryRoot, { recursive: true, force: true });
   }

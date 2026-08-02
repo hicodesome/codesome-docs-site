@@ -3,12 +3,12 @@
 正式 `deploy` 在既有 Git、curl、字节比对、生产运行时和公网文件验收之后，使用 Chrome DRM 容器中的真实 Google Chrome 全量渲染 Docsify 页面。它检查：
 
 - 首页侧栏包含目标文章标题，且首页没有 `console error`；
-- 首页 Markdown 请求必须收到 `HTTP 200`，且首页恰好有一个由标题注入器产生的正式 H1；
+- 首页 Markdown 请求必须收到 `HTTP 200`，且首页恰好有一个由标题注入器产生、实际可见的正式 H1；
 - 侧栏目标链接能进入目标文章路由；
 - 文章 Markdown 请求必须为 `HTTP 200`，标题管线必须实际处理当前文章；
 - 直接读取文章 Markdown 响应时，必须已经包含登记标题且恰好一个 H1；
-- 文章区域必须有且仅有一个由标题注入器产生的正式 H1；检查统计全部后代 `h1`，不会被嵌套 HTML H1 或 Setext H1 绕过；同时检查关键正文文字和正文图片 `naturalWidth > 0`；
-- 文章页没有 `console error`。
+- 文章区域必须有且仅有一个由标题注入器产生、实际可见的正式 H1；检查统计全部后代 `h1`，并检查祖先样式、`display`、`visibility`、`opacity`、尺寸，不会被嵌套 HTML H1、Setext H1 或 CSS 隐藏绕过；同时检查关键正文文字和正文图片 `naturalWidth > 0`；
+- 文章页没有 `console error`；桌面和移动视口都必须渲染出可见的首页和文章标题。
 
 发布门禁会对标题元数据中的全部公开文章逐篇执行上述检查；Chrome DRM、SSH 或 CDP 不可达时发布失败，不能把 `SKIP` 当成通过。
 
@@ -40,7 +40,7 @@ Chrome DRM 前置由 `chrome-drm-fetch` 技能定义：本机需要能通过 `ss
 
 ## CI 前置集成门禁
 
-`npm run check` 还会运行 `npm run check:rendered-titles:browser`。该命令启动临时本地站点，用 Playwright Chromium 真实加载 `index.html` 和 Docsify，并逐篇切换全部公开文章路由。它会在带有旧搜索缓存的浏览器上下文中验证 Markdown `200`、侧栏链接、唯一 `manifest-injector` H1、标题管线状态、无 fallback、无 console/network error 和图片加载。
+`npm run check` 还会运行 `npm run check:rendered-titles:browser`。该命令启动临时本地站点，用 Playwright Chromium 真实加载 `index.html` 和 Docsify，并在桌面、移动两个视口逐篇切换全部公开文章路由。它会在带有旧搜索缓存的浏览器上下文中验证 Markdown `200`、侧栏链接、唯一且实际可见的 `manifest-injector` H1、标题管线状态、无 fallback、无 console/network error 和图片加载。
 
 `npm run check:article-titles` 在浏览器验收前检查 29 篇文章的源文件、登记标题和侧栏入口，并要求源文件本身已经是唯一 canonical H1；`npm run check:runtime` 另外检查生产服务返回的每篇 Markdown 与 canonical 源文件逐字节一致，以及 `index.html` 和 Markdown 使用重新校验的缓存策略。这样客户端脚本失效、缓存旧版本或 CMS 写入正文时，不能只靠页面 fallback 把问题隐藏过去。
 

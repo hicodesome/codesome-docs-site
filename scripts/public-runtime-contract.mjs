@@ -189,7 +189,7 @@ function assertTitlePipelineAssets(root) {
   if (pageTitle.includes('page-title-fallback')) throw new Error('page-title layer contains a legacy H1 fallback');
 }
 
-function runtimeFingerprint(root, entries) {
+export function runtimeFingerprint(root, entries) {
   const paths = [
     'index.html',
     '_sidebar.md',
@@ -198,9 +198,8 @@ function runtimeFingerprint(root, entries) {
   ];
   return paths.map(path => {
     try {
-      const stats = statSync(resolve(root, path));
-      const modified = stats.mtimeNs === undefined ? stats.mtimeMs : stats.mtimeNs;
-      return `${path}:${stats.size}:${modified}:${stats.ctimeMs}`;
+      const source = readFileSync(resolve(root, path));
+      return `${path}:${createHash('sha256').update(source).digest('hex')}`;
     } catch {
       return `${path}:missing`;
     }

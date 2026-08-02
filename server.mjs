@@ -37,6 +37,8 @@ const PRIVATE_STATIC_FILES = new Set([
 const PUBLIC_DOCUMENT_FILES = new Set(['README.md', '_sidebar.md']);
 const PUBLIC_ARTICLE_TITLES = new Map(articleTitleEntries.map(article => [article.site, article.title]));
 const PUBLIC_ARTICLE_FILES = new Set(PUBLIC_ARTICLE_TITLES.keys());
+const PULL_REQUEST_PATH_PATTERN = new RegExp(`^${REPO_API_ROOT}/pulls/\\d+$`);
+const PULL_REQUEST_MERGE_PATH_PATTERN = new RegExp(`^${REPO_API_ROOT}/pulls/\\d+/merge$`);
 
 export { assertPublicArticleSources };
 
@@ -366,6 +368,13 @@ function isAllowedCmsBranch(branch) {
     !branch.endsWith('.');
 }
 
+function isAllowedCmsHead(head) {
+  if (typeof head !== 'string') return false;
+  const ownerPrefix = `${REPO.split('/')[0]}:`;
+  const branch = head.startsWith(ownerPrefix) ? head.slice(ownerPrefix.length) : head;
+  return isAllowedCmsBranch(branch);
+}
+
 export function isAllowedContentWriteBody(method, body) {
   if (!['PUT', 'DELETE'].includes(method)) return true;
   if (!body) return false;
@@ -441,10 +450,142 @@ export function isAllowedArticleContentWrite(pathname, method, body) {
   }
 }
 
+export function isAllowedPullRequestMutation(pathname, method, body) {
+  const payload = body?.length ? parseContentPayload(body) : null;
+  if (pathname === `${REPO_API_ROOT}/pulls` && method === 'POST') {
+    return Boolean(payload && payload.base === 'main' && isAllowedCmsHead(payload.head));
+  }
+
+  if (PULL_REQUEST_PATH_PATTERN.test(pathname) && method === 'PATCH') {
+    if (!payload) return false;
+    if (Object.hasOwn(payload, 'base') && payload.base !== 'main') return false;
+    if (Object.hasOwn(payload, 'head') && !isAllowedCmsHead(payload.head)) return false;
+    return true;
+  }
+
+  if (PULL_REQUEST_MERGE_PATH_PATTERN.test(pathname) && method === 'PUT') {
+    return !body?.length || Boolean(payload);
+  }
+
+  return true;
+}
+
+export function assertPublicArticleContents(contents, entries = articleTitleEntries) {
+  const errors = [];
+  for (const { site, title } of entries) {
+    const content = contents instanceof Map ? contents.get(site) : undefined;
+    if (typeof content !== 'string') {
+      errors.push(`${site}: article file is missing from proposed commit`);
+      continue;
+    }
+    try {
+      assertCanonicalArticleMarkdown(content, title);
+    } catch (error) {
+      errors.push(`${site}: ${error.message}`);
+    }
+  }
+  if (errors.length) {
+    throw new Error(`public article title contract failed for proposed merge:\n${errors.join('\n')}`);
+  }
+}
+
 export function isAllowedGitRef(ref) {
   if (ref === 'refs/meta/_decap_cms') return true;
   if (typeof ref !== 'string' || !ref.startsWith('refs/heads/')) return false;
   return isAllowedCmsBranch(ref.slice('refs/heads/'.length));
+}
+
+async function githubApiJSON(pathname) {
+  let response;
+  try {
+    response = await fetch(`${GITHUB_API_ROOT}${pathname}`, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        'User-Agent': 'codesome-doc-admin',
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    });
+  } catch {
+    throw new Error('GitHub API is unavailable');
+  }
+
+  const body = await response.text();
+  if (!response.ok) throw new Error(`GitHub API returned HTTP ${response.status}`);
+  try {
+    return JSON.parse(body);
+  } catch {
+    throw new Error('GitHub API returned invalid JSON');
+  }
+}
+
+async function assertPublicArticleTree(tree) {
+  if (!tree || tree.truncated || !Array.isArray(tree.tree)) {
+    throw new Error('proposed commit tree is incomplete');
+  }
+
+  const files = new Map(tree.tree
+    .filter(entry => entry && typeof entry.path === 'string')
+    .map(entry => [entry.path, entry]));
+  const contents = await Promise.all(articleTitleEntries.map(async ({ site, title }) => {
+    const treeEntry = files.get(site);
+    if (!treeEntry || treeEntry.type !== 'blob' || typeof treeEntry.sha !== 'string') {
+      return { site, title, error: 'article file is missing from proposed commit' };
+    }
+    try {
+      const blob = await githubApiJSON(`${REPO_API_ROOT}/git/blobs/${encodeURIComponent(treeEntry.sha)}`);
+      const content = decodeGitHubContent(blob.content);
+      if (content === null) return { site, title, error: 'article blob is not valid UTF-8 base64' };
+      return { site, title, content };
+    } catch (error) {
+      return { site, title, error: error.message };
+    }
+  }));
+
+  const fetchErrors = contents
+    .filter(result => result.error)
+    .map(result => `${result.site}: ${result.error}`);
+  if (fetchErrors.length) throw new Error(`public article title contract failed for proposed merge:\n${fetchErrors.join('\n')}`);
+  assertPublicArticleContents(new Map(contents.map(result => [result.site, result.content])));
+}
+
+// This is the last server-side gate before an authenticated editor can ask GitHub to merge into main.
+async function assertPublicMergeGate(pullNumber, body) {
+  const pull = await githubApiJSON(`${REPO_API_ROOT}/pulls/${pullNumber}`);
+  if (
+    pull.state !== 'open' ||
+    pull.base?.ref !== 'main' ||
+    pull.base?.repo?.full_name !== REPO ||
+    !isAllowedCmsBranch(pull.head?.ref) ||
+    pull.head?.repo?.full_name !== REPO ||
+    typeof pull.head?.sha !== 'string'
+  ) {
+    throw new Error('only an open cms/* pull request into main can be merged');
+  }
+
+  const payload = body?.length ? parseContentPayload(body) : null;
+  if (payload?.sha && payload.sha !== pull.head.sha) {
+    throw new Error('pull request head changed; refresh before merging');
+  }
+
+  const checkData = await githubApiJSON(
+    `${REPO_API_ROOT}/commits/${encodeURIComponent(pull.head.sha)}/check-runs?per_page=100`
+  );
+  const contractRuns = Array.isArray(checkData.check_runs)
+    ? checkData.check_runs.filter(run => run?.name === 'contract')
+    : [];
+  const latestContract = [...contractRuns]
+    .sort((left, right) => {
+      const leftTime = Date.parse(left.completed_at || left.updated_at || left.started_at || '') || 0;
+      const rightTime = Date.parse(right.completed_at || right.updated_at || right.started_at || '') || 0;
+      return rightTime - leftTime;
+    })[0];
+  if (latestContract?.status !== 'completed' || latestContract.conclusion !== 'success') {
+    throw new Error('required contract check has not passed for the proposed commit');
+  }
+
+  const tree = await githubApiJSON(`${REPO_API_ROOT}/git/trees/${encodeURIComponent(pull.head.sha)}?recursive=1`);
+  await assertPublicArticleTree(tree);
 }
 
 function refFromGitHubPath(repoPath) {
@@ -511,6 +652,19 @@ async function handleGitHubProxy(req, res, url) {
       body = await readRequestBody(req);
     } catch (error) {
       return json(res, error.statusCode || 400, { message: '请求体无效' });
+    }
+  }
+
+  if (!isAllowedPullRequestMutation(pathname, req.method, body)) {
+    return json(res, 403, { message: 'pull requests must target cms/* branches and main' });
+  }
+
+  const mergeMatch = pathname.match(new RegExp(`^${REPO_API_ROOT}/pulls/(\\d+)/merge$`));
+  if (mergeMatch && req.method === 'PUT') {
+    try {
+      await assertPublicMergeGate(mergeMatch[1], body);
+    } catch (error) {
+      return json(res, 409, { message: `merge blocked: ${error.message}` });
     }
   }
 

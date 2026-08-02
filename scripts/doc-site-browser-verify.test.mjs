@@ -14,6 +14,7 @@ function passingProbe() {
       sidebarTitles: [config.title],
       h1: 'codesome｜Agentic 入门宝典',
       h1Count: 1,
+      h1Visible: true,
       h1Sources: ['manifest-injector'],
       articleResource: { status: 200, statuses: [200], failures: [] },
       titlePipeline: {
@@ -29,6 +30,7 @@ function passingProbe() {
     article: {
       h1: config.title,
       h1Count: 1,
+      h1Visible: true,
       h1Sources: ['manifest-injector'],
       articleResource: { status: 200, statuses: [200], failures: [] },
       titlePipeline: {
@@ -41,7 +43,11 @@ function passingProbe() {
       bodyText: `正文 ${config.expect}`,
       images: [{ complete: true, naturalWidth: 1280 }],
       consoleErrors: []
-    }
+    },
+    viewports: [
+      { viewport: 'desktop', home: { h1: 'codesome｜Agentic 入门宝典', h1Visible: true }, article: { h1: config.title, h1Visible: true } },
+      { viewport: 'mobile', home: { h1: 'codesome｜Agentic 入门宝典', h1Visible: true }, article: { h1: config.title, h1Visible: true } }
+    ]
   };
 }
 
@@ -93,6 +99,15 @@ test('duplicate article H1 headings fail the browser contract', () => {
   probe.article.h1Sources = ['manifest-injector', 'manifest-injector'];
   const checks = evaluateBrowserAssertions(probe, config);
   assert.equal(checks.find(check => check.id === 'article-h1-count').pass, false);
+});
+
+test('an H1 that exists in the DOM but is hidden fails the browser contract', () => {
+  const probe = passingProbe();
+  probe.article.h1Visible = false;
+  probe.viewports[1].article.h1Visible = false;
+  const checks = evaluateBrowserAssertions(probe, config);
+  assert.equal(checks.find(check => check.id === 'article-h1-count').pass, false);
+  assert.equal(checks.find(check => check.id === 'responsive-h1-visibility').pass, false);
 });
 
 test('CLI rejects invalid timeout and accepts browser options', () => {

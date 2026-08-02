@@ -167,6 +167,16 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
               const article = %s;
               const title = %s;
               const articleBase = %s;
+              const isVisible = node => {
+                if (!node || node.getClientRects().length === 0) return false;
+                for (let current = node; current; current = current.parentElement) {
+                  const style = getComputedStyle(current);
+                  if (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+                  if (Number.parseFloat(style.opacity || '1') <= 0) return false;
+                }
+                const rect = node.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0;
+              };
               const hash = decodeURIComponent(location.hash || '');
               const section = document.querySelector('.markdown-section');
               const h1s = Array.from(section?.querySelectorAll('h1') || []);
@@ -180,6 +190,7 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
                 article: hash.includes(article) || hash.includes(articleBase),
                 h1: h1s[0]?.textContent?.trim() || '',
                 h1Count: h1s.length,
+                h1Visible: h1s.length === 1 && isVisible(h1s[0]),
                 title: title,
                 titlePipeline: {
                   status: pipeline.status || 'missing',
@@ -192,7 +203,7 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
             })()""" % (article_json, title_json, article_base_json),
             session_id,
         ) or {}
-        if state.get("ready") and state.get("sidebar") and state.get("markdown"):
+        if state.get("ready") and state.get("sidebar") and state.get("markdown") and state.get("h1Visible"):
             if require_article and state.get("article") and state.get("h1") == state.get("title"):
                 return state
             if not require_article and not state.get("article"):
@@ -274,12 +285,23 @@ def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | No
           });
           const section = document.querySelector('.markdown-section');
           const h1s = Array.from(section?.querySelectorAll('h1') || []);
+          const isVisible = node => {
+            if (!node || node.getClientRects().length === 0) return false;
+            for (let current = node; current; current = current.parentElement) {
+              const style = getComputedStyle(current);
+              if (style.display === 'none' || style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+              if (Number.parseFloat(style.opacity || '1') <= 0) return false;
+            }
+            const rect = node.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          };
           const pipeline = window.CODESOME_TITLE_PIPELINE || {};
           return {
             sidebarTitles: links.map(link => (link.textContent || '').trim()).filter(Boolean),
             targetLink: target ? {text: target.textContent.trim(), href: target.getAttribute('href')} : null,
             h1: h1s[0]?.textContent?.trim() || '',
             h1Count: h1s.length,
+            h1Visible: h1s.length === 1 && isVisible(h1s[0]),
             h1Sources: h1s.map(node => node.getAttribute('data-codesome-title-source') || ''),
             titlePipeline: {
               status: pipeline.status || 'missing',
@@ -305,6 +327,59 @@ def capture(cdp: CDP, session_id: str):
     return cdp.call("Page.captureScreenshot", {"format": "png", "fromSurface": True}, session_id).get("data", "")
 
 
+def run_viewport(cdp: CDP, session_id: str, config, viewport):
+    cdp.call("Emulation.setDeviceMetricsOverride", {
+        "width": viewport["width"], "height": viewport["height"], "deviceScaleFactor": 1,
+        "mobile": viewport["mobile"]
+    }, session_id=session_id)
+    base_url = config["url"].rstrip("/")
+    timeout_s = max(10, config["timeout_ms"] / 1000)
+    cdp.call("Page.navigate", {"url": base_url + "/#/"}, session_id=session_id)
+    wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s)
+    home_events = cdp.drain_events()
+    home = snapshot(cdp, session_id, config["article"], "03-Agentic入门宝典.md")
+    home_events += cdp.drain_events()
+    home["consoleErrors"] = console_errors(home_events)
+    home["articleResource"] = resource_observation(home_events, "03-Agentic入门宝典.md")
+    home["html"] = evaluate(cdp, "document.documentElement.outerHTML", session_id)
+    home["screenshot"] = capture(cdp, session_id)
+
+    navigation = evaluate(
+        cdp,
+        """(() => {
+          const article = %s;
+          const links = Array.from(document.querySelectorAll('.sidebar-nav a'));
+          const target = links.find(link => {
+            const href = decodeURIComponent(link.getAttribute('href') || '');
+            return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
+          });
+          if (!target) return {clicked: false, href: location.href};
+          target.click();
+          return {clicked: true, href: target.href};
+        })()""" % json.dumps(config["article"], ensure_ascii=False),
+        session_id,
+    ) or {"clicked": False, "href": ""}
+    is_homepage = config["article"] == "03-Agentic入门宝典.md"
+    if navigation.get("clicked"):
+        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
+    elif not is_homepage:
+        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
+    prepare_and_wait_for_images(cdp, session_id, time.monotonic() + timeout_s)
+    article_events = cdp.drain_events()
+    article = snapshot(cdp, session_id, config["article"])
+    article_events += cdp.drain_events()
+    article["consoleErrors"] = console_errors(article_events)
+    article["articleResource"] = resource_observation(home_events + article_events, config["article"])
+    article["html"] = evaluate(cdp, "document.documentElement.outerHTML", session_id)
+    article["screenshot"] = capture(cdp, session_id)
+    return {
+        "viewport": viewport["name"],
+        "home": home,
+        "navigation": navigation,
+        "article": article
+    }
+
+
 def run(config, websocket_url):
     cdp = CDP(websocket_url)
     context_id = None
@@ -317,51 +392,19 @@ def run(config, websocket_url):
         cdp.call("Runtime.enable", session_id=session_id)
         cdp.call("Log.enable", session_id=session_id)
         cdp.call("Network.enable", session_id=session_id)
-        cdp.call("Emulation.setDeviceMetricsOverride", {
-            "width": 1280, "height": 900, "deviceScaleFactor": 1, "mobile": False
-        }, session_id=session_id)
-
-        base_url = config["url"].rstrip("/")
-        timeout_s = max(10, config["timeout_ms"] / 1000)
-        cdp.call("Page.navigate", {"url": base_url + "/#/"}, session_id=session_id)
-        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s)
-        home_events = cdp.drain_events()
-        home = snapshot(cdp, session_id, config["article"], "03-Agentic入门宝典.md")
-        home_events += cdp.drain_events()
-        home["consoleErrors"] = console_errors(home_events)
-        home["articleResource"] = resource_observation(home_events, "03-Agentic入门宝典.md")
-        home["html"] = evaluate(cdp, "document.documentElement.outerHTML", session_id)
-        home["screenshot"] = capture(cdp, session_id)
-
-        navigation = evaluate(
-            cdp,
-            """(() => {
-              const article = %s;
-              const links = Array.from(document.querySelectorAll('.sidebar-nav a'));
-              const target = links.find(link => {
-                const href = decodeURIComponent(link.getAttribute('href') || '');
-                return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
-              });
-              if (!target) return {clicked: false, href: location.href};
-              target.click();
-              return {clicked: true, href: target.href};
-            })()""" % json.dumps(config["article"], ensure_ascii=False),
-            session_id,
-        ) or {"clicked": False, "href": ""}
-        is_homepage = config["article"] == "03-Agentic入门宝典.md"
-        if navigation.get("clicked"):
-            wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
-        elif not is_homepage:
-            wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
-        prepare_and_wait_for_images(cdp, session_id, time.monotonic() + timeout_s)
-        article_events = cdp.drain_events()
-        article = snapshot(cdp, session_id, config["article"])
-        article_events += cdp.drain_events()
-        article["consoleErrors"] = console_errors(article_events)
-        article["articleResource"] = resource_observation(home_events + article_events, config["article"])
-        article["html"] = evaluate(cdp, "document.documentElement.outerHTML", session_id)
-        article["screenshot"] = capture(cdp, session_id)
-        return {"status": "PASS", "home": home, "navigation": navigation, "article": article}
+        viewports = [
+            {"name": "desktop", "width": 1280, "height": 900, "mobile": False},
+            {"name": "mobile", "width": 390, "height": 844, "mobile": True},
+        ]
+        results = [run_viewport(cdp, session_id, config, viewport) for viewport in viewports]
+        desktop = next(result for result in results if result["viewport"] == "desktop")
+        return {
+            "status": "PASS",
+            "home": desktop["home"],
+            "navigation": desktop["navigation"],
+            "article": desktop["article"],
+            "viewports": results,
+        }
     finally:
         if target_id:
             try:

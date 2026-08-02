@@ -122,7 +122,7 @@ export function evaluateBrowserAssertions(probe, config) {
   const isHomepage = config.article === '03-Agentic入门宝典.md';
   const routeFile = encodeURIComponent(config.article).replaceAll('%2F', '/');
   const routeWithoutExtension = encodeURIComponent(config.article.replace(/\.md$/i, '')).replaceAll('%2F', '/');
-  return [
+  const checks = [
     {
       id: 'home-target-title',
       pass: hasText(home.sidebarTitles || [], config.title),
@@ -135,7 +135,7 @@ export function evaluateBrowserAssertions(probe, config) {
     },
     {
       id: 'home-h1',
-      pass: normalizeText(home.h1) === HOME_TITLE && home.h1Count === 1 && home.h1Sources?.[0] === 'manifest-injector',
+      pass: normalizeText(home.h1) === HOME_TITLE && home.h1Count === 1 && home.h1Visible === true && home.h1Sources?.[0] === 'manifest-injector',
       detail: `首页 H1：${home.h1 || '(空)'}，数量：${home.h1Count || 0}`
     },
     {
@@ -178,7 +178,7 @@ export function evaluateBrowserAssertions(probe, config) {
     },
     {
       id: 'article-h1-count',
-      pass: article.h1Count === 1 && article.h1Sources?.[0] === 'manifest-injector',
+      pass: article.h1Count === 1 && article.h1Visible === true && article.h1Sources?.[0] === 'manifest-injector',
       detail: `文章后代 H1 数量：${article.h1Count || 0}，来源：${article.h1Sources?.join(', ') || '(空)'}`
     },
     {
@@ -215,6 +215,25 @@ export function evaluateBrowserAssertions(probe, config) {
       detail: articleErrors.length ? `文章 console error ${articleErrors.length} 条` : '文章无 console error'
     }
   ];
+
+  const viewports = Array.isArray(probe.viewports) ? probe.viewports : [];
+  const requiredViewports = ['desktop', 'mobile'];
+  checks.push({
+    id: 'responsive-h1-visibility',
+    pass: requiredViewports.every(name => {
+      const viewport = viewports.find(candidate => candidate.viewport === name);
+      return viewport?.home?.h1 === HOME_TITLE &&
+        viewport?.article?.h1 === config.title &&
+        viewport?.home?.h1Visible === true &&
+        viewport?.article?.h1Visible === true;
+    }),
+    detail: `桌面/移动视口 H1 均实际可见：${requiredViewports.map(name => {
+      const viewport = viewports.find(candidate => candidate.viewport === name);
+      return `${name}=${viewport?.home?.h1 === HOME_TITLE && viewport?.article?.h1 === config.title && viewport?.home?.h1Visible === true && viewport?.article?.h1Visible === true ? 'visible' : 'missing'}`;
+    }).join(', ')}`
+  });
+
+  return checks;
 }
 
 function discoverContainer(config) {
