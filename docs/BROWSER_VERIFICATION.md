@@ -41,7 +41,7 @@ Chrome DRM 前置由 `chrome-drm-fetch` 技能定义：本机需要能通过 `ss
 
 `npm run check` 还会运行 `npm run check:rendered-titles:browser`。该命令启动临时本地站点，用 Playwright Chromium 真实加载 `index.html` 和 Docsify，并逐篇切换全部公开文章路由。它会在带有旧搜索缓存的浏览器上下文中验证 Markdown `200`、侧栏链接、唯一 `manifest-injector` H1、标题管线状态、无 fallback、无 console/network error 和图片加载。
 
-CI 必须先执行 `npx playwright install --with-deps chromium`。浏览器无法安装、无法启动或任一文章断言失败，均以非零状态结束；不能把浏览器不可用降级为 `SKIP`。
+CI 必须先 checkout `hicodesome/hicodesome-docs-source@cdc-snapshot-2026-07-14` 并设置 `CDC_SOURCE`，再执行 `npx playwright install --with-deps chromium`。浏览器无法安装、无法启动、CDC 源快照缺失或任一文章断言失败，均以非零状态结束；不能把这些问题降级为通过。
 
 ## 发布链路门禁
 

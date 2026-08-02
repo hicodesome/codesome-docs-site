@@ -16,6 +16,7 @@
 
 - 站点为 Docsify 静态站；本地预览使用 `npm run dev`，完整内容检查使用 `npm run check`。
 - `npm run check` 包含 `check:rendered-titles:browser`：它会用 Playwright Chromium 真实加载本地 Docsify，并逐篇验收全部公开文章；浏览器未安装或任一篇失败都必须阻断发布。
+- CI 必须显式 checkout `hicodesome/hicodesome-docs-source@cdc-snapshot-2026-07-14` 并设置 `CDC_SOURCE`；不能依赖本机工作区的同级目录存在。
 - 新增或改名文章时同步检查 `_sidebar.md`、首页入口、内部链接、图片和 `docs/CONTENT_BASELINE.md`。
 - 每篇站点文章都必须在 `scripts/cdc-manifest.mjs` 或 `scripts/content-baseline.mjs` 登记标题；登记后运行 `npm run generate:titles` 生成 `assets/article-titles.js`，再运行 `npm run check`。`check:titles` 会阻止漏登记文章、过期生成文件或错误的 `index.html` 加载顺序进入发布。
 - 修改浏览器 CSS/JS 时必须同步更新 `index.html` 对应资源的 `?v=` 缓存版本。

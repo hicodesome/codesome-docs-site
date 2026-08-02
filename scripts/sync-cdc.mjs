@@ -21,9 +21,14 @@ if (sourceArgIndex !== -1 && !process.argv[sourceArgIndex + 1]) {
 }
 const sourceRepo = resolve(
   sourceArgIndex === -1
-    ? resolve(root, '..', '..', 'hicodesome-docs-source')
+    ? process.env.CDC_SOURCE ?? resolve(root, '..', '..', 'hicodesome-docs-source')
     : process.argv[sourceArgIndex + 1]
 );
+
+if (!existsSync(sourceRepo)) {
+  console.error(`CDC source checkout not found: ${sourceRepo}`);
+  process.exit(1);
+}
 
 function gitText(...args) {
   return execFileSync('git', ['-C', sourceRepo, ...args], {
