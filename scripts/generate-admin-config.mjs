@@ -1,8 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { articles } from './cdc-manifest.mjs';
-import { SITE_ONLY_ARTICLES } from './content-baseline.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -14,7 +12,7 @@ function yamlString(value) {
 
 export function orderedPublicArticles(
   discoveredArticles,
-  preferredArticles = [...articles, ...SITE_ONLY_ARTICLES]
+  preferredArticles = []
 ) {
   const seen = new Set();
   const ordered = [];

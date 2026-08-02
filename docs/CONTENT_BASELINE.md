@@ -1,68 +1,41 @@
 # 文档内容基准
 
-登记日期：2026-08-02
+当前基准以站点仓库工作树为真值：根目录中符合 `^\d{2}-.+\.md$` 的公开文章，以及这些文章实际引用的本地 `images/` 图片。标题来自每篇文章第一行的唯一 canonical H1，文章、图片、引用关系、大小和 SHA-256 由 `docs/article-backup/manifest.json` 统一记录。
 
-文章新增、替换、改名和删除流程见 [文章生命周期流程](ARTICLE_LIFECYCLE.md)。
+## 日常刷新
 
-## 当前人工最新基准
+新增、修改、改名、删除文章或图片后，只运行：
 
-以下 25 篇 CDC 槽位文章以当前公网版本为最新基准，不再与 CDC 快照正文比较，也不会被 `sync:cdc` 覆盖：
+```bash
+npm run baseline:refresh
+```
 
-- [V3 Claude Code 安装与配置指南](../01-V3计划-ClaudeCode安装配置.md)
-- [V3 Codex 安装与配置指南](../01-V3计划-Codex安装配置.md)
-- [V3 OpenCode 配置指南](../01-V3计划-OpenCode配置.md)
-- [二合一 Claude Code 安装与配置指南](../01-二合一计划-ClaudeCode安装配置.md)
-- [二合一 Codex 安装与配置指南](../01-二合一计划-Codex安装配置.md)
-- [二合一 OpenCode 配置指南](../01-二合一计划-OpenCode配置.md)
-- [Claude Code 上下文自动压缩配置](../02-ClaudeCode上下文压缩配置.md)
-- [codesome｜Agentic 入门宝典](../03-Agentic入门宝典.md)（2026-07-23 起，因主页需引用站点独有文章转人工维护）
-- [V3 Grok Build 安装与配置指南](../01-V3计划-GrokBuild安装配置.md)
-- [OpenClaw 最新配置教程](../01-OpenClaw配置教程.md)
-- [【最新】hermes配置教程](../01-二合一计划-Hermes配置-AI自动版.md)
-- [【最新】Hermes 二合一配置教程](../01-二合一计划-Hermes配置-Mac手动版.md)
-- [第三方客户端接入 Codesome 配置指南](../01-第三方客户端接入配置.md)
-- [codesome｜使用问题速查](../02-使用问题速查.md)
-- [这样做，可以省下大半 Token 账单：长上下文降费执行手册](../03-Token降费执行手册.md)
-- [AI 编程课红包福利](../05-AI编程课红包福利.md)
-- [CC Switch 配置 Claude 桌面端教程](../01-CCSwitch配置Claude桌面端.md)
-- [Codex 桌面版持续 Reconnecting + 502 报错排查](../02-Codex桌面版断连和502排查.md)
-- [官方地址是多少](../01-官方地址.md)
-- [No.1 牛马神器：让 cc 帮你绘制 PPT](../03-牛马神器-CC绘制PPT.md)
-- [cc兑换码兑换指南](../05-兑换码兑换指南.md)
-- [codesome claude code小白课程录播](../04-小白课程录播合集.md)
-- [从用 Agent 到造 Agent：Agentway 学习平台介绍](../03-Agentway学习平台介绍.md)
-- [关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告](../02-平台服务紧张应对方案.md)
-- [通过对话管理 cc 中转站](../03-对话管理CC中转站.md)
+该命令自动发现文章和图片、生成标题映射与后台配置、更新并清理 `docs/article-backup/`，最后执行当前基准检查。重复运行不写运行时间等不稳定字段，内容未变化时不会重写文件。
 
-机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs)。
+提交前或 CI 只需运行：
 
-## 站点独有人工文章
+```bash
+npm run baseline:check
+```
 
-以下文章不来自 CDC 快照，由人工直接在站点仓库维护，不参与 `sync:cdc` 同步：
+缺图、外部图片、越界路径、文章集合漂移、标题不符合 canonical H1、备份缺失、哈希不符和备份中残留旧文件都会失败关闭。
 
-- [GPT Image 2 终端生图备忘录](../03-GPTImage2终端生图备忘录.md)
-- [PIAgent 模型配置示例](../01-PIAgent模型配置示例.md)
-- [月卡、按量和二合一怎么选（购买前选购指南）](../02-月卡按量二合一怎么选.md)
-- [如何查询我的余额和用量（网页与 API）](../02-V3-V5余额额度用量查询.md)
+## CDC provenance
 
-机器可读登记位于 [`scripts/content-baseline.mjs`](../scripts/content-baseline.mjs) 的 `SITE_ONLY_ARTICLES`。
+CDC `cdc-snapshot-2026-07-14` 不再覆盖站点正文或图片，也不决定当前文章集合。它只作为不可变历史来源和审计锚点，固定为：
 
-## CDC 来源快照
+- 仓库：`hicodesome/hicodesome-docs-source`
+- 标签：`cdc-snapshot-2026-07-14`
+- 提交：`4f1256480ad14c4664408227b11ed6cd9b977746`
 
-CDC 快照仍是 25 个来源文件和历史图片的不可变 provenance，不再作为当前公网正文的覆盖源：
+日常 `npm run check`、`npm run check:ci` 和 `baseline:*` 不要求 CDC checkout。需要审计 provenance 时显式提供只读 checkout：
 
-- CDC 标签：`cdc-snapshot-2026-07-14`
-- CDC 内容清单：[`scripts/cdc-manifest.mjs`](../scripts/cdc-manifest.mjs)
-- `npm run check:cdc` 会继续校验固定 tag、25 个来源文件和清单；`npm run sync:cdc` 不会覆盖当前 29 篇公网文章。
+```bash
+npm run check:provenance -- --source /path/to/hicodesome-docs-source
+```
 
-## 维护规则
+`npm run sync:cdc` 保留为兼容入口，行为仅为上述 provenance 校验，绝不会写入文章或图片。
 
-后续如果确认某篇教程应作为最新基准，需要同时更新：
+## 恢复
 
-1. `scripts/content-baseline.mjs` 中的登记；
-2. 本文件中的清单和日期；
-3. 对应过程记录和交接文档。
-
-新增或改名文章时，还必须在上述机器可读清单中登记最终标题，运行 `npm run generate:titles` 更新浏览器搜索标题映射，并通过 `npm run check`。CDC 清单提供默认标题，人工最新基准会覆盖同名 CDC 标题，站点独有文章由 `SITE_ONLY_ARTICLES` 登记。发布门禁会拒绝未登记文章、过期映射和错误的脚本加载顺序。
-
-未被登记为人工最新基准的教程，默认仍以 CDC 为准。
+先运行 `npm run baseline:check`，再将 `docs/article-backup/articles/` 恢复到站点根目录、将 `docs/article-backup/images/` 恢复到 `images/`，最后运行 `npm run baseline:refresh` 和 `npm run check`。不要用 CDC 原始目录覆盖当前站点内容。

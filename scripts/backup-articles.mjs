@@ -8,22 +8,17 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
+  rmSync,
   writeFileSync
 } from 'node:fs';
 import { dirname, join, posix, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  articles as cdcArticles,
-  CDC_COMMIT,
-  CDC_IMAGE_COUNT,
-  CDC_TAG
+  articles as cdcArticles
 } from './cdc-manifest.mjs';
-import {
-  LATEST_BASELINE_SITES,
-  SITE_ONLY_SITES
-} from './content-baseline.mjs';
-import { articleTitleMap } from './title-metadata.mjs';
 import { assertCanonicalArticleMarkdown } from './markdown-headings.mjs';
+import { extractPublicArticleTitle } from './public-articles.mjs';
+import { verifyCdcProvenance, unverifiedCdcProvenance } from './cdc-provenance.mjs';
 
 const scriptRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const imagePattern = /!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^)]+?))\s*\)/g;
@@ -44,9 +39,10 @@ function option(name, fallback) {
 
 function showHelp() {
   console.log(`Usage:
-  node scripts/backup-articles.mjs [--dry-run] [--root PATH] [--output PATH] [--cdc-source PATH]
+  node scripts/backup-articles.mjs [--dry-run] [--root PATH] [--output PATH]
   node scripts/backup-articles.mjs --verify [--output PATH]
   node scripts/backup-articles.mjs --verify --verify-source [--root PATH] [--output PATH]
+  node scripts/backup-articles.mjs --verify --cdc-source PATH
 
 Options:
   --dry-run       Discover and validate without writing the backup.
@@ -55,7 +51,7 @@ Options:
   --root PATH     Site repository root (defaults to this repository).
   --output PATH   Backup directory (defaults to docs/article-backup).
   --cdc-source PATH
-                  Read-only hicodesome-docs-source checkout containing the fixed CDC tag.
+                  Optional read-only CDC checkout; validates provenance only when supplied.
 `);
 }
 
@@ -70,8 +66,10 @@ if (dryRun && verifyOnly) throw new Error('--dry-run and --verify cannot be comb
 
 const root = resolve(option('--root', scriptRoot));
 const output = resolve(option('--output', join(root, 'docs/article-backup')));
-const defaultCdcSource = resolve(root, '..', '..', 'hicodesome-docs-source');
-const cdcSource = resolve(option('--cdc-source', process.env.CDC_SOURCE ?? defaultCdcSource));
+const cdcSourceOption = option('--cdc-source', undefined);
+const cdcSource = cdcSourceOption || process.env.CDC_SOURCE
+  ? resolve(cdcSourceOption || process.env.CDC_SOURCE)
+  : undefined;
 
 function gitText(repository, ...gitArgs) {
   try {
@@ -149,55 +147,6 @@ function extractImagePaths(content, articlePath) {
   return refs.sort();
 }
 
-function cdcImagePath(rawTarget) {
-  const target = rawTarget.trim().split(/[?#]/, 1)[0];
-  return target.startsWith('images/') ? target : undefined;
-}
-
-function verifyCdcSnapshot() {
-  if (!isRegularFile(join(cdcSource, '.git')) && !existsSync(join(cdcSource, '.git'))) {
-    throw new Error(`CDC source checkout not found: ${cdcSource}`);
-  }
-
-  const verifiedCommit = gitText(cdcSource, 'rev-parse', `${CDC_TAG}^{commit}`).trim();
-  if (verifiedCommit !== CDC_COMMIT) {
-    throw new Error(`CDC tag mismatch: expected ${CDC_COMMIT}, found ${verifiedCommit}`);
-  }
-
-  const expectedArticles = cdcArticles.map(article => article.source).sort();
-  const snapshotArticles = gitText(cdcSource, 'ls-tree', '-r', '--name-only', '-z', CDC_TAG)
-    .split('\0')
-    .filter(file => file.endsWith('.md'))
-    .filter(file => !['IMPORT_REPORT.md', 'README.md', 'SOURCE_SNAPSHOT.md'].includes(file))
-    .sort();
-  if (JSON.stringify(snapshotArticles) !== JSON.stringify(expectedArticles)) {
-    throw new Error('CDC snapshot Markdown collection does not match cdc-manifest.mjs');
-  }
-
-  const imagePaths = new Set();
-  for (const article of cdcArticles) {
-    const content = gitText(cdcSource, 'show', `${CDC_TAG}:${article.source}`);
-    for (const match of content.matchAll(imagePattern)) {
-      const imagePath = cdcImagePath(match[1] ?? match[2]);
-      if (imagePath) imagePaths.add(imagePath);
-    }
-  }
-  if (imagePaths.size !== CDC_IMAGE_COUNT) {
-    throw new Error(`CDC image reference mismatch: expected ${CDC_IMAGE_COUNT}, found ${imagePaths.size}`);
-  }
-  for (const imagePath of imagePaths) {
-    gitText(cdcSource, 'cat-file', '-e', `${CDC_TAG}:${imagePath}`);
-  }
-
-  return {
-    tag: CDC_TAG,
-    commit: verifiedCommit,
-    commitDate: gitText(cdcSource, 'show', '-s', '--format=%cI', `${CDC_TAG}^{commit}`).trim(),
-    articleCount: snapshotArticles.length,
-    referencedImageCount: imagePaths.size
-  };
-}
-
 function discoverArticles() {
   const files = readdirSync(root, { withFileTypes: true })
     .filter(entry => entry.isFile() && /^\d{2}-.+\.md$/.test(entry.name))
@@ -208,10 +157,8 @@ function discoverArticles() {
   const records = [];
   const imageUsers = new Map();
   for (const sitePath of files) {
-    const article = manifestBySite.get(sitePath);
     const content = readFileSync(join(root, sitePath), 'utf8');
-    const title = articleTitleMap.get(sitePath);
-    if (!title) throw new Error(`site article has no discovered publication title: ${sitePath}`);
+    const title = extractPublicArticleTitle(content, sitePath);
     try {
       assertCanonicalArticleMarkdown(content, title);
     } catch (error) {
@@ -226,9 +173,8 @@ function discoverArticles() {
 
     records.push({
       sitePath,
-      kind: article ? 'cdc-slot' : SITE_ONLY_SITES.has(sitePath) ? 'site-only' : 'auto-public',
-      baseline: LATEST_BASELINE_SITES.has(sitePath) ? 'latest' : null,
-      cdcSourcePath: article?.source ?? null,
+      kind: manifestBySite.has(sitePath) ? 'cdc-provenance' : 'site-current',
+      cdcSourcePath: manifestBySite.get(sitePath)?.source ?? null,
       ...fileInfo(join(root, sitePath)),
       backupPath: `articles/${sitePath}`,
       imageReferences
@@ -249,15 +195,14 @@ function siteMetadata() {
   const commit = gitText(root, 'rev-parse', 'HEAD').trim();
   return {
     commit,
-    commitDate: gitText(root, 'show', '-s', '--format=%cI', 'HEAD').trim(),
-    branch: gitText(root, 'branch', '--show-current').trim() || null
+    commitDate: gitText(root, 'show', '-s', '--format=%cI', 'HEAD').trim()
   };
 }
 
 function buildManifest(cdc, site, discovered) {
   return {
     format: 'codesome-doc-site-article-backup',
-    formatVersion: 1,
+    formatVersion: 2,
     generatedFrom: {
       site,
       cdc
@@ -299,20 +244,21 @@ const backupReadme = `# 文档站文章备份
 
 ## 边界
 
-- manifest.json 是来源、提交时间、文章/图片路径、大小和 SHA-256 清单。
-- articles/ 与 images/ 只保存站点当前文件的副本，不复制 CDC 原始集合。
-- CDC 来源只读校验固定 tag cdc-snapshot-2026-07-14，不会切换真值、改写正文或放宽 sync-cdc。
-- 清单中的站点提交时间来自站点 Git HEAD；备份命令不写入不稳定的运行时间，因此重复执行不会产生无意义差异。
+  - manifest.json 是当前站点真值的来源、提交信息、文章/图片路径、大小和 SHA-256 清单。
+  - articles/ 与 images/ 只保存站点当前文件的副本，不复制 CDC 原始集合。
+  - generatedFrom.cdc 仅记录固定 tag 的 provenance 状态，不会切换真值或改写正文；验证需显式提供 CDC checkout。
+  - 清单中的站点提交信息来自站点 Git HEAD；备份命令不写入运行时间，因此重复执行不会产生无意义差异。
 
 ## 运行
 
 ~~~bash
-node scripts/backup-articles.mjs --dry-run --cdc-source /path/to/hicodesome-docs-source
-node scripts/backup-articles.mjs --cdc-source /path/to/hicodesome-docs-source
+node scripts/backup-articles.mjs --dry-run
+node scripts/backup-articles.mjs
 node scripts/backup-articles.mjs --verify
+node scripts/backup-articles.mjs --verify --cdc-source /path/to/hicodesome-docs-source
 ~~~
 
-缺图、外部图片、越界图片引用或 CDC 固定快照不一致都会失败。--verify 会确认清单完整覆盖当前站点文章、备份文章仍符合登记的 canonical H1，并逐文件进行 SHA-256 和字节数校验；追加 --verify-source 可再与当前站点源文件逐项比对。
+缺图、外部图片、越界图片引用都会失败。--verify 会确认清单完整覆盖当前站点文章、引用图片、备份文章 canonical H1 和当前文件哈希；追加 --verify-source 可再显式比对当前站点源文件。提供 --cdc-source 时只额外校验固定 CDC provenance。
 
 ## 恢复
 
@@ -325,28 +271,52 @@ function currentArticlePaths() {
     .map(entry => entry.name)
     .sort();
   if (!files.length) throw new Error(`no site article Markdown files found in ${root}`);
-  for (const sitePath of files) {
-    if (!articleTitleMap.has(sitePath)) {
-      throw new Error(`site article is not registered in title metadata: ${sitePath}`);
-    }
-  }
   return files;
 }
 
-function verifyManifestArticleCoverage(manifest, expectedSites) {
+function comparableArticle(entry) {
+  return {
+    sitePath: entry.sitePath,
+    kind: entry.kind,
+    cdcSourcePath: entry.cdcSourcePath ?? null,
+    bytes: entry.bytes,
+    sha256: entry.sha256,
+    backupPath: entry.backupPath,
+    imageReferences: entry.imageReferences
+  };
+}
+
+function comparableImage(entry) {
+  return {
+    sitePath: entry.sitePath,
+    bytes: entry.bytes,
+    sha256: entry.sha256,
+    backupPath: entry.backupPath,
+    referenceCount: entry.referenceCount,
+    referencedBy: entry.referencedBy
+  };
+}
+
+function verifyManifestArticleCoverage(manifest, discovered) {
   if (!Array.isArray(manifest.articles) || !Array.isArray(manifest.images)) {
     throw new Error('backup manifest articles and images must be arrays');
   }
-  if (manifest.scope?.articleCount !== expectedSites.length) {
-    throw new Error(`backup manifest article count differs: expected ${expectedSites.length}, found ${manifest.scope?.articleCount}`);
+  if (manifest.format !== 'codesome-doc-site-article-backup' || manifest.formatVersion !== 2) {
+    throw new Error('unsupported backup manifest format');
+  }
+  if (manifest.scope?.articleCount !== discovered.articles.length) {
+    throw new Error(`backup manifest article count differs: expected ${discovered.articles.length}, found ${manifest.scope?.articleCount}`);
   }
 
   const actualSites = manifest.articles.map(entry => entry?.sitePath);
   if (actualSites.some(site => typeof site !== 'string') || new Set(actualSites).size !== actualSites.length) {
     throw new Error('backup manifest article site paths must be unique strings');
   }
-  if (JSON.stringify([...actualSites].sort()) !== JSON.stringify(expectedSites)) {
+  if (JSON.stringify(manifest.articles.map(comparableArticle)) !== JSON.stringify(discovered.articles.map(comparableArticle))) {
     throw new Error('backup manifest does not cover exactly the current site article set');
+  }
+  if (JSON.stringify(manifest.images.map(comparableImage)) !== JSON.stringify(discovered.images.map(comparableImage))) {
+    throw new Error('backup manifest does not cover exactly the current referenced image set');
   }
 
   for (const entry of manifest.articles) {
@@ -358,12 +328,42 @@ function verifyManifestArticleCoverage(manifest, expectedSites) {
       throw new Error(`article backup path is not canonical: ${entry.sitePath}`);
     }
     const backupFile = assertInside(output, join(output, ...entry.backupPath.split('/')), 'article backup path');
-    const title = articleTitleMap.get(entry.sitePath);
     try {
-      assertCanonicalArticleMarkdown(readFileSync(backupFile, 'utf8'), title);
+      assertCanonicalArticleMarkdown(readFileSync(backupFile, 'utf8'), extractPublicArticleTitle(readFileSync(join(root, entry.sitePath), 'utf8'), entry.sitePath));
     } catch (error) {
       throw new Error(`${entry.sitePath}: backup article title contract failed (${error.message})`);
     }
+  }
+}
+
+function relativeFiles(directory) {
+  if (!existsSync(directory)) return [];
+  const files = [];
+  function visit(current, prefix = '') {
+    for (const entry of readdirSync(current, { withFileTypes: true })) {
+      const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+      const target = join(current, entry.name);
+      if (entry.isDirectory()) visit(target, relative);
+      else if (entry.isFile()) files.push(relative);
+    }
+  }
+  visit(directory);
+  return files.sort();
+}
+
+function verifyExactBackupFiles(manifest) {
+  const expected = new Set(['README.md', 'manifest.json']);
+  for (const entry of [...manifest.articles, ...manifest.images]) expected.add(entry.backupPath);
+  const actual = [
+    ...relativeFiles(join(output, 'articles')).map(file => `articles/${file}`),
+    ...relativeFiles(join(output, 'images')).map(file => `images/${file}`),
+    ...(isRegularFile(join(output, 'README.md')) ? ['README.md'] : []),
+    ...(isRegularFile(join(output, 'manifest.json')) ? ['manifest.json'] : [])
+  ];
+  const extras = actual.filter(file => !expected.has(file));
+  const missing = [...expected].filter(file => !actual.includes(file));
+  if (extras.length || missing.length) {
+    throw new Error(`backup file set drifted${extras.length ? `; extra: ${extras.join(', ')}` : ''}${missing.length ? `; missing: ${missing.join(', ')}` : ''}`);
   }
 }
 
@@ -376,10 +376,10 @@ function verifyBackup() {
   } catch (error) {
     throw new Error(`invalid backup manifest: ${error.message}`);
   }
-  if (manifest.format !== 'codesome-doc-site-article-backup' || manifest.formatVersion !== 1) {
-    throw new Error('unsupported backup manifest format');
-  }
-  verifyManifestArticleCoverage(manifest, currentArticlePaths());
+  if (cdcSource) verifyCdcProvenance(cdcSource);
+  const discovered = discoverArticles();
+  verifyManifestArticleCoverage(manifest, discovered);
+  verifyExactBackupFiles(manifest);
   const entries = [...(manifest.articles ?? []), ...(manifest.images ?? [])];
   if (!entries.length) throw new Error('backup manifest contains no files');
   for (const entry of entries) {
@@ -414,7 +414,7 @@ function verifyBackup() {
 function createBackup() {
   assertInside(root, output, 'backup output');
   if (output === root) throw new Error('backup output cannot be the site repository root');
-  const cdc = verifyCdcSnapshot();
+  const cdc = cdcSource ? verifyCdcProvenance(cdcSource) : unverifiedCdcProvenance();
   const site = siteMetadata();
   const discovered = discoverArticles();
   const manifest = buildManifest(cdc, site, discovered);
@@ -427,7 +427,18 @@ function createBackup() {
     return;
   }
 
+  const expectedFiles = new Set(['README.md', 'manifest.json']);
+  for (const article of discovered.articles) expectedFiles.add(article.backupPath);
+  for (const image of discovered.images) expectedFiles.add(image.backupPath);
   let changedFiles = 0;
+  for (const file of [
+    ...relativeFiles(join(output, 'articles')).map(item => `articles/${item}`),
+    ...relativeFiles(join(output, 'images')).map(item => `images/${item}`)
+  ]) {
+    if (expectedFiles.has(file)) continue;
+    rmSync(join(output, ...file.split('/')), { force: true });
+    changedFiles++;
+  }
   for (const article of discovered.articles) {
     if (copyIfChanged(join(root, article.sitePath), join(output, ...article.backupPath.split('/')))) {
       changedFiles++;

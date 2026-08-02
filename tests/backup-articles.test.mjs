@@ -7,7 +7,6 @@ import { fileURLToPath } from 'node:url';
 
 const siteRoot = fileURLToPath(new URL('..', import.meta.url));
 const script = join(siteRoot, 'scripts/backup-articles.mjs');
-const cdcSource = process.env.CDC_SOURCE || join(siteRoot, '..', '..', 'hicodesome-docs-source');
 const fixture = mkdtempSync(join(tmpdir(), 'codesome-article-backup-'));
 const output = join(fixture, 'docs/article-backup');
 
@@ -42,12 +41,11 @@ try {
     '--dry-run',
     '--root', fixture,
     '--output', dryRunOutput,
-    '--cdc-source', cdcSource
   );
   assert.match(dryRunResult, /backup dry-run: 1 articles, 1 unique images/);
   assert.equal(statSync(dryRunOutput, { throwIfNoEntry: false }), undefined);
 
-  const firstResult = run('--root', fixture, '--output', output, '--cdc-source', cdcSource);
+  const firstResult = run('--root', fixture, '--output', output);
   assert.match(firstResult, /backup created: 1 articles, 1 unique images/);
   const manifest = JSON.parse(readFileSync(join(output, 'manifest.json'), 'utf8'));
   assert.equal(manifest.scope.articleCount, 1);
@@ -58,7 +56,7 @@ try {
   const imageBackup = join(output, 'images/sample.png');
   const imageMtime = statSync(imageBackup).mtimeMs;
 
-  const secondResult = run('--root', fixture, '--output', output, '--cdc-source', cdcSource);
+  const secondResult = run('--root', fixture, '--output', output);
   assert.match(secondResult, /0 files changed/);
   assert.equal(statSync(imageBackup).mtimeMs, imageMtime);
   assert.match(
@@ -82,13 +80,13 @@ try {
   writeFileSync(articleBackup, articleBytes);
 
   writeFileSync(imageBackup, Buffer.from('corrupted\n'));
-  runFail('--verify', '--output', output);
+  runFail('--verify', '--root', fixture, '--output', output);
   writeFileSync(imageBackup, Buffer.from('fixture-image\n'));
   run('--verify', '--verify-source', '--root', fixture, '--output', output);
 
   rmSync(join(fixture, 'images/sample.png'));
   runFail('--verify', '--verify-source', '--root', fixture, '--output', output);
-  runFail('--dry-run', '--root', fixture, '--output', join(fixture, 'missing-output'), '--cdc-source', cdcSource);
+  runFail('--dry-run', '--root', fixture, '--output', join(fixture, 'missing-output'));
 } finally {
   rmSync(fixture, { recursive: true, force: true });
 }

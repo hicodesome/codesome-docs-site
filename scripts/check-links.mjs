@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { articles, internalDocumentTargets } from './cdc-manifest.mjs';
+import { internalDocumentTargets } from './cdc-manifest.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -26,7 +26,7 @@ const expectedArticles = [...articleNames].sort();
 const errors = [];
 
 if (JSON.stringify(discoveredArticles) !== JSON.stringify(expectedArticles)) {
-  errors.push('站点正文文件集合与已登记文章清单（CDC 25 篇 + 站点独有文章）不一致');
+  errors.push('站点正文文件集合与自动发现的公开文章集合不一致');
 }
 
 const files = [...expectedArticles, 'README.md', '_sidebar.md'];
@@ -97,4 +97,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`链接检查通过：${articles.length} 篇 CDC 正文 + ${articleTitleEntries.length - articles.length} 篇站点独有文章，${localLinks} 条本地 Markdown 链接，已知内部飞书链接残留 0 条`);
+console.log(`链接检查通过：${articleTitleEntries.length} 篇自动发现的公开文章，${localLinks} 条本地 Markdown 链接，已知内部飞书链接残留 0 条`);
