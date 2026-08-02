@@ -20,6 +20,7 @@
   "02-Codex桌面版断连和502排查.md": "Codex 桌面版持续 Reconnecting + 502 报错排查",
   "02-V3-V5余额额度用量查询.md": "如何查询我的余额和用量（网页与 API）",
   "02-使用问题速查.md": "codesome｜使用问题速查",
+  "02-分组是什么怎么选怎么切换.md": "分组是什么、怎么选、怎么切换？",
   "02-平台服务紧张应对方案.md": "关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告",
   "02-月卡按量二合一怎么选.md": "月卡、按量和二合一怎么选（购买前选购指南）",
   "03-Agentic入门宝典.md": "codesome｜Agentic 入门宝典",
@@ -32,5 +33,5 @@
   "05-AI编程课红包福利.md": "AI 编程课红包福利",
   "05-兑换码兑换指南.md": "cc兑换码兑换指南"
 });
-  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-9aaf7a622427daab";
+  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-72c7bdcb145254d9";
 }(window));

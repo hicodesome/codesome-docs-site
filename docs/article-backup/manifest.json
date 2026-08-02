@@ -3,9 +3,9 @@
   "formatVersion": 1,
   "generatedFrom": {
     "site": {
-      "commit": "67edc52543643e2311340314fabd9e71e32f17ec",
-      "commitDate": "2026-08-02T20:47:50+08:00",
-      "branch": "codex/title-invariant-20260802"
+      "commit": "af1efd666d03814ee15bd12d8c214b89d19fb5fe",
+      "commitDate": "2026-08-02T23:50:30+08:00",
+      "branch": "main"
     },
     "cdc": {
       "tag": "cdc-snapshot-2026-07-14",
@@ -17,7 +17,7 @@
   },
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
-    "articleCount": 29,
+    "articleCount": 30,
     "uniqueImageCount": 101,
     "imageReferenceCount": 113
   },
@@ -310,6 +310,16 @@
         "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
         "images/codesome｜使用问题速查-重连-大部分情况是您开启了vpn.png"
       ]
+    },
+    {
+      "sitePath": "02-分组是什么怎么选怎么切换.md",
+      "kind": "site-only",
+      "baseline": null,
+      "cdcSourcePath": null,
+      "bytes": 6691,
+      "sha256": "e2b05873f215b3ae94325703af0149f90d58edf6633b275fb5fa281dc6047072",
+      "backupPath": "articles/02-分组是什么怎么选怎么切换.md",
+      "imageReferences": []
     },
     {
       "sitePath": "02-平台服务紧张应对方案.md",

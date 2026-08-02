@@ -120,6 +120,10 @@ export const SITE_ONLY_ARTICLES = [
     title: 'PIAgent 模型配置示例'
   },
   {
+    site: '02-分组是什么怎么选怎么切换.md',
+    title: '分组是什么、怎么选、怎么切换？'
+  },
+  {
     site: '02-月卡按量二合一怎么选.md',
     title: '月卡、按量和二合一怎么选（购买前选购指南）'
   },

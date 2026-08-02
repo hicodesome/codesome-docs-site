@@ -17,7 +17,7 @@ node scripts/backup-articles.mjs --cdc-source /path/to/hicodesome-docs-source
 node scripts/backup-articles.mjs --verify
 ~~~
 
-缺图、外部图片、越界图片引用或 CDC 固定快照不一致都会失败。--verify 独立读取本目录清单，逐文件进行 SHA-256 和字节数校验；追加 --verify-source 可再与当前站点源文件逐项比对。
+缺图、外部图片、越界图片引用或 CDC 固定快照不一致都会失败。--verify 会确认清单完整覆盖当前站点文章、备份文章仍符合登记的 canonical H1，并逐文件进行 SHA-256 和字节数校验；追加 --verify-source 可再与当前站点源文件逐项比对。
 
 ## 恢复
 
