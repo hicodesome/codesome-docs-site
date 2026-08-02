@@ -10,7 +10,7 @@
     "check:article-backup": "node scripts/backup-articles.mjs --verify --verify-source",
     "sync:cdc": "node scripts/sync-cdc.mjs && npm run generate:titles",
     "generate:admin-config": "node scripts/generate-admin-config.mjs",
-    "generate:titles": "node scripts/generate-title-map.mjs",
+    "generate:titles": "node scripts/generate-title-map.mjs && node scripts/generate-admin-config.mjs",
     "check:cdc": "node scripts/sync-cdc.mjs --check",
     "check:titles": "node scripts/generate-title-map.mjs --check",
     "check:article-titles": "node scripts/check-article-title-contract.mjs",
@@ -23,6 +23,8 @@
     "check:images": "node scripts/check-images.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:article-backup:manifest": "node scripts/backup-articles.mjs --verify",
+    "check:cms": "npm run check:titles && npm run check:article-titles && npm run check:admin && npm run check:links && npm run check:images && npm run check:secrets",
+    "review:cms": "node scripts/review-cms-changes.mjs",
     "check": "npm run check:cdc && npm run check:titles && npm run check:article-titles && npm run check:admin && npm run check:cache && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup",
     "check:ci": "npm run check:titles && npm run check:article-titles && npm run check:admin && npm run check:cache && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup:manifest",
     "test:browser": "node --test scripts/doc-site-browser-verify.test.mjs",
@@ -30,7 +32,9 @@
     "test:server": "node --test scripts/server-contract.test.mjs",
     "test:cache": "node --test scripts/check-cache-versions.test.mjs",
     "test:backup": "node tests/backup-articles.test.mjs",
-    "test": "npm run test:browser && npm run test:title-pipeline && npm run test:server && npm run test:cache"
+    "test:metadata": "node --test scripts/public-articles.test.mjs",
+    "test:cms-review": "node --test scripts/review-cms-changes.test.mjs",
+    "test": "npm run test:browser && npm run test:title-pipeline && npm run test:server && npm run test:cache && npm run test:metadata && npm run test:cms-review"
   },
   "devDependencies": {
     "docsify-cli": "^4.4.4",

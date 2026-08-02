@@ -2,17 +2,35 @@
 
 本文是文档站文章登记、替换、改名和删除的操作清单。脚本会修改登记表、侧边栏、基准文档和站内文件引用，并在每个命令结尾自动运行 `npm run generate:titles` 与 `npm run check`。
 
+## 公开文章自动发现
+
+站点根目录中符合 `^\d{2}-.*\.md$` 的文件就是公开文章；`README.md`、`_sidebar.md`、`docs/` 和其他子目录不在扫描范围。`npm run generate:titles` 会从这个集合同时生成标题映射和 Decap `admin/config.yml`；`npm run check` 会校验公开文章、侧边栏、生成文件、链接、图片、敏感信息和备份清单一致。
+
+- 已在 CDC 或人工基准登记的文章，继续以登记标题为权威，文件必须以它作为第一行唯一 H1。
+- 新的未登记文章，以第一行唯一 H1 作为标题，无需为了进入编辑器再手工维护一份清单。
+- CDC 来源、人工基准和动态事实仍是独立的可追溯契约；自动发现不替代这些来源登记。
+
 ## 先判断文章类型
 
 - **CDC 槽位（slot）**：文章在 `scripts/cdc-manifest.mjs` 的 `articles` 中，必须保留 25 个固定 CDC `source` 文件的集合。替换槽位只能改 `site` 和 `title`，不能删除或改写 `source`。
 - **站点独有（site-only）**：文章在 `scripts/content-baseline.mjs` 的 `SITE_ONLY_ARTICLES` 中，不参与 CDC 内容同步。
 - **人工最新基准**：如果文章在 `LATEST_BASELINE_ARTICLES` 中，改名或替换时必须同步其中的 `site/title`，保留其人工基准语义。
 
-每篇文章都必须在一个机器可读登记表中出现，且 `_sidebar.md` 中恰好有一个入口。首页 `03-Agentic入门宝典.md` 的入口位置仍需根据内容分类人工确认。
+每篇公开文章都必须被自动扫描集合纳入，且 `_sidebar.md` 中恰好有一个入口。首页 `03-Agentic入门宝典.md` 的入口位置仍需根据内容分类人工确认。
 
 ## 新增
 
-先把新文章文件放在仓库根目录，再运行：
+不需登记来源的新文章，放到仓库根目录，使用 `NN-*.md` 文件名并以唯一 H1 开头。同步增加 `_sidebar.md` 入口后运行：
+
+```bash
+npm run generate:titles
+npm run backup:articles
+npm run check
+```
+
+第一条命令会自动把新文章加入 `assets/article-titles.js` 和 `admin/config.yml`。备份命令会更新 `docs/article-backup/`；受控工作区要能读取固定 CDC 源，或显式传入 `--cdc-source`。
+
+需要登记 CDC 来源或人工基准语义时，再使用生命周期命令：
 
 ```bash
 # 新增 CDC 槽位。--source 是固定 CDC 快照中的源文件名，不能省略。
@@ -67,7 +85,7 @@ npm run check
 
 `npm run check` 已包含缓存版本、服务公开资源、标题输入、真实 Docsify 渲染和内容完整性门禁。若只修改浏览器资源或检查发布链路，可单独运行 `npm run check:cache`；它会要求 `index.html` 中的项目自有资源带非空 `?v=`，并在存在 Git 基线时阻止资源变更但缓存版本未变。
 
-`npm run check:article-titles` 还会逐篇核对文章文件、登记标题和侧栏入口。每篇公开文章源文件必须以登记标题作为第一行的唯一 H1，不能缺少 H1、使用其他标题或把正文小节写成 H1。检查器会拒绝依赖运行时修复才能通过的源文件；正文标题统一使用 H2 或更低级别。
+`npm run check:article-titles` 还会逐篇核对文章文件、发布标题和侧栏入口。每篇公开文章源文件必须以发布标题作为第一行的唯一 H1，不能缺少 H1、使用其他标题或把正文小节写成 H1。检查器会拒绝依赖运行时修复才能通过的源文件；正文标题统一使用 H2 或更低级别。
 
 ## 为什么这个问题会反复出现
 
@@ -100,3 +118,23 @@ Decap 的 `main` 是审核基线，编辑内容必须先写入 `cms/*` 草稿分
 `npm run check:links` 会同时读取 Git 已跟踪文件与磁盘上的根目录文章文件，因此新文章不必先 `git add` 才能检查；`npm run check:secrets` 会扫描已跟踪、已暂存和当前未跟踪的 Markdown/HTML/JS 文件，长 `sk-`、`cr-`、`sk_cr-`、`ghp_` 和 JWT 形态会阻断检查。短占位符如 `sk-xxx` 和 `sk-请替换` 不会命中长 token 规则，但不得把真实 Key 当作占位符提交。
 
 发布前使用 release skill 的 `preflight` 或 `deploy`。该技能调用 `npm run check`，因此敏感 Key 门禁会在 GitHub 推送和生产部署前再次执行。
+
+## CMS 变更自动审阅
+
+`.github/workflows/review-cms-changes.yml` 每 30 分钟和手工触发时执行只读审阅：
+
+1. 从 GitHub 查找 open `cms/* -> main` PR 以及没有 PR 的 `cms/*` 分支。
+2. 读取 PR files 或 compare files 和完整 unified diff；摘要只列文件、状态和增删统计，不把 diff 正文写入日志。
+3. 只接受根目录公开文章和 `images/uploads/` 变更；对 diff 新增行先扫描敏感信息，发现时只报文件、行号和类型，不回显值。
+4. 通过前置策略后，在一次性 checkout 中运行 `npm run check:cms`，覆盖标题/Decap 配置、文档、链接、图片和敏感信息检查。凭据环境变量不传给被审阅 checkout。
+5. 摘要写入 GitHub Actions step summary，任何失败使 workflow 失败；脚本不发送 merge、push 或发布请求。
+
+本机可按需运行：
+
+```bash
+npm run review:cms
+npm run review:cms -- --pr 123
+node scripts/review-cms-changes.mjs --output /path/to/summary.md
+```
+
+只读 GitHub Token 可从 `CODESOME_CMS_REVIEW_TOKEN`、`GH_TOKEN`、`GITHUB_TOKEN` 或本机 `gh` 登录态取得；脚本不写入 Token，也不打印 Token 值。默认安全边界是“自动发现、检查、生成摘要；人工确认合并和生产发布”。

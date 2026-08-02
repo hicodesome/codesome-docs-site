@@ -2,16 +2,10 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { scanTextForSecrets } from './secret-patterns.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const scannedExtensions = /\.(?:md|html?|mjs|js)$/i;
-const secretPatterns = [
-  { name: 'sk_cr', pattern: /sk_cr-[A-Za-z0-9]{24,}/g },
-  { name: 'sk', pattern: /sk-[A-Za-z0-9]{24,}/g },
-  { name: 'cr', pattern: /cr-[A-Za-z0-9]{24,}/g },
-  { name: 'ghp', pattern: /ghp_[A-Za-z0-9]{20,}/g },
-  { name: 'jwt', pattern: /eyJ[A-Za-z0-9_-]{20,}/g }
-];
 
 function gitFiles(...args) {
   return execFileSync('git', ['-C', root, ...args], {
@@ -40,15 +34,7 @@ for (const relativePath of [...candidates].sort()) {
     continue;
   }
 
-  const lines = content.split(/\r?\n/);
-  lines.forEach((line, index) => {
-    for (const { name, pattern } of secretPatterns) {
-      pattern.lastIndex = 0;
-      if (pattern.test(line)) {
-        findings.push({ path: relativePath, line: index + 1, name });
-      }
-    }
-  });
+  findings.push(...scanTextForSecrets(content, relativePath));
 }
 
 if (findings.length) {

@@ -209,6 +209,7 @@ test('the direct server entrypoint refuses to start with a broken public article
       'title-metadata.mjs',
       'cdc-manifest.mjs',
       'content-baseline.mjs',
+      'public-articles.mjs',
       'public-runtime-contract.mjs'
     ]) {
       cpSync(join(sourceRoot, 'scripts', script), join(temporaryRoot, 'scripts', script));
@@ -228,7 +229,10 @@ test('the direct server entrypoint refuses to start with a broken public article
     });
 
     assert.notEqual(result.status, 0);
-    assert.match(`${result.stdout}\n${result.stderr}`, /refusing to start/);
+    assert.match(
+      `${result.stdout}\n${result.stderr}`,
+      /refusing to start|article Markdown must start with the registered H1/
+    );
   } finally {
     rmSync(temporaryRoot, { recursive: true, force: true });
   }

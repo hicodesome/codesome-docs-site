@@ -5,6 +5,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articles } from './cdc-manifest.mjs';
 import { LATEST_BASELINE_SITES } from './content-baseline.mjs';
+import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const imagePattern = /!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^)]+?))\s*\)/g;
@@ -13,9 +14,10 @@ const refs = new Set();
 const allRefs = new Set();
 const hashes = new Map();
 const errors = [];
+const cdcSites = new Set(articles.map(article => article.site));
 
-for (const article of articles) {
-  const isCdcArticle = !LATEST_BASELINE_SITES.has(article.site);
+for (const article of articleTitleEntries) {
+  const isCdcArticle = cdcSites.has(article.site) && !LATEST_BASELINE_SITES.has(article.site);
   const text = readFileSync(join(root, article.site), 'utf8');
   for (const match of text.matchAll(imagePattern)) {
     const target = (match[1] ?? match[2]).trim();
@@ -56,5 +58,5 @@ const orphans = readdirSync(join(root, 'images')).filter(f => !allRefs.has(`imag
 if (orphans.length) console.warn(`孤儿图片（未被引用）: ${orphans.length} 个\n  ` + orphans.join('\n  '));
 
 if (errors.length) console.error(errors.join('\n'));
-console.log(`共 ${refs.size} 条 CDC 图片引用，内容哈希错误 ${errors.length} 条；全部教程图片引用 ${allRefs.size} 条`);
+console.log(`共 ${refs.size} 条 CDC 图片引用，内容哈希错误 ${errors.length} 条；${articleTitleEntries.length} 篇公开文章图片引用 ${allRefs.size} 条`);
 process.exit(errors.length ? 1 : 0);

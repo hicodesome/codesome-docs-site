@@ -1,8 +1,11 @@
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { articles } from './cdc-manifest.mjs';
 import {
   LATEST_BASELINE_ARTICLES,
   SITE_ONLY_ARTICLES
 } from './content-baseline.mjs';
+import { discoverPublicArticles } from './public-articles.mjs';
 
 function addUnique(entries, sourceName, target, { allowOverride = false } = {}) {
   const seen = new Set();
@@ -24,16 +27,16 @@ function addUnique(entries, sourceName, target, { allowOverride = false } = {}) 
 }
 
 const cdcSites = new Set(articles.map(article => article.site));
-const titleMap = new Map();
+const registeredTitleMap = new Map();
 
-addUnique(articles, 'cdc-manifest.mjs', titleMap);
+addUnique(articles, 'cdc-manifest.mjs', registeredTitleMap);
 
 for (const article of LATEST_BASELINE_ARTICLES) {
   if (!cdcSites.has(article.site)) {
     throw new Error(`latest baseline article is not in the CDC manifest: ${article.site}`);
   }
 }
-addUnique(LATEST_BASELINE_ARTICLES, 'content-baseline.mjs (latest baseline)', titleMap, {
+addUnique(LATEST_BASELINE_ARTICLES, 'content-baseline.mjs (latest baseline)', registeredTitleMap, {
   allowOverride: true
 });
 
@@ -42,9 +45,15 @@ for (const article of SITE_ONLY_ARTICLES) {
     throw new Error(`site-only article is already in the CDC manifest: ${article.site}`);
   }
 }
-addUnique(SITE_ONLY_ARTICLES, 'content-baseline.mjs (site only)', titleMap);
+addUnique(SITE_ONLY_ARTICLES, 'content-baseline.mjs (site only)', registeredTitleMap);
 
-export const articleTitleMap = titleMap;
-export const articleTitleEntries = [...titleMap.entries()]
-  .sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)
-  .map(([site, title]) => ({ site, title }));
+const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
+
+export const registeredArticleTitleMap = registeredTitleMap;
+export const articleTitleEntries = discoverPublicArticles({
+  root,
+  registeredTitles: registeredTitleMap
+});
+export const articleTitleMap = new Map(
+  articleTitleEntries.map(({ site, title }) => [site, title])
+);

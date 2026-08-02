@@ -209,12 +209,9 @@ function discoverArticles() {
   const imageUsers = new Map();
   for (const sitePath of files) {
     const article = manifestBySite.get(sitePath);
-    if (!article && !SITE_ONLY_SITES.has(sitePath)) {
-      throw new Error(`site article is not registered in CDC or site-only baseline: ${sitePath}`);
-    }
     const content = readFileSync(join(root, sitePath), 'utf8');
     const title = articleTitleMap.get(sitePath);
-    if (!title) throw new Error(`site article has no registered publication title: ${sitePath}`);
+    if (!title) throw new Error(`site article has no discovered publication title: ${sitePath}`);
     try {
       assertCanonicalArticleMarkdown(content, title);
     } catch (error) {
@@ -229,7 +226,7 @@ function discoverArticles() {
 
     records.push({
       sitePath,
-      kind: article ? 'cdc-slot' : 'site-only',
+      kind: article ? 'cdc-slot' : SITE_ONLY_SITES.has(sitePath) ? 'site-only' : 'auto-public',
       baseline: LATEST_BASELINE_SITES.has(sitePath) ? 'latest' : null,
       cdcSourcePath: article?.source ?? null,
       ...fileInfo(join(root, sitePath)),

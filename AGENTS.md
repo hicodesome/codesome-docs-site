@@ -18,7 +18,9 @@
 - `npm run check` 包含 `check:rendered-titles:browser`：它会用 Playwright Chromium 真实加载本地 Docsify，并逐篇验收全部公开文章；浏览器未安装或任一篇失败都必须阻断发布。
 - CI 使用 `npm run check:ci` 执行不依赖私有 CDC 源仓库的站点契约；正式发布 preflight 仍必须在有 `CDC_SOURCE` 的受控工作区运行完整 `npm run check`，不能把源校验静默跳过。
 - 新增或改名文章时同步检查 `_sidebar.md`、首页入口、内部链接、图片和 `docs/CONTENT_BASELINE.md`。
-- 每篇站点文章都必须在 `scripts/cdc-manifest.mjs` 或 `scripts/content-baseline.mjs` 登记标题；登记后运行 `npm run generate:titles` 生成 `assets/article-titles.js`，再运行 `npm run check`。`check:titles` 会阻止漏登记文章、过期生成文件或错误的 `index.html` 加载顺序进入发布。
+- 公开文章集合由站点根目录 `NN-*.md` 自动扫描得出；已在 `scripts/cdc-manifest.mjs` 或 `scripts/content-baseline.mjs` 登记的文章继续以登记标题为权威，新的未登记文章从第一行唯一 H1 取标题。
+- 新增或改名文章后运行 `npm run generate:titles`，它会同时生成 `assets/article-titles.js` 和 Decap `admin/config.yml`；再运行 `npm run check`。生成文件过期、缺少唯一 H1、侧边栏漏入口或公开文章集合不一致都必须阻断发布。
+- CMS 变更审阅使用 `npm run review:cms`；只允许读取 `cms/*` 分支/PR、changed files 和 diff，运行文档、链接、图片和敏感信息检查并生成摘要，默认不合并 PR。
 - 修改浏览器 CSS/JS 时必须同步更新 `index.html` 对应资源的 `?v=` 缓存版本。
 - 模型、套餐、分组、倍率、价格、额度、版本和站点行为属于动态事实，发布前按当天后台、正式资料或用户明确口径复核。
 
