@@ -15,6 +15,7 @@
 ## Development
 
 - 站点为 Docsify 静态站；本地预览使用 `npm run dev`，完整内容检查使用 `npm run check`。
+- `npm run check` 包含 `check:rendered-titles:browser`：它会用 Playwright Chromium 真实加载本地 Docsify，并逐篇验收全部公开文章；浏览器未安装或任一篇失败都必须阻断发布。
 - 新增或改名文章时同步检查 `_sidebar.md`、首页入口、内部链接、图片和 `docs/CONTENT_BASELINE.md`。
 - 每篇站点文章都必须在 `scripts/cdc-manifest.mjs` 或 `scripts/content-baseline.mjs` 登记标题；登记后运行 `npm run generate:titles` 生成 `assets/article-titles.js`，再运行 `npm run check`。`check:titles` 会阻止漏登记文章、过期生成文件或错误的 `index.html` 加载顺序进入发布。
 - 修改浏览器 CSS/JS 时必须同步更新 `index.html` 对应资源的 `?v=` 缓存版本。
@@ -26,6 +27,7 @@
 - 精确暂存本任务文件，不使用 `git add .`，不提交 core、日志、凭据或其他任务现场。
 - 禁止直接编辑、复制覆盖或在生产目录提交内容；服务器只允许从 GitHub `origin/main` 执行 `git pull --ff-only`。
 - 生产目录出现 staged、untracked 或与目标 commit 不一致的 dirty 内容时立即阻断，不使用 merge、reset 或强推绕过。
+- GitHub `main` 要求 `contract` required status check 且管理员也受保护；正式发布必须先把目标 SHA 推到 `release-gate`，等待该 check 成功后才可推进 `main`。
 
 ## Runtime
 
