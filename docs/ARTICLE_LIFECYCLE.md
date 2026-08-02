@@ -98,7 +98,7 @@ npm run check
 5. 后台代理过去只在 `contents` API 入口检查文章正文；Decap editorial workflow 还会调用 Git blobs/trees/commits 和 PR merge API，低层入口若只依赖 GitHub 保护而不在代理最后一跳复核，管理员令牌或错误的强制合并路径仍可能把坏树带到 `main`。运行时健康缓存若只看文件元数据，也可能漏掉“内容变了但大小和时间戳恢复”的漂移。
 6. 合并门禁过去只从拟合并 tree 读取文章文件，没有用同一份运行时契约验证 `index.html`、`_sidebar.md` 和入口页引用的浏览器脚本；同时 merge 请求允许省略 `sha`，检查完成后 PR head 发生变化时仍可能把未验证的新 head 交给 GitHub 合并。这两个缺口让标题问题可以从 CMS 的低层 Git API 或检查与合并之间的时间窗口重新进入发布链路。
 
-当前的不可复发约束是分层的：登记表定义唯一标题；CDC 同步、生命周期脚本和 CMS 代理只接受 canonical 源文件；`npm run check` 和 GitHub `contract` 检查逐篇拒绝坏源文件；PR 代理只允许 `cms/* -> main`，merge 必须携带 40 位当前 PR head SHA，服务端只接受与该 head 完全一致的请求，并要求 `contract` check 的 `head_sha` 也一致；合并前再从该精确 SHA 读取完整运行时 tree，使用同一份契约验证全部文章、`index.html`、侧栏和入口页引用的脚本；`server.mjs` 启动前验证全部文章、标题映射、入口脚本顺序、注入器和侧栏，运行中的 `/admin-api/healthz` 以文件内容 SHA-256 指纹复核同一运行时契约；本地和公网真实浏览器验收还检查 H1 未被祖先样式隐藏、具有非零尺寸，并覆盖桌面和移动视口；release skill 还必须验证生产和公网健康接口报告 `titleContract=ready`、文章数和 `titleMapVersion` 均与目标提交一致。任一层失败都应停止后续发布，而不是靠浏览器 fallback 掩盖。
+当前的不可复发约束是分层的：登记表定义唯一标题；CDC 同步、生命周期脚本和 CMS 代理只接受 canonical 源文件；`npm run check` 和 GitHub `contract` 检查逐篇拒绝坏源文件；PR 代理只允许 `cms/* -> main`，merge 必须携带 40 位当前 PR head SHA，服务端只接受与该 head 完全一致的请求，并要求 `contract` check 的 `head_sha` 一致且检查来源必须是 GitHub Actions App `15368`；合并前再从该精确 SHA 读取完整运行时 tree，使用同一份契约验证全部文章、`index.html`、侧栏和入口页引用的脚本；`server.mjs` 启动前验证全部文章、标题映射、入口脚本顺序、注入器和侧栏，运行中的 `/admin-api/healthz` 以文件内容 SHA-256 指纹复核同一运行时契约；本地和公网真实浏览器验收还检查 H1 未被祖先样式隐藏、具有非零尺寸，并覆盖桌面和移动视口；独立 release skill 在导入任何站点提交代码之前还会用外置 SHA-256 信任清单固定标题关键门禁，并独立核对文章、映射、侧栏、CMS 配置和入口资源。任一层失败都应停止后续发布，而不是靠浏览器 fallback 掩盖。
 
 ## 浏览器运行时资源
 

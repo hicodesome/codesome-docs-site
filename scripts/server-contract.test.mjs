@@ -15,6 +15,7 @@ import {
   isAllowedGitHubPath,
   isAllowedPullRequestMutation,
   isServerEntrypoint,
+  latestTrustedContractRun,
   publicArticleTitleHealth,
   publicRuntimeTitleHealth
 } from '../server.mjs';
@@ -125,6 +126,28 @@ test('editorial workflow pull requests can only target main from a CMS branch', 
   assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({}))), false);
   assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({ sha: 'head-sha' }))), false);
   assert.equal(isAllowedPullRequestMutation(mergePath, 'PUT', Buffer.from(JSON.stringify({ sha: 'a'.repeat(40) }))), true);
+});
+
+test('CMS merge accepts contract checks only from GitHub Actions for the exact head SHA', () => {
+  const headSha = 'a'.repeat(40);
+  const trusted = {
+    name: 'contract',
+    head_sha: headSha,
+    app: { id: 15368 },
+    status: 'completed',
+    conclusion: 'success',
+    completed_at: '2026-08-03T00:00:00Z'
+  };
+  const spoofed = {
+    ...trusted,
+    app: { id: 99999 },
+    completed_at: '2026-08-03T00:01:00Z'
+  };
+  const wrongHead = { ...trusted, head_sha: 'b'.repeat(40) };
+
+  assert.equal(latestTrustedContractRun([trusted, spoofed, wrongHead], headSha), trusted);
+  assert.equal(latestTrustedContractRun([spoofed, wrongHead], headSha), null);
+  assert.equal(latestTrustedContractRun([trusted], 'short-sha'), null);
 });
 
 test('the proposed merge tree validator rejects missing or malformed public articles', () => {

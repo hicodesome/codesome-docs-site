@@ -41,6 +41,7 @@ const PUBLIC_ARTICLE_FILES = new Set(PUBLIC_ARTICLE_TITLES.keys());
 const PULL_REQUEST_PATH_PATTERN = new RegExp(`^${REPO_API_ROOT}/pulls/\\d+$`);
 const PULL_REQUEST_MERGE_PATH_PATTERN = new RegExp(`^${REPO_API_ROOT}/pulls/\\d+/merge$`);
 const COMMIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
+const GITHUB_ACTIONS_APP_ID = 15368;
 
 export { assertPublicArticleSources };
 
@@ -602,6 +603,21 @@ function isCommitSha(value) {
   return typeof value === 'string' && COMMIT_SHA_PATTERN.test(value);
 }
 
+export function latestTrustedContractRun(checkRuns, headSha, appId = GITHUB_ACTIONS_APP_ID) {
+  if (!Array.isArray(checkRuns) || !isCommitSha(headSha)) return null;
+  return checkRuns
+    .filter(run =>
+      run?.name === 'contract' &&
+      run?.head_sha === headSha &&
+      run?.app?.id === appId
+    )
+    .sort((left, right) => {
+      const leftTime = Date.parse(left.completed_at || left.updated_at || left.started_at || '') || 0;
+      const rightTime = Date.parse(right.completed_at || right.updated_at || right.started_at || '') || 0;
+      return rightTime - leftTime;
+    })[0] || null;
+}
+
 // This is the last server-side gate before an authenticated editor can ask GitHub to merge into main.
 async function assertPublicMergeGate(pullNumber, body) {
   const pull = await githubApiJSON(`${REPO_API_ROOT}/pulls/${pullNumber}`);
@@ -627,17 +643,9 @@ async function assertPublicMergeGate(pullNumber, body) {
   const checkData = await githubApiJSON(
     `${REPO_API_ROOT}/commits/${encodeURIComponent(pull.head.sha)}/check-runs?per_page=100`
   );
-  const contractRuns = Array.isArray(checkData.check_runs)
-    ? checkData.check_runs.filter(run => run?.name === 'contract' && run?.head_sha === pull.head.sha)
-    : [];
-  const latestContract = [...contractRuns]
-    .sort((left, right) => {
-      const leftTime = Date.parse(left.completed_at || left.updated_at || left.started_at || '') || 0;
-      const rightTime = Date.parse(right.completed_at || right.updated_at || right.started_at || '') || 0;
-      return rightTime - leftTime;
-    })[0];
+  const latestContract = latestTrustedContractRun(checkData.check_runs, pull.head.sha);
   if (latestContract?.status !== 'completed' || latestContract.conclusion !== 'success') {
-    throw new Error('required contract check has not passed for the proposed commit');
+    throw new Error('trusted GitHub Actions contract check has not passed for the proposed commit');
   }
 
   const tree = await githubApiJSON(`${REPO_API_ROOT}/git/trees/${encodeURIComponent(pull.head.sha)}?recursive=1`);
