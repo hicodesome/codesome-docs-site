@@ -15,14 +15,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Check out CDC source snapshot
-        uses: actions/checkout@v4
-        with:
-          repository: hicodesome/hicodesome-docs-source
-          ref: cdc-snapshot-2026-07-14
-          fetch-depth: 0
-          path: hicodesome-docs-source
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,9 +28,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Validate site contract
-        env:
-          CDC_SOURCE: ${{ github.workspace }}/hicodesome-docs-source
-        run: npm run check
+        run: npm run check:ci
 
       - name: Run browser assertion unit tests
         run: npm test
