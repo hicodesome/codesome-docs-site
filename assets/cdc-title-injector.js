@@ -81,6 +81,12 @@
     }
   } catch (e) { /* ignore */ }
 
+  function demoteHtmlHeadings(line) {
+    return line
+      .replace(/<h1\b/gi, '<h2')
+      .replace(/<\/h1\s*>/gi, '</h2>');
+  }
+
   function normalizeHeadings(content, title, fileName) {
     if (typeof content !== 'string' || content.length === 0) {
       failPipeline('registered article response is empty or not text', fileName);
@@ -90,14 +96,9 @@
     var source = content.charAt(0) === '\uFEFF' ? content.slice(1) : content;
     var lines = source.split(/\r?\n/);
     var fence = null;
-    var titleHeadingPattern = /^ {0,3}#(?!#)\s+(.+?)\s*$/;
-    var hasExactTitle = lines.some(function (line) {
-      var match = line.match(titleHeadingPattern);
-      return match && match[1].trim() === title;
-    });
+    var normalizedLines = [];
 
-    var exactTitleSeen = false;
-    lines = lines.map(function (line) {
+    lines.forEach(function (line, index) {
       var fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
 
       if (fenceMatch) {
@@ -109,25 +110,33 @@
         ) {
           fence = null;
         }
-        return line;
+        normalizedLines.push(line);
+        return;
       }
 
-      if (!fence) {
-        var titleMatch = line.match(titleHeadingPattern);
-        if (hasExactTitle && titleMatch && titleMatch[1].trim() === title) {
-          if (!exactTitleSeen) {
-            exactTitleSeen = true;
-            return line;
-          }
-          return line.replace(/^( {0,3})#(?=\s+)/, '$1##');
+      if (fence) {
+        normalizedLines.push(line);
+        return;
+      }
+
+      var setextH1 = /^ {0,3}=+\s*$/.test(line);
+      if (setextH1 && index > 0) {
+        var previousSourceLine = lines[index - 1];
+        var previousLine = normalizedLines[normalizedLines.length - 1] || '';
+        var previousIsHeading = /^ {0,3}#{1,6}(?:\s|$)/.test(previousSourceLine);
+        var previousIsFence = /^ {0,3}(`{3,}|~{3,})/.test(previousSourceLine);
+        if (previousLine.trim() && !previousIsHeading && !previousIsFence) {
+          normalizedLines[normalizedLines.length - 1] = '## ' + previousLine.trim();
+          return;
         }
-        return line.replace(/^( {0,3})#(?=\s+)/, '$1##');
       }
 
-      return line;
+      normalizedLines.push(
+        demoteHtmlHeadings(line).replace(/^( {0,3})#(?=\s+)/, '$1##')
+      );
     });
 
-    var normalized = hasExactTitle ? lines.join('\n') : '# ' + title + '\n\n' + lines.join('\n');
+    var normalized = '# ' + title + '\n\n' + normalizedLines.join('\n');
     markProcessed(fileName, title);
     return normalized;
   }

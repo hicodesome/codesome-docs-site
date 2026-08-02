@@ -9,6 +9,7 @@ import { articleTitleEntries } from './scripts/title-metadata.mjs';
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const PORT = Number(process.env.PORT || process.env.PM2_SERVE_PORT || 3009);
 const REPO = 'hicodesome/codesome-docs-site';
+const REPO_API_ROOT = `/repos/${REPO}`;
 const GITHUB_API_ROOT = 'https://api.github.com';
 const SESSION_TTL_SECONDS = 8 * 60 * 60;
 const MAX_BODY_BYTES = 40 * 1024 * 1024;
@@ -20,6 +21,7 @@ const loginAttempts = new Map();
 const ALLOWED_PROXY_METHODS = new Set(['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE']);
 const PRIVATE_STATIC_PREFIXES = ['.git/', '.agents/', 'node_modules/', 'scripts/', 'docs/'];
 const PUBLIC_STATIC_PLACEHOLDERS = new Set(['images/uploads/.gitkeep']);
+const CONTENTS_PATH_PATTERN = /^\/contents(?:\/[^/]+\.md|\/images\/uploads(?:\/.+)?)?$/;
 const PRIVATE_STATIC_FILES = new Set([
   'ecosystem.config.js',
   'package.json',
@@ -331,18 +333,38 @@ async function handleToken(req, res) {
   });
 }
 
-function isAllowedGitHubPath(pathname, method) {
+function isAllowedCmsBranch(branch) {
+  return typeof branch === 'string' &&
+    /^cms\/[A-Za-z0-9][A-Za-z0-9._/-]*$/.test(branch) &&
+    !branch.includes('..') &&
+    !branch.includes('//') &&
+    !branch.endsWith('/') &&
+    !branch.endsWith('.');
+}
+
+export function isAllowedContentWriteBody(method, body) {
+  if (!['PUT', 'DELETE'].includes(method)) return true;
+  if (!body) return false;
+  try {
+    const payload = JSON.parse(Buffer.from(body).toString('utf8'));
+    return isAllowedCmsBranch(payload.branch);
+  } catch {
+    return false;
+  }
+}
+
+export function isAllowedGitHubPath(pathname, method) {
   if (!ALLOWED_PROXY_METHODS.has(method)) return false;
   if (!pathname || pathname.includes('\\') || pathname.includes('\0') || /(?:^|\/)\.\.(?:\/|$)/.test(pathname) || /%2e(?:%2e)?/i.test(pathname)) return false;
   if (pathname === '/user') return method === 'GET';
   if (/^\/users\/[A-Za-z0-9][A-Za-z0-9-]*$/.test(pathname)) return method === 'GET';
   if (pathname === '/search/issues') return method === 'GET';
-  const repoRoot = `/repos/${REPO}`;
+  const repoRoot = REPO_API_ROOT;
   if (pathname !== repoRoot && !pathname.startsWith(`${repoRoot}/`)) return false;
   const repoPath = pathname.slice(repoRoot.length);
   if (repoPath === '' || repoPath === '/') return method === 'GET' || method === 'HEAD';
 
-  if (/^\/contents(?:\/[^/]+\.md|\/images\/uploads(?:\/.+)?)?$/.test(repoPath)) {
+  if (CONTENTS_PATH_PATTERN.test(repoPath)) {
     return ['GET', 'HEAD', 'PUT', 'DELETE'].includes(method);
   }
   if (/^\/branches\/[^/]+$/.test(repoPath)) return method === 'GET' || method === 'HEAD';
@@ -382,6 +404,12 @@ async function handleGitHubProxy(req, res, url) {
     } catch (error) {
       return json(res, error.statusCode || 400, { message: '请求体无效' });
     }
+  }
+
+  const isContentsPath = pathname === `${REPO_API_ROOT}/contents` ||
+    pathname.startsWith(`${REPO_API_ROOT}/contents/`);
+  if (isContentsPath && !isAllowedContentWriteBody(req.method, body)) {
+    return json(res, 403, { message: 'contents writes must target a cms/* branch' });
   }
 
   if (req.method === 'POST' && pathname.endsWith('/git/refs')) {
@@ -493,20 +521,22 @@ async function handleRequest(req, res) {
   return serveStatic(req, res, url);
 }
 
-const server = createServer((req, res) => {
-  handleRequest(req, res).catch(error => {
-    if (!res.headersSent) json(res, 500, { message: '服务内部错误' });
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const server = createServer((req, res) => {
+    handleRequest(req, res).catch(error => {
+      if (!res.headersSent) json(res, 500, { message: '服务内部错误' });
+    });
   });
-});
 
-server.listen(PORT, '0.0.0.0', () => {
-  const missing = [];
-  if (!SESSION_SECRET) missing.push('CODESOME_DOC_ADMIN_SESSION_SECRET');
-  if (!EDITOR_TOKEN_HASH) missing.push('CODESOME_DOC_ADMIN_TOKEN_HASH');
-  if (!GITHUB_TOKEN) missing.push('CODESOME_DOC_ADMIN_GITHUB_TOKEN');
-  if (missing.length) console.warn(`doc-site admin disabled; missing environment: ${missing.join(', ')}`);
-  console.log(`doc-site serving ${ROOT} on port ${PORT}`);
-});
+  server.listen(PORT, '0.0.0.0', () => {
+    const missing = [];
+    if (!SESSION_SECRET) missing.push('CODESOME_DOC_ADMIN_SESSION_SECRET');
+    if (!EDITOR_TOKEN_HASH) missing.push('CODESOME_DOC_ADMIN_TOKEN_HASH');
+    if (!GITHUB_TOKEN) missing.push('CODESOME_DOC_ADMIN_GITHUB_TOKEN');
+    if (missing.length) console.warn(`doc-site admin disabled; missing environment: ${missing.join(', ')}`);
+    console.log(`doc-site serving ${ROOT} on port ${PORT}`);
+  });
 
-const authStatePruner = setInterval(pruneAuthState, 15 * 60 * 1000);
-authStatePruner.unref();
+  const authStatePruner = setInterval(pruneAuthState, 15 * 60 * 1000);
+  authStatePruner.unref();
+}

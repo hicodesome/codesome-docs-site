@@ -14,6 +14,7 @@
     "check:cdc": "node scripts/sync-cdc.mjs --check",
     "check:titles": "node scripts/generate-title-map.mjs --check",
     "check:admin": "node scripts/generate-admin-config.mjs --check",
+    "check:cache": "node scripts/check-cache-versions.mjs",
     "check:runtime": "node scripts/check-public-runtime.mjs",
     "check:rendered-titles": "node scripts/check-rendered-titles.mjs",
     "check:rendered-titles:browser": "node scripts/check-rendered-titles.browser.mjs",
@@ -21,11 +22,14 @@
     "check:images": "node scripts/check-images.mjs",
     "check:secrets": "node scripts/check-secrets.mjs",
     "check:article-backup:manifest": "node scripts/backup-articles.mjs --verify",
-    "check": "npm run check:cdc && npm run check:titles && npm run check:admin && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup",
-    "check:ci": "npm run check:titles && npm run check:admin && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup:manifest",
+    "check": "npm run check:cdc && npm run check:titles && npm run check:admin && npm run check:cache && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup",
+    "check:ci": "npm run check:titles && npm run check:admin && npm run check:cache && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets && npm run check:article-backup:manifest",
     "test:browser": "node --test scripts/doc-site-browser-verify.test.mjs",
+    "test:title-pipeline": "node --test scripts/markdown-headings.test.mjs scripts/title-injector.test.mjs",
+    "test:server": "node --test scripts/server-contract.test.mjs",
+    "test:cache": "node --test scripts/check-cache-versions.test.mjs",
     "test:backup": "node tests/backup-articles.test.mjs",
-    "test": "npm run test:browser"
+    "test": "npm run test:browser && npm run test:title-pipeline && npm run test:server && npm run test:cache"
   },
   "devDependencies": {
     "docsify-cli": "^4.4.4",

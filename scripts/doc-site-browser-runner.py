@@ -169,7 +169,7 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
               const articleBase = %s;
               const hash = decodeURIComponent(location.hash || '');
               const section = document.querySelector('.markdown-section');
-              const h1s = Array.from(section?.children || []).filter(node => node.tagName === 'H1');
+              const h1s = Array.from(section?.querySelectorAll('h1') || []);
               const pipeline = window.CODESOME_TITLE_PIPELINE || {};
               const dom = pipeline.dom?.[location.hash || '#/'] || null;
               return {
@@ -273,7 +273,7 @@ def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | No
             return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
           });
           const section = document.querySelector('.markdown-section');
-          const h1s = Array.from(section?.children || []).filter(node => node.tagName === 'H1');
+          const h1s = Array.from(section?.querySelectorAll('h1') || []);
           const pipeline = window.CODESOME_TITLE_PIPELINE || {};
           return {
             sidebarTitles: links.map(link => (link.textContent || '').trim()).filter(Boolean),

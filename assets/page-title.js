@@ -17,10 +17,8 @@
     return activeLink ? activeLink.textContent.trim() : null;
   }
 
-  function directHeadings(article) {
-    return Array.from(article.children).filter(function (node) {
-      return node.tagName === 'H1';
-    });
+  function articleHeadings(article) {
+    return Array.from(article.querySelectorAll('h1'));
   }
 
   function pipelineState() {
@@ -61,7 +59,7 @@
     }
 
     var first = article.firstElementChild;
-    var matchingHeading = directHeadings(article).find(function (node) {
+    var matchingHeading = articleHeadings(article).find(function (node) {
       return node.textContent.trim() === title;
     });
 

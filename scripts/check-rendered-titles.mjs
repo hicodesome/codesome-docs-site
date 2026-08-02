@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { headings } from './markdown-headings.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -52,23 +53,6 @@ function setRoute(context, site) {
   context.location.hash = site === '03-Agentic入门宝典.md'
     ? '#/'
     : `#/${encodeURIComponent(site)}`;
-}
-
-function headings(markdown) {
-  const result = [];
-  let fence = null;
-  for (const line of markdown.replace(/^\uFEFF/, '').split(/\r?\n/)) {
-    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
-    if (fenceMatch) {
-      if (!fence) fence = fenceMatch[1];
-      else if (fenceMatch[1][0] === fence[0] && fenceMatch[1].length >= fence.length) fence = null;
-      continue;
-    }
-    if (fence) continue;
-    const match = line.match(/^ {0,3}(#{1,6})\s+(.+?)\s*$/);
-    if (match) result.push({ level: match[1].length, text: match[2].trim() });
-  }
-  return result;
 }
 
 async function normalizedMarkdown(context, site) {

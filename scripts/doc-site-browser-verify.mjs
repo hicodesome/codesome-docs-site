@@ -179,7 +179,7 @@ export function evaluateBrowserAssertions(probe, config) {
     {
       id: 'article-h1-count',
       pass: article.h1Count === 1 && article.h1Sources?.[0] === 'manifest-injector',
-      detail: `文章直接 H1 数量：${article.h1Count || 0}，来源：${article.h1Sources?.join(', ') || '(空)'}`
+      detail: `文章后代 H1 数量：${article.h1Count || 0}，来源：${article.h1Sources?.join(', ') || '(空)'}`
     },
     {
       id: 'article-resource',

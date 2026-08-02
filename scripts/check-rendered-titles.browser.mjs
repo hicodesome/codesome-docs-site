@@ -92,7 +92,7 @@ async function waitForReady(page, article, title) {
       .replace(/^#\/?/, '')
       .split(/[?#]/)[0];
     const section = document.querySelector('.markdown-section');
-    const h1s = Array.from(section?.children || []).filter(node => node.tagName === 'H1');
+    const h1s = Array.from(section?.querySelectorAll('h1') || []);
     const pipeline = window.CODESOME_TITLE_PIPELINE || {};
     const dom = pipeline.dom?.[window.location.hash || '#/'] || null;
     return Boolean(
@@ -115,10 +115,10 @@ async function waitForReady(page, article, title) {
   ).every(image => image.complete), undefined, { timeout: TIMEOUT_MS });
 }
 
-async function inspectPage(page, article, title, responses, consoleErrors, networkFailures) {
+async function inspectPage(page, article, title, responses, consoleErrors, networkFailures, baseUrl) {
   const state = await page.evaluate(({ articleName, expectedTitle, homeArticle }) => {
     const section = document.querySelector('.markdown-section');
-    const h1s = Array.from(section?.children || []).filter(node => node.tagName === 'H1');
+    const h1s = Array.from(section?.querySelectorAll('h1') || []);
     const pipeline = window.CODESOME_TITLE_PIPELINE || {};
     const dom = pipeline.dom?.[window.location.hash || '#/'] || null;
     const sidebarLink = Array.from(document.querySelectorAll('.sidebar-nav a')).find(link => {
@@ -151,6 +151,9 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
 
   const articleResponses = responses.filter(response => decodedPath(response.url()) === article);
   const statuses = articleResponses.map(response => response.status());
+  const directResponse = await fetch(`${baseUrl}/${encodeURIComponent(article).replaceAll('%2F', '/')}`);
+  await directResponse.text();
+  const observedStatuses = articleResponses.length ? statuses : [directResponse.status];
   const failures = [
     ...networkFailures,
     ...consoleErrors.map(message => `console: ${message}`)
@@ -160,7 +163,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
       ? state.href.endsWith('/#/')
       : decodeURIComponent(state.href).includes(article.replace(/\.md$/i, '')),
     sidebar: Boolean(state.sidebarLink),
-    markdown200: articleResponses.length > 0 && statuses.every(status => status === 200),
+    markdown200: directResponse.status === 200 && observedStatuses.every(status => status === 200),
     h1: state.h1.length === 1 && state.h1[0] === title,
     h1Source: state.h1Sources.length === 1 && state.h1Sources[0] === 'manifest-injector',
     pipeline: state.titlePipeline.status === 'ready' &&
@@ -227,7 +230,7 @@ async function main() {
           timeout: TIMEOUT_MS
         });
         await waitForReady(page, entry.site, entry.title);
-        results.push(await inspectPage(page, entry.site, entry.title, responses, consoleErrors, networkFailures));
+        results.push(await inspectPage(page, entry.site, entry.title, responses, consoleErrors, networkFailures, site.baseUrl));
       } catch (error) {
         results.push({
           article: entry.site,
