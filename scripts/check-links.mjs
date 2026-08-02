@@ -56,6 +56,26 @@ for (const file of files) {
 
 const sidebar = readFileSync(resolve(root, '_sidebar.md'), 'utf8');
 const homepageSite = '03-Agentic入门宝典.md';
+const sidebarArticleTargets = [...sidebar.matchAll(/(?<!!)\[[^\]]*\]\(([^)]+)\)/g)]
+  .map(match => decodeURIComponent(match[1].split('#')[0]).replace(/^\.\//, '').replace(/^\//, ''))
+  .filter(target => target.endsWith('.md'));
+const expectedArticleSet = new Set(expectedArticles);
+const sidebarArticleSet = new Set(sidebarArticleTargets);
+if ((sidebar.match(/\]\(\/\)/g) || []).length > 0) {
+  sidebarArticleSet.add(homepageSite);
+}
+
+for (const target of sidebarArticleSet) {
+  if (!expectedArticleSet.has(target)) {
+    errors.push(`_sidebar.md: 未登记文章入口 -> ${target}`);
+  }
+}
+for (const target of expectedArticles) {
+  if (!sidebarArticleSet.has(target)) {
+    errors.push(`_sidebar.md: 已登记文章没有入口 -> ${target}`);
+  }
+}
+
 for (const article of articleTitleEntries) {
   const articleOccurrences = sidebar.split(`(${article.site})`).length - 1;
   const homepageOccurrences = article.site === homepageSite

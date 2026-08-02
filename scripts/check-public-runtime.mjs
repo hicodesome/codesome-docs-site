@@ -181,9 +181,11 @@ async function main() {
       }
     }
 
-    const unregistered = await request(port, '/99-unregistered-title-contract.md');
-    if (unregistered !== 404) {
-      throw new Error(`unregistered numbered article is unexpectedly public (HTTP ${unregistered})`);
+    for (const path of ['/99-unregistered-title-contract.md', '/unregistered-title-contract.md']) {
+      const status = await request(port, path);
+      if (status !== 404) {
+        throw new Error(`unregistered article is unexpectedly public: ${path} (HTTP ${status})`);
+      }
     }
 
     for (const path of [

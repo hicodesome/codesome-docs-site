@@ -26,6 +26,7 @@ const PRIVATE_STATIC_FILES = new Set([
   'package-lock.json',
   'server.mjs'
 ]);
+const PUBLIC_DOCUMENT_FILES = new Set(['README.md', '_sidebar.md']);
 const PUBLIC_ARTICLE_FILES = new Set(articleTitleEntries.map(article => article.site));
 
 const MIME_TYPES = {
@@ -440,6 +441,11 @@ async function serveStatic(req, res, url) {
   const isHiddenPath = relativePath.split('/').some(segment => segment.startsWith('.') && segment !== '.nojekyll');
   if (isHiddenPath && !PUBLIC_STATIC_PLACEHOLDERS.has(relativePath)) return text(res, 404, 'Not Found');
   if (PRIVATE_STATIC_FILES.has(relativePath) || PRIVATE_STATIC_PREFIXES.some(prefix => relativePath.startsWith(prefix))) {
+    return text(res, 404, 'Not Found');
+  }
+  if (/\.md$/i.test(relativePath) &&
+      !PUBLIC_ARTICLE_FILES.has(relativePath) &&
+      !PUBLIC_DOCUMENT_FILES.has(relativePath)) {
     return text(res, 404, 'Not Found');
   }
   if (/^\d{2}-.*\.md$/i.test(relativePath) && !PUBLIC_ARTICLE_FILES.has(relativePath)) {
