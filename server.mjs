@@ -18,12 +18,6 @@ const revokedSessions = new Map();
 const loginAttempts = new Map();
 const ALLOWED_PROXY_METHODS = new Set(['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE']);
 const PRIVATE_STATIC_PREFIXES = ['.git/', '.agents/', 'node_modules/', 'scripts/', 'docs/'];
-const PUBLIC_BROWSER_SCRIPTS = new Set([
-  'scripts/home-tutorial-grid.js',
-  'scripts/page-title.js',
-  'scripts/sidebar-scroll.js',
-  'scripts/copy-page-markdown.js'
-]);
 const PUBLIC_STATIC_PLACEHOLDERS = new Set(['images/uploads/.gitkeep']);
 const PRIVATE_STATIC_FILES = new Set([
   'ecosystem.config.js',
@@ -443,8 +437,7 @@ async function serveStatic(req, res, url) {
   if (!isAdmin && !isPublicPlaceholder && !extname(relativePath)) relativePath = 'index.html';
   const isHiddenPath = relativePath.split('/').some(segment => segment.startsWith('.') && segment !== '.nojekyll');
   if (isHiddenPath && !PUBLIC_STATIC_PLACEHOLDERS.has(relativePath)) return text(res, 404, 'Not Found');
-  if (!PUBLIC_BROWSER_SCRIPTS.has(relativePath) &&
-      (PRIVATE_STATIC_FILES.has(relativePath) || PRIVATE_STATIC_PREFIXES.some(prefix => relativePath.startsWith(prefix)))) {
+  if (PRIVATE_STATIC_FILES.has(relativePath) || PRIVATE_STATIC_PREFIXES.some(prefix => relativePath.startsWith(prefix))) {
     return text(res, 404, 'Not Found');
   }
 

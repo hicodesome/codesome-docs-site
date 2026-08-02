@@ -128,7 +128,15 @@ async function main() {
       }
     }
 
-    for (const path of ['/scripts/generate-title-map.mjs', '/server.mjs', '/docs/CONTENT_BASELINE.md']) {
+    for (const path of [
+      '/scripts/generate-title-map.mjs',
+      '/scripts/page-title.js',
+      '/scripts/home-tutorial-grid.js',
+      '/scripts/sidebar-scroll.js',
+      '/scripts/copy-page-markdown.js',
+      '/server.mjs',
+      '/docs/CONTENT_BASELINE.md'
+    ]) {
       const status = await request(port, path);
       if (status !== 404) {
         throw new Error(`private path is unexpectedly public: ${path} (HTTP ${status})`);
