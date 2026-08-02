@@ -24,6 +24,7 @@ const PUBLIC_BROWSER_SCRIPTS = new Set([
   'scripts/sidebar-scroll.js',
   'scripts/copy-page-markdown.js'
 ]);
+const PUBLIC_STATIC_PLACEHOLDERS = new Set(['images/uploads/.gitkeep']);
 const PRIVATE_STATIC_FILES = new Set([
   'ecosystem.config.js',
   'package.json',
@@ -438,8 +439,10 @@ async function serveStatic(req, res, url) {
   const isAdmin = pathname === '/admin/index.html' || pathname.startsWith('/admin/');
   let relativePath = pathname.replace(/^\/+/, '');
   if (!relativePath) relativePath = 'index.html';
-  if (!isAdmin && !extname(relativePath)) relativePath = 'index.html';
-  if (relativePath.split('/').some(segment => segment.startsWith('.') && segment !== '.nojekyll')) return text(res, 404, 'Not Found');
+  const isPublicPlaceholder = PUBLIC_STATIC_PLACEHOLDERS.has(relativePath);
+  if (!isAdmin && !isPublicPlaceholder && !extname(relativePath)) relativePath = 'index.html';
+  const isHiddenPath = relativePath.split('/').some(segment => segment.startsWith('.') && segment !== '.nojekyll');
+  if (isHiddenPath && !PUBLIC_STATIC_PLACEHOLDERS.has(relativePath)) return text(res, 404, 'Not Found');
   if (!PUBLIC_BROWSER_SCRIPTS.has(relativePath) &&
       (PRIVATE_STATIC_FILES.has(relativePath) || PRIVATE_STATIC_PREFIXES.some(prefix => relativePath.startsWith(prefix)))) {
     return text(res, 404, 'Not Found');
