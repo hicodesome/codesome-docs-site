@@ -1,5 +1,5 @@
 function isHeadingLine(line) {
-  return /^ {0,3}#{1,6}(?:\s|$)/.test(line);
+  return Boolean(markdownHeading(line));
 }
 
 function demoteHtmlHeadings(line) {
@@ -9,7 +9,28 @@ function demoteHtmlHeadings(line) {
 }
 
 function fenceMarker(line) {
-  return line.match(/^ {0,3}(`{3,}|~{3,})/);
+  const prefix = blockquotePrefix(line);
+  return line.slice(prefix.length).match(/^ {0,3}(`{3,}|~{3,})/);
+}
+
+function blockquotePrefix(line) {
+  return line.match(/^ {0,3}(?:(?:>[ \t]?)+)/)?.[0] || '';
+}
+
+function markdownHeading(line) {
+  const match = line.match(/^( {0,3}(?:(?:>[ \t]?)+)?)(#{1,6})(?:[ \t]+(.+?)[ \t]*|$)$/);
+  if (!match) return null;
+  return {
+    prefix: match[1],
+    hashes: match[2],
+    text: (match[3] || '').replace(/[ \t]+#+[ \t]*$/, '').trim()
+  };
+}
+
+function demoteMarkdownHeading(line) {
+  const heading = markdownHeading(line);
+  if (!heading || heading.hashes.length !== 1) return line;
+  return `${heading.prefix}##${line.slice(heading.prefix.length + 1)}`;
 }
 
 /**
@@ -75,19 +96,25 @@ export function normalizeArticleMarkdown(markdown, title) {
       continue;
     }
 
-    if (/^ {0,3}=+\s*$/.test(line) && index > 0) {
+    const quotePrefix = blockquotePrefix(line);
+    if (/^=+\s*$/.test(line.slice(quotePrefix.length)) && index > 0) {
       const previousSourceLine = lines[index - 1];
       const previousLine = normalizedLines.at(-1) || '';
       const previousIsFence = fenceMarker(previousSourceLine);
-      if (previousLine.trim() && !isHeadingLine(previousSourceLine) && !previousIsFence) {
-        normalizedLines[normalizedLines.length - 1] = `## ${previousLine.trim()}`;
+      const previousQuotePrefix = blockquotePrefix(previousSourceLine);
+      const previousBody = previousLine.slice(previousQuotePrefix.length);
+      if (
+        quotePrefix === previousQuotePrefix &&
+        previousBody.trim() &&
+        !isHeadingLine(previousSourceLine) &&
+        !previousIsFence
+      ) {
+        normalizedLines[normalizedLines.length - 1] = `${quotePrefix}## ${previousBody.trim()}`;
         continue;
       }
     }
 
-    normalizedLines.push(
-      demoteHtmlHeadings(line).replace(/^( {0,3})#(?=\s+)/, '$1##')
-    );
+    normalizedLines.push(demoteMarkdownHeading(demoteHtmlHeadings(line)));
   }
 
   const prefix = `# ${title}`;
@@ -118,13 +145,21 @@ export function headings(markdown) {
     }
 
     visibleLines.push(line);
-    const atx = line.match(/^ {0,3}(#{1,6})\s+(.+?)\s*$/);
-    if (atx) result.push({ level: atx[1].length, text: atx[2].trim(), order: index });
+    const atx = markdownHeading(line);
+    if (atx) result.push({ level: atx.hashes.length, text: atx.text, order: index });
 
-    if (/^ {0,3}=+\s*$/.test(line) && index > 0) {
+    const quotePrefix = blockquotePrefix(line);
+    if (/^=+\s*$/.test(line.slice(quotePrefix.length)) && index > 0) {
       const previous = lines[index - 1];
-      if (previous.trim() && !isHeadingLine(previous)) {
-        result.push({ level: 1, text: previous.trim(), order: index - 0.5 });
+      const previousQuotePrefix = blockquotePrefix(previous);
+      const previousBody = previous.slice(previousQuotePrefix.length).trim();
+      if (
+        quotePrefix === previousQuotePrefix &&
+        previousBody &&
+        !isHeadingLine(previous) &&
+        !fenceMarker(previous)
+      ) {
+        result.push({ level: 1, text: previousBody, order: index - 0.5 });
       }
     }
   }

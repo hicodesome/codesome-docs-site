@@ -81,6 +81,31 @@
     }
   } catch (e) { /* ignore */ }
 
+  function blockquotePrefix(line) {
+    var match = line.match(/^ {0,3}(?:(?:>[ \t]?)+)/);
+    return match ? match[0] : '';
+  }
+
+  function fenceMarker(line) {
+    var prefix = blockquotePrefix(line);
+    return line.slice(prefix.length).match(/^ {0,3}(`{3,}|~{3,})/);
+  }
+
+  function markdownHeading(line) {
+    var match = line.match(/^( {0,3}(?:(?:>[ \t]?)+)?)(#{1,6})(?:[ \t]+(.+?)[ \t]*|$)$/);
+    if (!match) return null;
+    return {
+      prefix: match[1],
+      hashes: match[2]
+    };
+  }
+
+  function demoteMarkdownHeading(line) {
+    var heading = markdownHeading(line);
+    if (!heading || heading.hashes.length !== 1) return line;
+    return heading.prefix + '##' + line.slice(heading.prefix.length + 1);
+  }
+
   function demoteHtmlHeadings(line) {
     return line
       .replace(/<h1\b/gi, '<h2')
@@ -102,7 +127,7 @@
 
     for (var index = firstBodyLine; index < lines.length; index += 1) {
       var line = lines[index];
-      var fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+      var fenceMatch = fenceMarker(line);
 
       if (fenceMatch) {
         if (!fence) {
@@ -122,20 +147,26 @@
         continue;
       }
 
-      if (/^ {0,3}=+\s*$/.test(line) && index > 0) {
+      var quotePrefix = blockquotePrefix(line);
+      if (/^=+\s*$/.test(line.slice(quotePrefix.length)) && index > 0) {
         var previousSourceLine = lines[index - 1];
         var previousLine = normalizedLines[normalizedLines.length - 1] || '';
-        var previousIsHeading = /^ {0,3}#{1,6}(?:\s|$)/.test(previousSourceLine);
-        var previousIsFence = /^ {0,3}(`{3,}|~{3,})/.test(previousSourceLine);
-        if (previousLine.trim() && !previousIsHeading && !previousIsFence) {
-          normalizedLines[normalizedLines.length - 1] = '## ' + previousLine.trim();
+        var previousQuotePrefix = blockquotePrefix(previousSourceLine);
+        var previousIsHeading = Boolean(markdownHeading(previousSourceLine));
+        var previousIsFence = Boolean(fenceMarker(previousSourceLine));
+        var previousBody = previousLine.slice(previousQuotePrefix.length);
+        if (
+          quotePrefix === previousQuotePrefix &&
+          previousBody.trim() &&
+          !previousIsHeading &&
+          !previousIsFence
+        ) {
+          normalizedLines[normalizedLines.length - 1] = quotePrefix + '## ' + previousBody.trim();
           continue;
         }
       }
 
-      normalizedLines.push(
-        demoteHtmlHeadings(line).replace(/^( {0,3})#(?=\s+)/, '$1##')
-      );
+      normalizedLines.push(demoteMarkdownHeading(demoteHtmlHeadings(line)));
     }
 
     var normalized = canonicalPrefix

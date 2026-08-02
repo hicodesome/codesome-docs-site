@@ -50,7 +50,7 @@ function showHelp() {
 
 Options:
   --dry-run       Discover and validate without writing the backup.
-  --verify        Read the backup manifest and verify every copied file hash.
+  --verify        Verify every copied file, the complete current article set, and backup H1s.
   --verify-source Compare manifest hashes with the current site files as well.
   --root PATH     Site repository root (defaults to this repository).
   --output PATH   Backup directory (defaults to docs/article-backup).
@@ -315,12 +315,60 @@ node scripts/backup-articles.mjs --cdc-source /path/to/hicodesome-docs-source
 node scripts/backup-articles.mjs --verify
 ~~~
 
-缺图、外部图片、越界图片引用或 CDC 固定快照不一致都会失败。--verify 独立读取本目录清单，逐文件进行 SHA-256 和字节数校验；追加 --verify-source 可再与当前站点源文件逐项比对。
+缺图、外部图片、越界图片引用或 CDC 固定快照不一致都会失败。--verify 会确认清单完整覆盖当前站点文章、备份文章仍符合登记的 canonical H1，并逐文件进行 SHA-256 和字节数校验；追加 --verify-source 可再与当前站点源文件逐项比对。
 
 ## 恢复
 
 恢复前先运行 --verify。将 articles/ 下文件复制回站点根目录、将 images/ 下文件复制回站点 images/，再运行站点 npm run check；清单中的 backupPath 与 sha256 用于逐文件核对，不能用 CDC 原始目录覆盖此备份。
 `;
+
+function currentArticlePaths() {
+  const files = readdirSync(root, { withFileTypes: true })
+    .filter(entry => entry.isFile() && /^\d{2}-.+\.md$/.test(entry.name))
+    .map(entry => entry.name)
+    .sort();
+  if (!files.length) throw new Error(`no site article Markdown files found in ${root}`);
+  for (const sitePath of files) {
+    if (!articleTitleMap.has(sitePath)) {
+      throw new Error(`site article is not registered in title metadata: ${sitePath}`);
+    }
+  }
+  return files;
+}
+
+function verifyManifestArticleCoverage(manifest, expectedSites) {
+  if (!Array.isArray(manifest.articles) || !Array.isArray(manifest.images)) {
+    throw new Error('backup manifest articles and images must be arrays');
+  }
+  if (manifest.scope?.articleCount !== expectedSites.length) {
+    throw new Error(`backup manifest article count differs: expected ${expectedSites.length}, found ${manifest.scope?.articleCount}`);
+  }
+
+  const actualSites = manifest.articles.map(entry => entry?.sitePath);
+  if (actualSites.some(site => typeof site !== 'string') || new Set(actualSites).size !== actualSites.length) {
+    throw new Error('backup manifest article site paths must be unique strings');
+  }
+  if (JSON.stringify([...actualSites].sort()) !== JSON.stringify(expectedSites)) {
+    throw new Error('backup manifest does not cover exactly the current site article set');
+  }
+
+  for (const entry of manifest.articles) {
+    if (typeof entry.backupPath !== 'string' || entry.backupPath.includes('..')) {
+      throw new Error(`invalid article backup path: ${entry.backupPath}`);
+    }
+    const expectedBackupPath = `articles/${entry.sitePath}`;
+    if (entry.backupPath !== expectedBackupPath) {
+      throw new Error(`article backup path is not canonical: ${entry.sitePath}`);
+    }
+    const backupFile = assertInside(output, join(output, ...entry.backupPath.split('/')), 'article backup path');
+    const title = articleTitleMap.get(entry.sitePath);
+    try {
+      assertCanonicalArticleMarkdown(readFileSync(backupFile, 'utf8'), title);
+    } catch (error) {
+      throw new Error(`${entry.sitePath}: backup article title contract failed (${error.message})`);
+    }
+  }
+}
 
 function verifyBackup() {
   const manifestPath = join(output, 'manifest.json');
@@ -334,6 +382,7 @@ function verifyBackup() {
   if (manifest.format !== 'codesome-doc-site-article-backup' || manifest.formatVersion !== 1) {
     throw new Error('unsupported backup manifest format');
   }
+  verifyManifestArticleCoverage(manifest, currentArticlePaths());
   const entries = [...(manifest.articles ?? []), ...(manifest.images ?? [])];
   if (!entries.length) throw new Error('backup manifest contains no files');
   for (const entry of entries) {

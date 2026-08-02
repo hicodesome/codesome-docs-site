@@ -1,11 +1,16 @@
 import { createServer } from 'node:http';
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
-import { createReadStream, readFileSync } from 'node:fs';
+import { createReadStream } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { extname, relative, resolve } from 'node:path';
 import { assertCanonicalArticleMarkdown } from './scripts/markdown-headings.mjs';
 import { articleTitleEntries } from './scripts/title-metadata.mjs';
+import {
+  assertPublicArticleSources,
+  assertPublicRuntimeContract,
+  publicRuntimeHealth
+} from './scripts/public-runtime-contract.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const PORT = Number(process.env.PORT || process.env.PM2_SERVE_PORT || 3009);
@@ -33,31 +38,21 @@ const PUBLIC_DOCUMENT_FILES = new Set(['README.md', '_sidebar.md']);
 const PUBLIC_ARTICLE_TITLES = new Map(articleTitleEntries.map(article => [article.site, article.title]));
 const PUBLIC_ARTICLE_FILES = new Set(PUBLIC_ARTICLE_TITLES.keys());
 
-function readPublicArticleSource(site) {
-  return readFileSync(resolve(ROOT, site), 'utf8');
-}
+export { assertPublicArticleSources };
 
-export function assertPublicArticleSources(entries = articleTitleEntries, readSource = readPublicArticleSource) {
-  const errors = [];
-  for (const { site, title } of entries) {
-    try {
-      assertCanonicalArticleMarkdown(readSource(site), title);
-    } catch (error) {
-      errors.push(`${site}: ${error.message}`);
-    }
-  }
-  if (errors.length) {
-    throw new Error(`public article title contract failed:\n${errors.join('\n')}`);
-  }
-  return entries.length;
-}
-
-export function publicArticleTitleHealth(entries = articleTitleEntries, readSource = readPublicArticleSource) {
+export function publicArticleTitleHealth(entries = articleTitleEntries, readSource) {
   try {
-    return { ok: true, articleCount: assertPublicArticleSources(entries, readSource) };
+    const articleCount = readSource
+      ? assertPublicArticleSources(entries, readSource)
+      : assertPublicArticleSources(entries);
+    return { ok: true, articleCount };
   } catch {
     return { ok: false, articleCount: 0 };
   }
+}
+
+export function publicRuntimeTitleHealth() {
+  return publicRuntimeHealth({ root: ROOT });
 }
 
 const MIME_TYPES = {
@@ -382,6 +377,21 @@ export function isAllowedContentWriteBody(method, body) {
   }
 }
 
+export function isAllowedContentWriteRequest(pathname, method, search, body) {
+  if (!['PUT', 'DELETE'].includes(method)) return true;
+  if (!isAllowedContentWriteBody(method, body)) return false;
+
+  const payload = parseContentPayload(body);
+  const branch = payload?.branch;
+  if (!isAllowedCmsBranch(branch)) return false;
+
+  const query = new URLSearchParams(String(search || '').replace(/^\?/, ''));
+  for (const key of ['branch', 'ref']) {
+    if (query.getAll(key).some(value => value !== branch)) return false;
+  }
+  return true;
+}
+
 function contentPathFromApiPath(pathname) {
   const prefix = `${REPO_API_ROOT}/contents/`;
   if (!pathname.startsWith(prefix)) return null;
@@ -431,6 +441,22 @@ export function isAllowedArticleContentWrite(pathname, method, body) {
   }
 }
 
+export function isAllowedGitRef(ref) {
+  if (ref === 'refs/meta/_decap_cms') return true;
+  if (typeof ref !== 'string' || !ref.startsWith('refs/heads/')) return false;
+  return isAllowedCmsBranch(ref.slice('refs/heads/'.length));
+}
+
+function refFromGitHubPath(repoPath) {
+  const prefix = '/git/refs/heads/';
+  if (!repoPath.startsWith(prefix)) return null;
+  try {
+    return decodeURIComponent(repoPath.slice(prefix.length));
+  } catch {
+    return null;
+  }
+}
+
 export function isAllowedGitHubPath(pathname, method) {
   if (!ALLOWED_PROXY_METHODS.has(method)) return false;
   if (!pathname || pathname.includes('\\') || pathname.includes('\0') || /(?:^|\/)\.\.(?:\/|$)/.test(pathname) || /%2e(?:%2e)?/i.test(pathname)) return false;
@@ -450,8 +476,12 @@ export function isAllowedGitHubPath(pathname, method) {
   if (/^\/git\/commits(?:\/[^/]+)?$/.test(repoPath)) return ['GET', 'HEAD', 'POST'].includes(method);
   if (repoPath === '/git/refs') return method === 'POST';
   if (/^\/git\/refs\/meta\/_decap_cms$/.test(repoPath)) return ['GET', 'HEAD', 'POST'].includes(method);
-  if (/^\/git\/refs\/heads\/cms(?:\/|%2[fF]).+$/.test(repoPath)) return ['GET', 'HEAD', 'PATCH', 'DELETE'].includes(method);
-  if (/^\/git\/refs\/heads\/[^/]+$/.test(repoPath)) return method === 'GET' || method === 'HEAD';
+  if (repoPath.startsWith('/git/refs/heads/')) {
+    const ref = refFromGitHubPath(repoPath);
+    if (!ref) return false;
+    if (isAllowedCmsBranch(ref)) return ['GET', 'HEAD', 'PATCH', 'DELETE'].includes(method);
+    return !ref.includes('/') && ['GET', 'HEAD'].includes(method);
+  }
   if (/^\/commits(?:\/[^/]+(?:\/status)?)?$/.test(repoPath)) return method === 'GET' || method === 'HEAD';
   if (/^\/compare\/[^/]+\.\.\.[^/]+$/.test(repoPath)) return method === 'GET' || method === 'HEAD';
   if (repoPath === '/pulls') return ['GET', 'HEAD', 'POST'].includes(method);
@@ -487,7 +517,7 @@ async function handleGitHubProxy(req, res, url) {
   const isContentsPath = pathname === `${REPO_API_ROOT}/contents` ||
     pathname.startsWith(`${REPO_API_ROOT}/contents/`);
   if (isContentsPath && (
-    !isAllowedContentWriteBody(req.method, body) ||
+    !isAllowedContentWriteRequest(pathname, req.method, url.search, body) ||
     !isAllowedArticleContentWrite(pathname, req.method, body)
   )) {
     return json(res, 403, { message: 'contents writes must target a cms/* branch and canonical registered article' });
@@ -500,7 +530,7 @@ async function handleGitHubProxy(req, res, url) {
     } catch {
       return json(res, 400, { message: '请求体无效' });
     }
-    if (typeof ref !== 'string' || (!/^refs\/heads\/cms\/.+/.test(ref) && ref !== 'refs/meta/_decap_cms')) {
+    if (!isAllowedGitRef(ref)) {
       return json(res, 403, { message: 'ref is not allowed' });
     }
   }
@@ -543,6 +573,9 @@ async function serveStatic(req, res, url) {
   if (pathname.includes('\0') || pathname.split('/').includes('..')) return text(res, 400, 'Bad Request');
   if (pathname === '/admin' || pathname === '/admin/') pathname = '/admin/index.html';
   const isAdmin = pathname === '/admin/index.html' || pathname.startsWith('/admin/');
+  if (!isAdmin && !publicRuntimeTitleHealth().ok) {
+    return text(res, 503, 'Public title contract failed');
+  }
   let relativePath = pathname.replace(/^\/+/, '');
   if (!relativePath) relativePath = 'index.html';
   const isPublicPlaceholder = PUBLIC_STATIC_PLACEHOLDERS.has(relativePath);
@@ -599,12 +632,13 @@ async function serveStatic(req, res, url) {
 async function handleRequest(req, res) {
   const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
   if (url.pathname === '/admin-api/healthz') {
-    const titleContract = publicArticleTitleHealth();
+    const titleContract = publicRuntimeTitleHealth();
     return json(res, titleContract.ok ? 200 : 503, {
       ok: titleContract.ok,
       configured: configReady(),
       titleContract: titleContract.ok ? 'ready' : 'failed',
-      articleCount: titleContract.articleCount
+      articleCount: titleContract.articleCount,
+      titleMapVersion: titleContract.titleMapVersion || null
     });
   }
   if (url.pathname === '/admin-api/auth') {
@@ -632,10 +666,10 @@ export function isServerEntrypoint(argvPath = process.argv[1], pmExecPath = proc
 }
 
 if (isServerEntrypoint()) {
-  const titleContract = publicArticleTitleHealth();
+  const titleContract = publicRuntimeTitleHealth();
   if (!titleContract.ok) {
     try {
-      assertPublicArticleSources();
+      assertPublicRuntimeContract({ root: ROOT });
     } catch (error) {
       console.error(`doc-site title contract failed; refusing to start: ${error.message}`);
     }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cpSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -9,10 +9,14 @@ import {
   assertPublicArticleSources,
   isAllowedArticleContentWrite,
   isAllowedContentWriteBody,
+  isAllowedContentWriteRequest,
+  isAllowedGitRef,
   isAllowedGitHubPath,
   isServerEntrypoint,
-  publicArticleTitleHealth
+  publicArticleTitleHealth,
+  publicRuntimeTitleHealth
 } from '../server.mjs';
+import { publicRuntimeHealth } from './public-runtime-contract.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const contentPath = '/repos/hicodesome/codesome-docs-site/contents/01-example.md';
@@ -38,6 +42,25 @@ test('GitHub contents writes are limited to CMS branches', () => {
   assert.equal(isAllowedContentWriteBody('PUT', body('cms/../main')), false);
   assert.equal(isAllowedContentWriteBody('PUT', Buffer.from('{')), false);
   assert.equal(isAllowedContentWriteBody('PUT', undefined), false);
+});
+
+test('content write query parameters cannot redirect a CMS write', () => {
+  assert.equal(isAllowedContentWriteRequest(contentPath, 'PUT', '?ref=cms/article-123', body('cms/article-123')), true);
+  assert.equal(isAllowedContentWriteRequest(contentPath, 'PUT', '?ref=main', body('cms/article-123')), false);
+  assert.equal(isAllowedContentWriteRequest(contentPath, 'PUT', '?branch=main', body('cms/article-123')), false);
+  assert.equal(isAllowedContentWriteRequest(contentPath, 'PUT', '?ref=cms/other', body('cms/article-123')), false);
+  assert.equal(isAllowedContentWriteRequest(contentPath, 'GET', '?ref=main', undefined), true);
+});
+
+test('Git refs accept only the CMS namespace for mutations', () => {
+  assert.equal(isAllowedGitRef('refs/heads/cms/article-123'), true);
+  assert.equal(isAllowedGitRef('refs/heads/cms/nested/article-123'), true);
+  assert.equal(isAllowedGitRef('refs/meta/_decap_cms'), true);
+  assert.equal(isAllowedGitRef('refs/heads/main'), false);
+  assert.equal(isAllowedGitRef('refs/heads/cms/../main'), false);
+  assert.equal(isAllowedGitHubPath('/repos/hicodesome/codesome-docs-site/git/refs/heads/cms/article-123', 'PATCH'), true);
+  assert.equal(isAllowedGitHubPath('/repos/hicodesome/codesome-docs-site/git/refs/heads/cms%2Fnested%2Farticle-123', 'DELETE'), true);
+  assert.equal(isAllowedGitHubPath('/repos/hicodesome/codesome-docs-site/git/refs/heads/main', 'PATCH'), false);
 });
 
 test('read-only contents requests and non-contents writes retain their route policy', () => {
@@ -73,15 +96,52 @@ test('the server validates every public article before it can report healthy', (
   assert.deepEqual(publicArticleTitleHealth(entries, invalidSource), { ok: false, articleCount: 0 });
 });
 
+test('the runtime health contract covers the public title pipeline', () => {
+  const health = publicRuntimeTitleHealth();
+  assert.equal(health.ok, true);
+  assert.equal(health.articleCount, articleTitleEntries.length);
+  assert.match(health.titleMapVersion, /^title-map-[a-f0-9]{16}$/);
+});
+
+test('runtime health detects a title pipeline asset drift after startup', () => {
+  const sourceRoot = fileURLToPath(new URL('../', import.meta.url));
+  const temporaryRoot = mkdtempSync(join(tmpdir(), 'codesome-runtime-contract-'));
+  try {
+    cpSync(join(sourceRoot, 'assets'), join(temporaryRoot, 'assets'), { recursive: true });
+    cpSync(join(sourceRoot, 'index.html'), join(temporaryRoot, 'index.html'));
+    cpSync(join(sourceRoot, '_sidebar.md'), join(temporaryRoot, '_sidebar.md'));
+    for (const { site } of articleTitleEntries) cpSync(join(sourceRoot, site), join(temporaryRoot, site));
+
+    assert.equal(publicRuntimeHealth({ root: temporaryRoot }).ok, true);
+    const indexPath = join(temporaryRoot, 'index.html');
+    const index = readFileSync(indexPath, 'utf8');
+    writeFileSync(indexPath, index.replace(/article-titles\.js\?v=[^"]+/, 'article-titles.js?v=stale'));
+    const health = publicRuntimeHealth({ root: temporaryRoot });
+    assert.equal(health.ok, false);
+    assert.match(health.error, /title map script version is stale/);
+  } finally {
+    rmSync(temporaryRoot, { recursive: true, force: true });
+  }
+});
+
 test('the direct server entrypoint refuses to start with a broken public article', () => {
   const sourceRoot = fileURLToPath(new URL('../', import.meta.url));
   const temporaryRoot = mkdtempSync(join(tmpdir(), 'codesome-title-boot-'));
   try {
     mkdirSync(join(temporaryRoot, 'scripts'));
     cpSync(fileURLToPath(new URL('../server.mjs', import.meta.url)), join(temporaryRoot, 'server.mjs'));
-    for (const script of ['markdown-headings.mjs', 'title-metadata.mjs', 'cdc-manifest.mjs', 'content-baseline.mjs']) {
+    for (const script of [
+      'markdown-headings.mjs',
+      'title-metadata.mjs',
+      'cdc-manifest.mjs',
+      'content-baseline.mjs',
+      'public-runtime-contract.mjs'
+    ]) {
       cpSync(join(sourceRoot, 'scripts', script), join(temporaryRoot, 'scripts', script));
     }
+    cpSync(join(sourceRoot, 'assets'), join(temporaryRoot, 'assets'), { recursive: true });
+    cpSync(join(sourceRoot, 'index.html'), join(temporaryRoot, 'index.html'));
+    cpSync(join(sourceRoot, '_sidebar.md'), join(temporaryRoot, '_sidebar.md'));
     for (const { site } of articleTitleEntries) {
       cpSync(join(sourceRoot, site), join(temporaryRoot, site));
     }

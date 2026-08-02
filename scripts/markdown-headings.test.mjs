@@ -27,6 +27,24 @@ test('heading scanner includes Setext and nested HTML H1 elements', () => {
   ]);
 });
 
+test('heading scanner follows blockquote Markdown and ignores quoted fenced code', () => {
+  const result = headings([
+    '> # Quoted title',
+    '>',
+    '> Setext title',
+    '> ============',
+    '>',
+    '> ```html',
+    '> <h1>code sample</h1>',
+    '> ```'
+  ].join('\n'));
+
+  assert.deepEqual(result.filter(heading => heading.level === 1), [
+    { level: 1, text: 'Quoted title' },
+    { level: 1, text: 'Setext title' }
+  ]);
+});
+
 test('article title normalization is unique and idempotent', () => {
   const source = [
     '<section><h1>Nested title</h1></section>',
@@ -35,6 +53,15 @@ test('article title normalization is unique and idempotent', () => {
     '============',
     '',
     '# Source title',
+    '',
+    '> # Quoted title',
+    '>',
+    '> Setext title',
+    '> ============',
+    '>',
+    '> ```html',
+    '> <h1>quoted code sample</h1>',
+    '> ```',
     '',
     '```html',
     '<h1>code sample</h1>',
@@ -48,6 +75,9 @@ test('article title normalization is unique and idempotent', () => {
   assert.match(normalized, /<h2>Nested title<\/h2>/);
   assert.match(normalized, /## Setext title/);
   assert.match(normalized, /## Source title/);
+  assert.match(normalized, /> ## Quoted title/);
+  assert.match(normalized, /> ## Setext title/);
+  assert.match(normalized, /> <h1>quoted code sample<\/h1>/);
   assert.match(normalized, /<h1>code sample<\/h1>/);
   assert.equal(normalizeArticleMarkdown(normalized, 'Fixture title'), normalized);
 });

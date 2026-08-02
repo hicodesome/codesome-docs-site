@@ -66,6 +66,21 @@ try {
     /backup verify passed with source hashes: 1 articles, 1 unique images/
   );
 
+  const manifestPath = join(output, 'manifest.json');
+  const manifestBytes = readFileSync(manifestPath);
+  const incompleteManifest = JSON.parse(manifestBytes);
+  incompleteManifest.articles = [];
+  incompleteManifest.scope.articleCount = 0;
+  writeFileSync(manifestPath, `${JSON.stringify(incompleteManifest, null, 2)}\n`);
+  runFail('--verify', '--root', fixture, '--output', output);
+  writeFileSync(manifestPath, manifestBytes);
+
+  const articleBackup = join(output, 'articles/01-PIAgent模型配置示例.md');
+  const articleBytes = readFileSync(articleBackup);
+  writeFileSync(articleBackup, '# 错误标题\n\n正文\n');
+  runFail('--verify', '--root', fixture, '--output', output);
+  writeFileSync(articleBackup, articleBytes);
+
   writeFileSync(imageBackup, Buffer.from('corrupted\n'));
   runFail('--verify', '--output', output);
   writeFileSync(imageBackup, Buffer.from('fixture-image\n'));

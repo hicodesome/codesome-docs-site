@@ -1,43 +1,15 @@
 import { spawn } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createServer } from 'node:net';
-import { dirname, relative, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { headings } from './markdown-headings.mjs';
+import { assertPublicRuntimeContract } from './public-runtime-contract.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const indexPath = resolve(root, 'index.html');
-const index = readFileSync(indexPath, 'utf8');
-const sourcePattern = /<script\b[^>]*\bsrc="([^"]+)"/g;
-const baseUrl = new URL('http://127.0.0.1/');
-const scriptPaths = [];
-const errors = [];
-
-for (const match of index.matchAll(sourcePattern)) {
-  const source = match[1];
-  const url = new URL(source, baseUrl);
-  if (url.origin !== baseUrl.origin) continue;
-
-  const relativePath = decodeURIComponent(url.pathname).replace(/^\/+/, '');
-  const absolutePath = resolve(root, relativePath);
-  const relativeToRoot = relative(root, absolutePath);
-
-  if (!relativePath || relativeToRoot.startsWith('..') || relativeToRoot.includes('..')) {
-    errors.push(`invalid local browser resource path: ${source}`);
-    continue;
-  }
-  if (!existsSync(absolutePath)) {
-    errors.push(`browser resource does not exist: ${relativePath}`);
-    continue;
-  }
-
-  scriptPaths.push(relativePath);
-}
-
-if (errors.length) {
-  throw new Error(errors.join('\n'));
-}
+const runtimeContract = assertPublicRuntimeContract({ root });
+const scriptPaths = runtimeContract.scriptPaths;
 
 function reservePort() {
   return new Promise((resolvePort, reject) => {
@@ -119,27 +91,6 @@ function publicPath(path) {
   return `/${encodeURIComponent(path).replaceAll('%2F', '/')}`;
 }
 
-function assertScriptOrder() {
-  const indexScripts = scriptPaths.map(path => path.replace(/^\.\//, ''));
-  const position = path => indexScripts.indexOf(path);
-  const required = [
-    'assets/page-title.js',
-    'assets/vendor/docsify.min.js',
-    'assets/article-titles.js',
-    'assets/cdc-title-injector.js',
-    'assets/vendor/search.min.js'
-  ];
-  for (const path of required) {
-    if (position(path) === -1) throw new Error(`index.html is missing the title pipeline script: ${path}`);
-  }
-  if (!(position('assets/page-title.js') < position('assets/vendor/docsify.min.js') &&
-    position('assets/vendor/docsify.min.js') < position('assets/article-titles.js') &&
-    position('assets/article-titles.js') < position('assets/cdc-title-injector.js') &&
-    position('assets/cdc-title-injector.js') < position('assets/vendor/search.min.js'))) {
-    throw new Error('index.html title pipeline script order is invalid');
-  }
-}
-
 async function main() {
   const port = await reservePort();
   const child = spawn(process.execPath, ['server.mjs'], {
@@ -158,8 +109,6 @@ async function main() {
     if (!/no-cache/i.test(indexResponse.headers.get('cache-control') || '')) {
       throw new Error('index.html must be revalidated after releases');
     }
-    assertScriptOrder();
-
     const healthResponse = await requestText(port, '/admin-api/healthz');
     let health;
     try {
@@ -167,7 +116,13 @@ async function main() {
     } catch {
       throw new Error('health check did not return JSON');
     }
-    if (healthResponse.status !== 200 || health.ok !== true || health.titleContract !== 'ready' || health.articleCount !== articleTitleEntries.length) {
+    if (
+      healthResponse.status !== 200 ||
+      health.ok !== true ||
+      health.titleContract !== 'ready' ||
+      health.articleCount !== articleTitleEntries.length ||
+      health.titleMapVersion !== runtimeContract.titleMapVersion
+    ) {
       throw new Error(`health check did not prove the full title contract: HTTP ${healthResponse.status}`);
     }
 
