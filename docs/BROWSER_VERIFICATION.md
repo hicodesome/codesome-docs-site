@@ -36,3 +36,13 @@ Chrome DRM 前置由 `chrome-drm-fetch` 技能定义：本机需要能通过 `ss
 - `3`：Chrome DRM 容器、SSH 或 CDP 不可达，明确输出 `SKIP`；发布流程会将其视为失败，不视为通过。
 
 可以用 `npm run test:browser` 运行不依赖 Chrome 的断言回归测试。测试覆盖伪造 H1、文章请求 `404`、fallback 标题和重复 H1 等反例。故意把侧栏目标链接改为不存在的路由时，浏览器验收会以 `1` 退出，不能生成“完成”结论。
+
+## CI 前置集成门禁
+
+`npm run check` 还会运行 `npm run check:rendered-titles:browser`。该命令启动临时本地站点，用 Playwright Chromium 真实加载 `index.html` 和 Docsify，并逐篇切换全部公开文章路由。它会在带有旧搜索缓存的浏览器上下文中验证 Markdown `200`、侧栏链接、唯一 `manifest-injector` H1、标题管线状态、无 fallback、无 console/network error 和图片加载。
+
+CI 必须先执行 `npx playwright install --with-deps chromium`。浏览器无法安装、无法启动或任一文章断言失败，均以非零状态结束；不能把浏览器不可用降级为 `SKIP`。
+
+## 发布链路门禁
+
+GitHub `hicodesome/codesome-docs-site` 的 `main` 已启用 `contract` required status check、线性历史和管理员保护。正式发布技能会先把目标提交推到 `release-gate`，等待该提交的 CI 成功，再快进推送 `main`；直接推送没有该提交成功检查的版本会被 GitHub 拒绝。
