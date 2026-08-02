@@ -3,9 +3,9 @@
   "formatVersion": 1,
   "generatedFrom": {
     "site": {
-      "commit": "a3737520ba2ffe1132924de8f63216647dc63576",
-      "commitDate": "2026-08-02T00:49:01+08:00",
-      "branch": "codex/a05-cdc-backup"
+      "commit": "20c358d7e4006bfc1aacf222789b228d9fa761c5",
+      "commitDate": "2026-08-02T18:16:58+08:00",
+      "branch": "codex/merge-docsite-20260802"
     },
     "cdc": {
       "tag": "cdc-snapshot-2026-07-14",
@@ -399,8 +399,8 @@
       "kind": "cdc-slot",
       "baseline": "latest",
       "cdcSourcePath": "No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等） - Feishu Docs.md",
-      "bytes": 6038,
-      "sha256": "15d51522047448c921d539251c808c12960b82a8937d78c7f0c109f8ea610c17",
+      "bytes": 6032,
+      "sha256": "a611a78de9308337bf0783177f81c0911ce74ab7b3141bfcbe51fbf9bf22103b",
       "backupPath": "articles/03-牛马神器-CC绘制PPT.md",
       "imageReferences": [
         "images/No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）-image-1.png",
