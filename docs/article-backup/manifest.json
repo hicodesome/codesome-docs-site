@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "d13c1f3f618f2249010773fb653d6c102544cae4fd682acea7bc134393e3e30e"
+      "contentFingerprint": "38d1e7c4a131799a1881c03ae142f4ce788c12d9eb8f4edea6b62761150cfa96"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -250,8 +250,8 @@
       "sitePath": "01-第三方客户端接入配置.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "第三方客户端接入 Codesome 配置指南 - Feishu Docs.md",
-      "bytes": 9921,
-      "sha256": "88f3d6ef878f2eaae987d599b6106f52f286b9ffeef772de35f1259a281f1b0c",
+      "bytes": 10078,
+      "sha256": "14cbed0d3ece40cb631152eb8e9b8467e84791f25b4865d2db066705925b3c25",
       "backupPath": "articles/01-第三方客户端接入配置.md",
       "imageReferences": [
         "images/第三方客户端接入 Codesome 配置指南-image-001.png",
