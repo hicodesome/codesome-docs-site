@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "748d9e3430de0ad2d5fd39df3e74555b3c863355ec8b04f6e3b39338aa096fc2"
+      "contentFingerprint": "2378f2f447380c10f445b9937dad84e66f5c0b151048506dc9044327920af7af"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -295,8 +295,8 @@
       "sitePath": "02-分组是什么怎么选怎么切换.md",
       "kind": "site-current",
       "cdcSourcePath": null,
-      "bytes": 6691,
-      "sha256": "e2b05873f215b3ae94325703af0149f90d58edf6633b275fb5fa281dc6047072",
+      "bytes": 6734,
+      "sha256": "ed1204bc08b3db82a7ad130f9ad58d9716897a67e16f922ccba20c75cbeb73ad",
       "backupPath": "articles/02-分组是什么怎么选怎么切换.md",
       "imageReferences": []
     },
