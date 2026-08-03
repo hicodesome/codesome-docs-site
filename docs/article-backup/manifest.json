@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "b3b7d7d3f061da00d114c42549889ed0840cca1a1590dfc54051f776283dceb7"
+      "contentFingerprint": "748d9e3430de0ad2d5fd39df3e74555b3c863355ec8b04f6e3b39338aa096fc2"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -17,8 +17,8 @@
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
     "articleCount": 30,
-    "uniqueImageCount": 101,
-    "imageReferenceCount": 113
+    "uniqueImageCount": 100,
+    "imageReferenceCount": 112
   },
   "articles": [
     {
@@ -277,14 +277,13 @@
       "sitePath": "02-使用问题速查.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜使用问题速查 - Feishu Docs.md",
-      "bytes": 21831,
-      "sha256": "35bf7f3c0aad2599d5d37837da59566107c148e8b3eaa59de0a36b3745ef3e76",
+      "bytes": 21674,
+      "sha256": "cd75ee8639432b3cf3d335015fc94ca9ce6a70d26625d8225abdecf8c6898997",
       "backupPath": "articles/02-使用问题速查.md",
       "imageReferences": [
         "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
         "images/codesome｜使用问题速查-codesome-502.png",
         "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
-        "images/codesome｜使用问题速查-codesome-503-status.png",
         "images/codesome｜使用问题速查-econnreset-example.png",
         "images/codesome｜使用问题速查-opus-46-model-mapping.png",
         "images/codesome｜使用问题速查-skip-claude-login.jpg",
@@ -305,8 +304,8 @@
       "sitePath": "02-平台服务紧张应对方案.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告 - Feishu Docs.md",
-      "bytes": 3185,
-      "sha256": "6d873156a27157191c46e8fafee093413c7684a03b18142034eaedd998c56580",
+      "bytes": 3233,
+      "sha256": "8f7638641930b043b0854ff8cdf691b84bb7fe886de1bec9810332f808b03eb5",
       "backupPath": "articles/02-平台服务紧张应对方案.md",
       "imageReferences": [
         "images/关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告-image.png"
@@ -899,16 +898,6 @@
       "bytes": 98017,
       "sha256": "95eaedf69ef36b27da15ad22a12c228161d0fec995a7f31a84af8ea7b7db4665",
       "backupPath": "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
-      "referenceCount": 1,
-      "referencedBy": [
-        "02-使用问题速查.md"
-      ]
-    },
-    {
-      "sitePath": "images/codesome｜使用问题速查-codesome-503-status.png",
-      "bytes": 189118,
-      "sha256": "dc385e9a80a2ef118228fd466dbcab054f04c207fc5f5af9e3efe7e2b27eda5e",
-      "backupPath": "images/codesome｜使用问题速查-codesome-503-status.png",
       "referenceCount": 1,
       "referencedBy": [
         "02-使用问题速查.md"
