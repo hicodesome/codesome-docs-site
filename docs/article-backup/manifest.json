@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "5059fcf080fc8f418baa3944fb72e1eea728c562d26bd5e62a2362f192d2eac0"
+      "contentFingerprint": "d13c1f3f618f2249010773fb653d6c102544cae4fd682acea7bc134393e3e30e"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -16,7 +16,7 @@
   },
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
-    "articleCount": 31,
+    "articleCount": 32,
     "uniqueImageCount": 110,
     "imageReferenceCount": 122
   },
@@ -205,6 +205,15 @@
       ]
     },
     {
+      "sitePath": "01-如何创建API并选择分组.md",
+      "kind": "site-current",
+      "cdcSourcePath": null,
+      "bytes": 3901,
+      "sha256": "125e83ab7ba4d5a5cdd55ed355b75dff9ef22e945d0d5f410a7c5f689d06a65e",
+      "backupPath": "articles/01-如何创建API并选择分组.md",
+      "imageReferences": []
+    },
+    {
       "sitePath": "01-官方地址.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "Feishu Docs.md",
@@ -344,8 +353,8 @@
       "sitePath": "03-Agentic入门宝典.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 8467,
-      "sha256": "7d571f876e26c417ed559eaab639cd7841b8f5de43e2156ffdccf847531ea2c1",
+      "bytes": 8853,
+      "sha256": "9a41faec0d477851a778ae8ed725e81686d4cd77aa3162758d0d0fb99f7b3f5a",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"

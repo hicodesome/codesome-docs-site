@@ -14,6 +14,7 @@
   "01-二合一计划-Hermes配置-AI自动版.md": "【最新】hermes配置教程",
   "01-二合一计划-Hermes配置-Mac手动版.md": "【最新】Hermes 二合一配置教程",
   "01-二合一计划-OpenCode配置.md": "二合一 OpenCode 配置指南",
+  "01-如何创建API并选择分组.md": "如何创建 API 以及选择对应的分组",
   "01-官方地址.md": "官方地址是多少",
   "01-牛马AI配置教程.md": "牛马 AI（NewMax）配置教程",
   "01-第三方客户端接入配置.md": "第三方客户端接入 Codesome 配置指南",
@@ -34,5 +35,5 @@
   "05-AI编程课红包福利.md": "AI 编程课红包福利",
   "05-兑换码兑换指南.md": "cc兑换码兑换指南"
 });
-  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-0ef5d5b05255e35b";
+  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-a770d1e9803a175f";
 }(window));
