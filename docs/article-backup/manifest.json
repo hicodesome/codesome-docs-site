@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "426456417508cb8a6ae0774e89c51ce82c6174a42a08c5729538a324d7152d71"
+      "contentFingerprint": "10fc8ddddd8dc6bb4f1492b7b8621ba3d640bd3afeda24e6bacf554c442ac138"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -350,8 +350,8 @@
       "sitePath": "03-Agentic入门宝典.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 6074,
-      "sha256": "9e407d7006cab42496c890738a6bb9ea0a67f31a50750d9ea6b2824b04920853",
+      "bytes": 6162,
+      "sha256": "63d66dff93aaf7138aa7cd9c875b3ebc7afb3207c0bcaa36058b24666ba49318",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"

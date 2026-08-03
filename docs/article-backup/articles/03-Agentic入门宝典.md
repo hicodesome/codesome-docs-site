@@ -35,14 +35,16 @@
 | V3 | [V3 OpenCode 配置指南](01-V3计划-OpenCode配置.md) |
 | 二合一 | [二合一 OpenCode 配置指南](01-二合一计划-OpenCode配置.md) |
 
-### 其他工具
+### 其他 Agent
 
-- Hermes：二合一有 [Hermes 二合一配置教程](01-二合一计划-Hermes配置-Mac手动版.md) 和 [hermes配置教程（AI 自动版）](01-二合一计划-Hermes配置-AI自动版.md) 两篇，任选一篇操作
-- [OpenClaw 最新配置教程](01-OpenClaw配置教程.md)
-- [PIAgent 模型配置示例](01-PIAgent模型配置示例.md)
-- [牛马 AI（NewMax）配置教程](01-牛马AI配置教程.md)
-- [V3 Grok Build 安装与配置指南](01-V3计划-GrokBuild安装配置.md)
-- Cherry Studio、WorkBuddy、Trae、Claudian、VSCode 等通用客户端：[第三方客户端接入 Codesome 配置指南](01-第三方客户端接入配置.md)
+| 你的情况 | 教程 |
+|---|---|
+| Hermes（二合一） | [Hermes 二合一配置教程](01-二合一计划-Hermes配置-Mac手动版.md) 或 [hermes配置教程（AI 自动版）](01-二合一计划-Hermes配置-AI自动版.md) |
+| OpenClaw | [OpenClaw 最新配置教程](01-OpenClaw配置教程.md) |
+| PIAgent | [PIAgent 模型配置示例](01-PIAgent模型配置示例.md) |
+| 牛马 AI（NewMax） | [牛马 AI（NewMax）配置教程](01-牛马AI配置教程.md) |
+| Grok Build（V3） | [V3 Grok Build 安装与配置指南](01-V3计划-GrokBuild安装配置.md) |
+| Cherry Studio / WorkBuddy / Trae / Claudian / VSCode 等通用客户端 | [第三方客户端接入 Codesome 配置指南](01-第三方客户端接入配置.md) |
 
 ## 常用操作
 
