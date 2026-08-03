@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "853bdd25596b276a14eec6f3159e7c41a4d1b5eaf67a321d3555fd058f48af8c"
+      "contentFingerprint": "5059fcf080fc8f418baa3944fb72e1eea728c562d26bd5e62a2362f192d2eac0"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -16,9 +16,9 @@
   },
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
-    "articleCount": 30,
-    "uniqueImageCount": 100,
-    "imageReferenceCount": 112
+    "articleCount": 31,
+    "uniqueImageCount": 110,
+    "imageReferenceCount": 122
   },
   "articles": [
     {
@@ -214,11 +214,35 @@
       "imageReferences": []
     },
     {
+      "sitePath": "01-牛马AI配置教程.md",
+      "kind": "site-current",
+      "cdcSourcePath": null,
+      "bytes": 5098,
+      "sha256": "4ef74e0b79c847c20d582ca480744772b3fbf3c8a7f70f8f16e8c2eda358fe12",
+      "backupPath": "articles/01-牛马AI配置教程.md",
+      "imageReferences": [
+        "images/牛马 AI（NewMax）配置教程-image-1.png",
+        "images/牛马 AI（NewMax）配置教程-image-2.png",
+        "images/牛马 AI（NewMax）配置教程-image-3.png",
+        "images/牛马 AI（NewMax）配置教程-image-4.png",
+        "images/牛马 AI（NewMax）配置教程-image-5.png",
+        "images/牛马 AI（NewMax）配置教程-image-6.png",
+        "images/牛马 AI（NewMax）配置教程-image-7.png",
+        "images/牛马 AI（NewMax）配置教程-image-8.png",
+        "images/牛马 AI（NewMax）配置教程-image-9.png",
+        "images/牛马 AI（NewMax）配置教程-image.png",
+        "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162425.png",
+        "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162552.png",
+        "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162708.png",
+        "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162820.png"
+      ]
+    },
+    {
       "sitePath": "01-第三方客户端接入配置.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "第三方客户端接入 Codesome 配置指南 - Feishu Docs.md",
-      "bytes": 11507,
-      "sha256": "fb22c2dd677eb1848654e83c94a7c7bb92a152a4e3be95937c70b2f7e945b601",
+      "bytes": 9921,
+      "sha256": "88f3d6ef878f2eaae987d599b6106f52f286b9ffeef772de35f1259a281f1b0c",
       "backupPath": "articles/01-第三方客户端接入配置.md",
       "imageReferences": [
         "images/第三方客户端接入 Codesome 配置指南-image-001.png",
@@ -226,15 +250,11 @@
         "images/第三方客户端接入 Codesome 配置指南-image-003.png",
         "images/第三方客户端接入 Codesome 配置指南-image-004.png",
         "images/第三方客户端接入 Codesome 配置指南-image-005.png",
-        "images/第三方客户端接入 Codesome 配置指南-image-006.png",
-        "images/第三方客户端接入 Codesome 配置指南-image-007.png",
-        "images/第三方客户端接入 Codesome 配置指南-image-008.png",
         "images/第三方客户端接入 Codesome 配置指南-image-1.png",
         "images/第三方客户端接入 Codesome 配置指南-image-10.png",
         "images/第三方客户端接入 Codesome 配置指南-image-11.png",
         "images/第三方客户端接入 Codesome 配置指南-image-2.png",
         "images/第三方客户端接入 Codesome 配置指南-image-3.png",
-        "images/第三方客户端接入 Codesome 配置指南-image-4.png",
         "images/第三方客户端接入 Codesome 配置指南-image-5.png",
         "images/第三方客户端接入 Codesome 配置指南-image-6.png",
         "images/第三方客户端接入 Codesome 配置指南-image-7.png",
@@ -324,8 +344,8 @@
       "sitePath": "03-Agentic入门宝典.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 8375,
-      "sha256": "8a181456029bfb788c562a96accf370bd507af3d40731dd2184137d9092968b4",
+      "bytes": 8467,
+      "sha256": "7d571f876e26c417ed559eaab639cd7841b8f5de43e2156ffdccf847531ea2c1",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"
@@ -1224,6 +1244,146 @@
       ]
     },
     {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-1.png",
+      "bytes": 23768,
+      "sha256": "aedee78faa11679d70a32ddabf3662eb3ed150c861a503cf1ee630526411245a",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-1.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-2.png",
+      "bytes": 365848,
+      "sha256": "0d321ae8165fa127b32844716e2e6107b354e2aed9a78ba1480be5b74a1ff827",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-2.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-3.png",
+      "bytes": 55812,
+      "sha256": "9fc59cca2cd1cce9cd90e0dcf6e57eb82ac976414ddb6c6ab8e84d6373e36279",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-3.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-4.png",
+      "bytes": 24954,
+      "sha256": "da92c9ce551a7c976310cd70df7c7a1875d41260ff4df46acc7082afec1dc960",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-4.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-5.png",
+      "bytes": 7588,
+      "sha256": "88292e686287fbb0d11ba856af6f45216f1e15498078ea04f6551bb0f979b6fa",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-5.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-6.png",
+      "bytes": 57012,
+      "sha256": "8943ac8cbd8e239fb1a8f577de482748e48b2c49abe551701ed573d80b281b11",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-6.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-7.png",
+      "bytes": 25718,
+      "sha256": "5db10fa9c4333780ad0ec28bcf44f9e86af25a5d7459e7fd757454dfc0318f7e",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-7.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-8.png",
+      "bytes": 80875,
+      "sha256": "b530929f786a412cea0ac809a64246a5680e281dbbee5e6e8effc1c9252db9c4",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-8.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image-9.png",
+      "bytes": 64071,
+      "sha256": "cb9a40cf96bc85bbdf3b029ebb440c1489808f516d7686cbf2fb41ed27b1b628",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image-9.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-image.png",
+      "bytes": 112047,
+      "sha256": "57098e25d1d75924a130f248f892cd9163c15f5591165eabea56669677ddc706",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-image.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162425.png",
+      "bytes": 113107,
+      "sha256": "0774f6cb7697b71f93330db9b3c9ac23570a0f67f4b970770293ea7455ad116c",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162425.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162552.png",
+      "bytes": 207372,
+      "sha256": "a5ec4f009570c5feb86e59dbc480fc5c6425f9160cea983dcaf2971b3c3cfc57",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162552.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162708.png",
+      "bytes": 188237,
+      "sha256": "02912e415268f338df513df22a1aa8791b6b3e91003f65a62982b5ef8ec9243d",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162708.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
+      "sitePath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162820.png",
+      "bytes": 65052,
+      "sha256": "a6b60e05a6ff1d0415750ec72814a0dccbf9d6026626fc3f5141ae1099564983",
+      "backupPath": "images/牛马 AI（NewMax）配置教程-屏幕截图 2026-08-03 162820.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-牛马AI配置教程.md"
+      ]
+    },
+    {
       "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-001.png",
       "bytes": 53188,
       "sha256": "d2f0d8a4868415d06603b86427810ba7ff0ba2675ca5cf0706d26bd00d93ca34",
@@ -1274,36 +1434,6 @@
       ]
     },
     {
-      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-006.png",
-      "bytes": 26272,
-      "sha256": "215c8057f2d90cbafdb0ad2f1077a16415bab661e54432534ff64643f565663f",
-      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-006.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-第三方客户端接入配置.md"
-      ]
-    },
-    {
-      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-007.png",
-      "bytes": 94542,
-      "sha256": "98a50cd977613a747e50334d163b38b87f478d3acbbe06c07cf6a2e0e76dbb18",
-      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-007.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-第三方客户端接入配置.md"
-      ]
-    },
-    {
-      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-008.png",
-      "bytes": 30863,
-      "sha256": "db9fe102f6040a15412f488cabe0ca8d70fed8d05372453fd80d6ac7cd0226a7",
-      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-008.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-第三方客户端接入配置.md"
-      ]
-    },
-    {
       "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-1.png",
       "bytes": 96546,
       "sha256": "21cada7b1c15b30b2e861d6a0b72ff9e418caa73179289c8eecdf682ddd2ada6",
@@ -1348,16 +1478,6 @@
       "bytes": 48999,
       "sha256": "a498ea6ce4c2f87cec1923320c9954fef2ae3cf9414144484cfa354888a7d55d",
       "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-3.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-第三方客户端接入配置.md"
-      ]
-    },
-    {
-      "sitePath": "images/第三方客户端接入 Codesome 配置指南-image-4.png",
-      "bytes": 84844,
-      "sha256": "e84d8ca98160370917bceb1373f443270f373e7e3eab1396372ffaa7d0fbac5f",
-      "backupPath": "images/第三方客户端接入 Codesome 配置指南-image-4.png",
       "referenceCount": 1,
       "referencedBy": [
         "01-第三方客户端接入配置.md"

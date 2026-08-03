@@ -42,7 +42,9 @@
 
 [ 【最新】hermes配置教程](01-二合一计划-Hermes配置-AI自动版.md)
 
-Cherry studio、workbuddy、trae、Claudian
+Cherry studio、workbuddy、trae、Claudian、NewMax（原牛马 AI）
+
+[牛马 AI（NewMax）配置教程](01-牛马AI配置教程.md)
 
 [ 第三方客户端接入 Codesome 配置指南](01-第三方客户端接入配置.md)
 

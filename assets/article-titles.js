@@ -15,6 +15,7 @@
   "01-二合一计划-Hermes配置-Mac手动版.md": "【最新】Hermes 二合一配置教程",
   "01-二合一计划-OpenCode配置.md": "二合一 OpenCode 配置指南",
   "01-官方地址.md": "官方地址是多少",
+  "01-牛马AI配置教程.md": "牛马 AI（NewMax）配置教程",
   "01-第三方客户端接入配置.md": "第三方客户端接入 Codesome 配置指南",
   "02-ClaudeCode上下文压缩配置.md": "Claude Code 上下文自动压缩配置",
   "02-Codex桌面版断连和502排查.md": "Codex 桌面版持续 Reconnecting + 502 报错排查",
@@ -33,5 +34,5 @@
   "05-AI编程课红包福利.md": "AI 编程课红包福利",
   "05-兑换码兑换指南.md": "cc兑换码兑换指南"
 });
-  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-72c7bdcb145254d9";
+  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-0ef5d5b05255e35b";
 }(window));
