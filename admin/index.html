@@ -57,12 +57,14 @@
 
     #admin-token-login {
       background: #168a58;
+      border: 0;
       border-radius: 4px;
       color: #fff;
+      cursor: pointer;
       display: inline-block;
+      font: inherit;
       font-weight: 600;
       padding: 11px 16px;
-      text-decoration: none;
     }
 
     #admin-token-login:focus-visible {
@@ -87,8 +89,8 @@
     <section id="admin-fallback-card" aria-live="polite">
       <h1>Codesome 文档编辑</h1>
       <p>编辑器正在加载，或浏览器阻止了自动登录入口。</p>
-      <a id="admin-token-login" href="../admin-api/auth?provider=github">输入编辑 Token</a>
-      <p id="admin-fallback-error" role="alert" hidden>登录窗口被浏览器拦截，请允许此站点打开弹窗后重试。</p>
+      <button id="admin-token-login" type="button">输入编辑 Token</button>
+      <p id="admin-fallback-error" role="alert" hidden></p>
     </section>
   </main>
   <script>
@@ -96,15 +98,17 @@
       const fallback = document.getElementById('admin-fallback');
       const loginLink = document.getElementById('admin-token-login');
       const loginError = document.getElementById('admin-fallback-error');
-      loginLink.addEventListener('click', event => {
-        event.preventDefault();
+      loginLink.addEventListener('click', () => {
         loginError.hidden = true;
-        const popup = window.open(loginLink.href, 'codesome-doc-auth', 'popup,width=420,height=640,resizable=yes,scrollbars=yes');
-        if (!popup) {
+        const nativeLogin = Array.from(document.querySelectorAll('#nc-root button, #nc-root a'))
+          .find(control => /GitHub/i.test(control.textContent || ''));
+        if (!nativeLogin) {
+          loginError.textContent = '编辑器仍在加载，请稍后重试。';
           loginError.hidden = false;
           return;
         }
-        popup.focus();
+        fallback.hidden = true;
+        nativeLogin.click();
       });
       const ready = () => {
         const root = document.getElementById('nc-root');

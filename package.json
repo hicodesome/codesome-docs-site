@@ -31,6 +31,7 @@
     "check": "npm run baseline:check && npm run check:article-titles && npm run check:cache && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets",
     "check:ci": "npm run baseline:check && npm run check:article-titles && npm run check:cache && npm run check:runtime && npm run check:rendered-titles && npm run check:rendered-titles:browser && npm run check:links && npm run check:images && npm run check:secrets",
     "test:browser": "node --test scripts/doc-site-browser-verify.test.mjs",
+    "test:admin-login": "node --test scripts/admin-login.browser.test.mjs",
     "test:title-pipeline": "node --test scripts/markdown-headings.test.mjs scripts/title-injector.test.mjs",
     "test:server": "node --test scripts/server-contract.test.mjs",
     "test:cache": "node --test scripts/check-cache-versions.test.mjs",
@@ -38,7 +39,7 @@
     "test:baseline": "node --test tests/baseline.test.mjs scripts/cdc-provenance.test.mjs",
     "test:metadata": "node --test scripts/public-articles.test.mjs",
     "test:cms-review": "node --test scripts/review-cms-changes.test.mjs",
-    "test": "npm run test:browser && npm run test:title-pipeline && npm run test:server && npm run test:cache && npm run test:metadata && npm run test:cms-review && npm run test:backup && npm run test:baseline"
+    "test": "npm run test:browser && npm run test:admin-login && npm run test:title-pipeline && npm run test:server && npm run test:cache && npm run test:metadata && npm run test:cms-review && npm run test:backup && npm run test:baseline"
   },
   "devDependencies": {
     "docsify-cli": "^4.4.4",
