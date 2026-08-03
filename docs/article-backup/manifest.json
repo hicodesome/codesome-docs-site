@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "38d1e7c4a131799a1881c03ae142f4ce788c12d9eb8f4edea6b62761150cfa96"
+      "contentFingerprint": "eb5a9c4d04415073c2c1dd9f45b49a6f11bb65bbd71f7d35fea2999b888df186"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -17,8 +17,8 @@
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
     "articleCount": 32,
-    "uniqueImageCount": 110,
-    "imageReferenceCount": 122
+    "uniqueImageCount": 108,
+    "imageReferenceCount": 120
   },
   "articles": [
     {
@@ -123,13 +123,10 @@
       "sitePath": "01-V3计划-OpenCode配置.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "V3 如何配置 OpenCode - Feishu Docs.md",
-      "bytes": 11115,
-      "sha256": "ae462d34e2e0bc549601990b1ee66a72b363a339d9128158dc669e8c86b69955",
+      "bytes": 6215,
+      "sha256": "eab7b03eed7f334e358030b795480b8d77b4ce61001c55745985236af044eb09",
       "backupPath": "articles/01-V3计划-OpenCode配置.md",
-      "imageReferences": [
-        "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
-        "images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png"
-      ]
+      "imageReferences": []
     },
     {
       "sitePath": "01-二合一计划-ClaudeCode安装配置.md",
@@ -820,26 +817,6 @@
       "referenceCount": 1,
       "referencedBy": [
         "01-V3计划-Codex安装配置.md"
-      ]
-    },
-    {
-      "sitePath": "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
-      "bytes": 16897,
-      "sha256": "f9efdd9979736c507ba9986e3b9d2c483cc6d4090840311219b53efb281b81fd",
-      "backupPath": "images/V3 如何配置 OpenCode-切换模型使用斜杠model命令.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-V3计划-OpenCode配置.md"
-      ]
-    },
-    {
-      "sitePath": "images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png",
-      "bytes": 12151,
-      "sha256": "e7455b388fd700f3f3d87806783d1ff9af0edf7a536a5a12ec7da3f5b7d4e50b",
-      "backupPath": "images/V3 如何配置 OpenCode-这是命令执行后的选模型界面.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-V3计划-OpenCode配置.md"
       ]
     },
     {
