@@ -19,7 +19,7 @@
 |---|---|
 | V3（`sk-` Key） | [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md) |
 | 二合一（`cr-` Key） | [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md) |
-| 想图形化一键切换 Key | [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md) |
+| Claude 桌面版（CC Switch 配置） | [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md) |
 
 ### Codex
 
