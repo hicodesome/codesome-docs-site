@@ -12,7 +12,17 @@ CC Switch 适合在有桌面的 macOS、Windows 或 Linux 电脑上配置 Hermes
 
 开始前请准备：
 
-- 已安装 Hermes；安装命令见下方[安装 Hermes](#一安装-hermes)。
+- 已安装 Hermes。macOS、Linux 或 WSL 运行：
+
+  ```bash
+  curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+  ```
+
+  Windows 原生环境在 PowerShell 中运行：
+
+  ```powershell
+  iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+  ```
 - 已安装最新版 CC Switch；如果还没有安装，请先看 [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md) 中的下载说明。
 - 已准备对应产品线的 API Key：V3 使用 `sk-...`，V5（二合一）使用 `cr-...`。
 
