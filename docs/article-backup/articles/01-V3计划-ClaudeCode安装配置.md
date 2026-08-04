@@ -262,7 +262,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要在 npm 安装命令前加 `sudo`。
+不要在 npm 安装命令前加 `sudo`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。
 
 验证：
 
@@ -300,7 +300,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要使用 `sudo npm install -g`。安装完成后验证：
+不要使用 `sudo npm install -g`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。安装完成后验证：
 
 ```bash
 claude --version
@@ -408,7 +408,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要在 npm 安装命令前加 `sudo`。
+不要在 npm 安装命令前加 `sudo`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。
 
 验证：
 
@@ -472,7 +472,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要使用 `sudo npm install -g`。
+不要使用 `sudo npm install -g`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。
 
 #### 3. 写入 V3 配置
 

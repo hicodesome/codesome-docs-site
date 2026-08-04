@@ -17,10 +17,10 @@ npm -v
 ```bash
 npm i -g openclaw
 openclaw --version
-
-
-
 ```
+
+如果安装时报权限错误（无法写入 `/usr/local`），或装完提示找不到命令，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」，不要用 `sudo`。
+
 
 ### 1.3 配置
 
@@ -160,10 +160,10 @@ npm -v
 ```powershell
 npm i -g openclaw
 openclaw --version
-
-
-
 ```
+
+如果安装时报权限错误（无法写入 `/usr/local`），或装完提示找不到命令，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」，不要用 `sudo`。
+
 
 ### 2.3 配置
 

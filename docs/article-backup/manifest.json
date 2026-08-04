@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "06007b89b90e99d60392b081b09145d88335b5c01da826ed4dc8af4e06117627"
+      "contentFingerprint": "f5dcfb1fe30dbaf9ffb2e5bf513f6a42b9448a75e2bfa489be003916ea2a7c77"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -42,8 +42,8 @@
       "sitePath": "01-OpenClaw配置教程.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "OpenClaw 最新配置教程 - Feishu Docs.md",
-      "bytes": 4172,
-      "sha256": "a25f11bfaf72316c688cde8b3f53846aedb5f37028b26988ccb04cc5b56023c8",
+      "bytes": 4612,
+      "sha256": "1390286c576ae8d913cf213ef903bb0e9afe4f2572aa038a0cc40b7dbae9a9e5",
       "backupPath": "articles/01-OpenClaw配置教程.md",
       "imageReferences": []
     },
@@ -60,8 +60,8 @@
       "sitePath": "01-V3计划-ClaudeCode安装配置.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "V3 Claude Code 安装与配置指南 - Feishu Docs.md",
-      "bytes": 18277,
-      "sha256": "f37f51f6a982d69d14496728a72e9137fc1f16c5265d2eeb450e55417c342982",
+      "bytes": 18949,
+      "sha256": "55c1da5484507d30a665d099b224b0757c61bb5409089deeff0875f6743e58c2",
       "backupPath": "articles/01-V3计划-ClaudeCode安装配置.md",
       "imageReferences": [
         "images/V3 Claude Code 安装与配置指南-ccswitch-macos-download.png",
@@ -303,8 +303,8 @@
       "sitePath": "02-使用问题速查.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜使用问题速查 - Feishu Docs.md",
-      "bytes": 17633,
-      "sha256": "d50137cf1f4dfe2942234be7f0a68a57d1096b360f124b7eac8c818e4df0d38e",
+      "bytes": 20355,
+      "sha256": "3cdbedbce1a976c2706938334ad246327ffe044c1b046a24ef19abafff2a5e8e",
       "backupPath": "articles/02-使用问题速查.md",
       "imageReferences": [
         "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
