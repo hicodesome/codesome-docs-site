@@ -98,22 +98,67 @@
       const fallback = document.getElementById('admin-fallback');
       const loginLink = document.getElementById('admin-token-login');
       const loginError = document.getElementById('admin-fallback-error');
+      const LOGIN_TIMEOUT_MS = 15_000;
+      const LOGIN_POLL_MS = 100;
+      const AUTH_WINDOW_NAME = 'Netlify Authorization';
+      let loginAttempt = null;
+
+      const findNativeLogin = () => Array.from(document.querySelectorAll('#nc-root button, #nc-root a'))
+        .find(control => /GitHub/i.test(control.textContent || ''));
+
+      const waitForNativeLogin = () => new Promise((resolve, reject) => {
+        const deadline = Date.now() + LOGIN_TIMEOUT_MS;
+        const check = () => {
+          const nativeLogin = findNativeLogin();
+          if (nativeLogin) return resolve(nativeLogin);
+          if (Date.now() >= deadline) return reject(new Error('editor-timeout'));
+          window.setTimeout(check, LOGIN_POLL_MS);
+        };
+        check();
+      });
+
+      const resetLogin = () => {
+        loginAttempt = null;
+        loginLink.disabled = false;
+        loginLink.removeAttribute('aria-busy');
+      };
+
       loginLink.addEventListener('click', () => {
+        if (loginAttempt) return;
         loginError.hidden = true;
-        const nativeLogin = Array.from(document.querySelectorAll('#nc-root button, #nc-root a'))
-          .find(control => /GitHub/i.test(control.textContent || ''));
-        if (!nativeLogin) {
-          loginError.textContent = '编辑器仍在加载，请稍后重试。';
+        const nativeLogin = findNativeLogin();
+        if (nativeLogin) {
+          fallback.hidden = true;
+          nativeLogin.click();
+          return;
+        }
+
+        // Keep the user gesture alive while Decap finishes loading. Decap opens
+        // its OAuth window with the same name, so it will reuse this window.
+        const authWindow = window.open('', AUTH_WINDOW_NAME, 'popup,width=960,height=600,resizable=yes,scrollbars=yes');
+        if (!authWindow) {
+          loginError.textContent = '登录窗口被浏览器拦截，请允许此站点打开弹窗后重试。';
           loginError.hidden = false;
           return;
         }
-        fallback.hidden = true;
-        nativeLogin.click();
+        authWindow.focus();
+        loginLink.disabled = true;
+        loginLink.setAttribute('aria-busy', 'true');
+        loginAttempt = waitForNativeLogin()
+          .then(readyLogin => {
+            fallback.hidden = true;
+            readyLogin.click();
+          })
+          .catch(() => {
+            if (!authWindow.closed) authWindow.close();
+            loginError.textContent = '编辑器仍在加载，请稍后重试。';
+            loginError.hidden = false;
+          })
+          .finally(resetLogin);
       });
       const ready = () => {
-        const root = document.getElementById('nc-root');
-        if (!root || /Loading configuration/i.test(root.textContent || '')) return false;
-        return Boolean(root.querySelector('button, a'));
+        if (!document.getElementById('nc-root')) return false;
+        return Boolean(findNativeLogin());
       };
       const hideWhenReady = () => {
         if (ready()) fallback.hidden = true;

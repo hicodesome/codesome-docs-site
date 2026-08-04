@@ -79,7 +79,12 @@ test('the fallback Token entry completes Decap authentication', { timeout: 30_00
     const context = await browser.newContext();
     const page = await context.newPage();
 
+    let releaseConfig;
+    const configAvailable = new Promise(resolve => {
+      releaseConfig = resolve;
+    });
     await page.route('**/admin/config.yml', async route => {
+      await configAvailable;
       const response = await route.fetch();
       const config = (await response.text()).replace(
         'base_url: https://doc.codesome.ai',
@@ -96,15 +101,14 @@ test('the fallback Token entry completes Decap authentication', { timeout: 30_00
 
     await page.goto(`${site.baseUrl}/admin/`, { waitUntil: 'domcontentloaded', timeout: TIMEOUT_MS });
     const nativeLogin = page.locator('#nc-root button, #nc-root a').filter({ hasText: /GitHub/i }).first();
-    await nativeLogin.waitFor({ state: 'visible', timeout: TIMEOUT_MS });
-
-    await page.evaluate(() => {
-      document.getElementById('admin-fallback').hidden = false;
-    });
+    assert.equal(await nativeLogin.count(), 0);
 
     const popupPromise = context.waitForEvent('page', { timeout: TIMEOUT_MS });
     await page.locator('#admin-token-login').click();
     const popup = await popupPromise;
+    releaseConfig();
+    await popup.waitForURL('**/admin-api/auth**', { timeout: TIMEOUT_MS });
+    await nativeLogin.waitFor({ state: 'visible', timeout: TIMEOUT_MS });
     await popup.locator('#editor-token').fill(EDITOR_TOKEN);
 
     const tokenResponsePromise = popup.waitForResponse(response => (
