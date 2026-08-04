@@ -12,7 +12,9 @@ CC Switch 适合在有桌面的 macOS、Windows 或 Linux 电脑上配置 Hermes
 
 开始前请准备：
 
-- 已安装 Hermes。macOS、Linux 或 WSL 运行：
+- 已安装 Hermes。
+
+  macOS、Linux 或 WSL 运行：
 
   ```bash
   curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash

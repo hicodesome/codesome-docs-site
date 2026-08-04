@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "4a1a111ccf16e75401be72b00567b1fefd6a179b5201c80d4a3dc20d6e143ca0"
+      "contentFingerprint": "494a99f022129ef30f84a5333b32c99e44a833acf1d5177b921ef6a79d90a3ab"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -170,8 +170,8 @@
       "sitePath": "01-二合一计划-Hermes配置-Mac手动版.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "【最新】Hermes 二合一配置教程 - Feishu Docs.md",
-      "bytes": 14053,
-      "sha256": "fa90ef292e41f6b21c99e37f7843e833330b2b6f193ef140a1cfdd91d9c235d7",
+      "bytes": 14057,
+      "sha256": "aa791084da2d5f9fea562ffa47cbeecf6a483806b96bd08c6c643944dbb2e3cb",
       "backupPath": "articles/01-二合一计划-Hermes配置-Mac手动版.md",
       "imageReferences": [
         "images/Hermes 客户端配置教程-CC Switch-V3 Claude.png",
