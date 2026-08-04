@@ -165,6 +165,10 @@
       padding-left: 26px;
       font-size: 13px;
     }
+    .article-toc a.level-4 {
+      padding-left: 38px;
+      font-size: 12px;
+    }
     .article-toc a:hover,
     .article-toc a:focus-visible,
     .article-toc a.is-active {
@@ -374,7 +378,7 @@
           return;
         }
 
-        var headings = Array.prototype.slice.call(markdown.querySelectorAll('h1, h2, h3'));
+        var headings = Array.prototype.slice.call(markdown.querySelectorAll('h1, h2, h3, h4'));
         var toc = document.querySelector('.article-toc');
         if (!toc) {
           toc = document.createElement('aside');

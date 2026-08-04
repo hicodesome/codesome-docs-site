@@ -23,6 +23,7 @@
 - 新增或改名文章后运行 `npm run baseline:refresh`，它会同时生成 `assets/article-titles.js`、Decap `admin/config.yml` 和 `docs/article-backup/manifest.json`；再运行 `npm run check`。生成文件过期、缺少唯一 H1、侧边栏漏入口或公开文章集合不一致都必须阻断发布。
 - CMS 变更审阅使用 `npm run review:cms`；只允许读取 `cms/*` 分支/PR、changed files 和 diff，运行文档、链接、图片和敏感信息检查并生成摘要，默认不合并 PR。
 - 修改浏览器 CSS/JS 时必须同步更新 `index.html` 对应资源的 `?v=` 缓存版本。
+- 右侧“本页目录”当前收录文章中的 `h1` 至 `h4`；长文章可以使用 `h4` 作为更深一层的定位标题，并保持 `h1 → h2 → h3 → h4` 的连续层级。若需要显示 `h5` 或更深层级，必须先同步扩展 `index.html` 的目录生成、样式和回归测试。
 - 模型、套餐、分组、倍率、价格、额度、版本和站点行为属于动态事实，发布前按当天后台、正式资料或用户明确口径复核。
 
 ## Git And Production Safety
