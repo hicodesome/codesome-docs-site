@@ -2,7 +2,7 @@
 
 这是一篇 Hermes 客户端配置文章，V3 和 V5（二合一）都在这里配置。先判断你手里的 Key 属于哪套产品，再只使用对应的一组地址、provider 和环境变量。
 
-## 配置方式
+## 一、选择配置方式
 
 Hermes 有两种配置路径。普通电脑优先使用 CC Switch 图形界面；没有图形桌面的服务器、远程 SSH 环境和只使用终端的场景，使用后面的“无头配置”。两种方式最终配置的是同一个 Hermes provider，不要同时把两套配置拼在一起。
 
@@ -152,7 +152,7 @@ Hermes 能正常返回内容，说明 CC Switch 配置已经生效。模型列�
 
 无头配置适用于服务器、远程 SSH、Linux 终端或没有图形桌面的环境。这个方式不打开 CC Switch，而是直接在终端编辑 Hermes 的 `config.yaml` 和 `.env` 文件；本文后面的配置示例都属于无头配置。
 
-## 先判断你使用的是 V3 还是 V5
+#### 1. 判断你使用的是 V3 还是 V5
 
 | 产品 | Key 特征 | 管理 / 使用入口 | Hermes 请求地址 |
 |---|---|---|---|
@@ -163,9 +163,9 @@ V3 的 API Key 需要在 V3 后台创建，并在后台选择对应分组。V5 �
 
 > **不要混用：** V3 的 `sk-...` Key 不能配 V5 地址；V5 的 `cr-...` Key 不能配 V3 地址。虽然 V3 Codex 和 V5 Codex 都使用 `OPENAI_API_KEY` 这个变量名，但地址、provider 和 Key 前缀不同。
 
-## 一、安装 Hermes
+#### 2. 安装 Hermes
 
-### macOS、Linux 或 WSL
+##### macOS、Linux 或 WSL
 
 运行官方安装命令：
 
@@ -191,7 +191,7 @@ source ~/.bashrc
 hermes version
 ```
 
-### Windows 原生环境
+##### Windows 原生环境
 
 请使用 Hermes 官方 PowerShell 安装命令：
 
@@ -199,7 +199,7 @@ hermes version
 iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 ```
 
-## 二、无头配置：打开 Hermes 配置文件
+#### 3. 打开 Hermes 配置文件
 
 如果你使用的是服务器、远程 SSH 或没有图形桌面的终端环境，这一节就是你的配置路径。直接编辑 `config.yaml` 的方式属于无头配置，不需要打开 CC Switch。
 
@@ -212,9 +212,9 @@ nano ~/.hermes/config.yaml
 
 > Hermes 官方当前推荐使用 `providers:` 命名 provider 配置。一个 provider 可以在 `models:` 下同时登记多个模型 ID；本文按这个新格式写，不使用旧的 `custom_providers:` 列表格式。
 
-## 三、V3 配置（`sk-...` Key）
+#### 4. V3 配置（`sk-...` Key）
 
-### V3 + GPT / Codex
+##### V3 + GPT / Codex
 
 适用于 V3 的 GPT 月卡、按量或 Codex 分组。GPT provider 同时登记三个 GPT-5.6 模型 ID，但默认使用 Sol：
 
@@ -259,7 +259,7 @@ nano ~/.hermes/.env
 OPENAI_API_KEY=sk-替换成你的V3-Key
 ```
 
-### V3 + Claude
+##### V3 + Claude
 
 适用于 V3 的 Claude 月卡或按量分组。将下面内容写入 `~/.hermes/config.yaml`：
 
@@ -296,11 +296,11 @@ CODESOME_CLAUDE_API_KEY=sk-替换成你的V3-Key
 
 这里的 `CODESOME_CLAUDE_API_KEY` 只是 Hermes `key_env` 指定的变量名，不是新的 Key 类型；值仍然必须是 V3 的 `sk-...` Key。
 
-## 四、V5（二合一）配置（`cr-...` Key）
+#### 5. V5（二合一）配置（`cr-...` Key）
 
 V5 没有 V3 的分组选择，Claude 和 GPT 使用同一个二合一 `cr-...` Key，但请求地址不同。
 
-### V5 + GPT / Codex
+##### V5 + GPT / Codex
 
 GPT provider 同样登记三个 GPT-5.6 模型 ID，默认使用 Sol：
 
@@ -341,7 +341,7 @@ V5 Codex 的 Key 写入 `~/.hermes/.env`：
 OPENAI_API_KEY=cr-替换成你的二合一-Key
 ```
 
-### V5 + Claude
+##### V5 + Claude
 
 将下面内容写入 `~/.hermes/config.yaml`：
 
@@ -376,7 +376,7 @@ V5 Claude 的 Key 写入 `~/.hermes/.env`：
 ANTHROPIC_API_KEY=cr-替换成你的二合一-Key
 ```
 
-## 五、保存配置
+#### 6. 保存配置
 
 在 `nano` 中：
 
@@ -386,7 +386,7 @@ ANTHROPIC_API_KEY=cr-替换成你的二合一-Key
 
 macOS Terminal 或 iTerm2 粘贴文本使用 `Command + V`。`Control + V` 不是 macOS 终端的普通粘贴快捷键。
 
-## 六、验证 Hermes 模型连接
+#### 7. 验证 Hermes 模型连接
 
 先验证模型路径，再配置 Telegram、飞书或其他 gateway：
 
@@ -421,7 +421,7 @@ hermes gateway setup
 - V5 Claude 是否使用 `ANTHROPIC_API_KEY`。
 - `provider`、`api`、`transport` 是否来自同一套 V3 或 V5 配置。
 
-## 七、常用命令
+#### 8. 常用命令
 
 启动 Hermes：
 
@@ -447,7 +447,7 @@ hermes -c
 /new
 ```
 
-## 八、上下文参数说明
+#### 9. 上下文参数说明
 
 本文配置的是 Hermes 通过 API provider 访问 Codesome 的方式：
 
@@ -456,9 +456,9 @@ hermes -c
 - 这两个数值属于 Hermes 的 API 配置，不等于官方 Codex 客户端的 `272000`；不要把不同客户端的配置互相复制。
 - 如果后台或具体套餐给出了新的模型上下文限制，以当天 Codesome 后台和正式口径为准，不要自行把 V3 和 V5 的配置合并。
 
-## 九、常见错误
+#### 10. 常见错误
 
-### 401 或 API Key 无效
+##### 401 或 API Key 无效
 
 先看 Key 前缀和地址是否成套：
 
@@ -469,15 +469,15 @@ hermes -c
 | V5 Codex | `cr-...` | `https://v5.codesome.cn/openai` |
 | V5 Claude | `cr-...` | `https://v5.codesome.cn/api` |
 
-### 连接超时
+##### 连接超时
 
 先完全关闭 VPN，然后再重试 Hermes。不要用 V5 地址测试 V3 Key，也不要用 V3 地址测试 V5 Key。
 
-### 模型找不到
+##### 模型找不到
 
 确认 `model.default` 和 `providers.<name>.models` 中的模型名称一致。GPT 默认使用 `gpt-5.6-sol`，同一 provider 同时登记 `gpt-5.6-luna`、`gpt-5.6-terra` 和 `gpt-5.6-sol`。
 
-## 官方资料
+## 参考资料
 
 - Hermes 官方配置文档：https://hermes-agent.nousresearch.com/docs/user-guide/configuration
 - Hermes 官方 provider 文档：https://hermes-agent.nousresearch.com/docs/integrations/providers
