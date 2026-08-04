@@ -19,7 +19,6 @@
   - [codesome｜使用问题速查](02-使用问题速查.md)
   - [如何查询我的余额和用量（网页与 API）](02-V3-V5余额额度用量查询.md)
   - [【最新】Hermes 二合一配置教程](01-二合一计划-Hermes配置-Mac手动版.md)
-  - [【最新】hermes配置教程](01-二合一计划-Hermes配置-AI自动版.md)
   - [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md)
   - [二合一 Codex 安装与配置指南](01-二合一计划-Codex安装配置.md)
   - [二合一 OpenCode 配置指南](01-二合一计划-OpenCode配置.md)

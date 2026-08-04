@@ -134,19 +134,6 @@ collections:
               - image
               - code-block
       - name: "article-10"
-        label: "【最新】hermes配置教程"
-        file: "01-二合一计划-Hermes配置-AI自动版.md"
-        fields:
-          - label: 正文
-            name: body
-            widget: richtext
-            modes:
-              - rich_text
-              - raw
-            editor_components:
-              - image
-              - code-block
-      - name: "article-11"
         label: "【最新】Hermes 二合一配置教程"
         file: "01-二合一计划-Hermes配置-Mac手动版.md"
         fields:
@@ -159,7 +146,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-12"
+      - name: "article-11"
         label: "二合一 OpenCode 配置指南"
         file: "01-二合一计划-OpenCode配置.md"
         fields:
@@ -172,7 +159,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-13"
+      - name: "article-12"
         label: "如何创建 API 以及选择对应的分组"
         file: "01-如何创建API并选择分组.md"
         fields:
@@ -185,7 +172,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-14"
+      - name: "article-13"
         label: "官方地址是多少"
         file: "01-官方地址.md"
         fields:
@@ -198,7 +185,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-15"
+      - name: "article-14"
         label: "牛马 AI（NewMax）配置教程"
         file: "01-牛马AI配置教程.md"
         fields:
@@ -211,7 +198,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-16"
+      - name: "article-15"
         label: "第三方客户端接入 Codesome 配置指南"
         file: "01-第三方客户端接入配置.md"
         fields:
@@ -224,7 +211,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-17"
+      - name: "article-16"
         label: "Claude Code 上下文自动压缩配置"
         file: "02-ClaudeCode上下文压缩配置.md"
         fields:
@@ -237,7 +224,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-18"
+      - name: "article-17"
         label: "Codex 桌面版持续 Reconnecting + 502 报错排查"
         file: "02-Codex桌面版断连和502排查.md"
         fields:
@@ -250,7 +237,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-19"
+      - name: "article-18"
         label: "如何查询我的余额和用量（网页与 API）"
         file: "02-V3-V5余额额度用量查询.md"
         fields:
@@ -263,7 +250,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-20"
+      - name: "article-19"
         label: "codesome｜使用问题速查"
         file: "02-使用问题速查.md"
         fields:
@@ -276,7 +263,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-21"
+      - name: "article-20"
         label: "分组是什么、怎么选、怎么切换？"
         file: "02-分组是什么怎么选怎么切换.md"
         fields:
@@ -289,7 +276,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-22"
+      - name: "article-21"
         label: "关于 Codesome 平台 Claude Code 服务紧张及应对方案的公告"
         file: "02-平台服务紧张应对方案.md"
         fields:
@@ -302,7 +289,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-23"
+      - name: "article-22"
         label: "月卡、按量和二合一怎么选（购买前选购指南）"
         file: "02-月卡按量二合一怎么选.md"
         fields:
@@ -315,7 +302,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-24"
+      - name: "article-23"
         label: "codesome｜Agentic 入门宝典"
         file: "03-Agentic入门宝典.md"
         fields:
@@ -328,7 +315,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-25"
+      - name: "article-24"
         label: "从用 Agent 到造 Agent：Agentway 帮你完成一次真正的 Agent 工程师进化"
         file: "03-Agentway学习平台介绍.md"
         fields:
@@ -341,7 +328,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-26"
+      - name: "article-25"
         label: "GPT Image 2 终端生图备忘录"
         file: "03-GPTImage2终端生图备忘录.md"
         fields:
@@ -354,7 +341,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-27"
+      - name: "article-26"
         label: "这样做，可以省下大半 Token 账单：长上下文降费执行手册"
         file: "03-Token降费执行手册.md"
         fields:
@@ -367,7 +354,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-28"
+      - name: "article-27"
         label: "懒人党福音最简单：通过对话来管理你的 cc 中转站"
         file: "03-对话管理CC中转站.md"
         fields:
@@ -380,7 +367,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-29"
+      - name: "article-28"
         label: "No.1 牛马神器： 让 cc 帮你绘制你的牛马 PPT（宜：述职汇报、产品方案、市场洞察、需求调研等）"
         file: "03-牛马神器-CC绘制PPT.md"
         fields:
@@ -393,7 +380,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-30"
+      - name: "article-29"
         label: "codesome claude code小白课程录播"
         file: "04-小白课程录播合集.md"
         fields:
@@ -406,7 +393,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-31"
+      - name: "article-30"
         label: "AI 编程课红包福利"
         file: "05-AI编程课红包福利.md"
         fields:
@@ -419,7 +406,7 @@ collections:
             editor_components:
               - image
               - code-block
-      - name: "article-32"
+      - name: "article-31"
         label: "cc兑换码兑换指南"
         file: "05-兑换码兑换指南.md"
         fields:

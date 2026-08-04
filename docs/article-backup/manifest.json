@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "f5dcfb1fe30dbaf9ffb2e5bf513f6a42b9448a75e2bfa489be003916ea2a7c77"
+      "contentFingerprint": "8d86d70d0a71527d973bff1dd519bf4275e65eeffbd21bf5d15674fb176d28af"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -16,9 +16,9 @@
   },
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
-    "articleCount": 32,
-    "uniqueImageCount": 106,
-    "imageReferenceCount": 118
+    "articleCount": 31,
+    "uniqueImageCount": 102,
+    "imageReferenceCount": 114
   },
   "articles": [
     {
@@ -164,20 +164,6 @@
         "images/二合一 Codex 安装与配置指南-codex_desktop.png",
         "images/二合一 Codex 安装与配置指南-image.png",
         "images/二合一 Codex 安装与配置指南-image.png"
-      ]
-    },
-    {
-      "sitePath": "01-二合一计划-Hermes配置-AI自动版.md",
-      "kind": "cdc-provenance",
-      "cdcSourcePath": "【最新】hermes配置教程 - Feishu Docs.md",
-      "bytes": 13103,
-      "sha256": "4f52628e5a4f731b07839a959d4cadbfd8142003fd001159a0507edb0e887672",
-      "backupPath": "articles/01-二合一计划-Hermes配置-AI自动版.md",
-      "imageReferences": [
-        "images/【最新】hermes配置教程-image-1.png",
-        "images/【最新】hermes配置教程-image-2.png",
-        "images/【最新】hermes配置教程-image-3.png",
-        "images/【最新】hermes配置教程-image.png"
       ]
     },
     {
@@ -348,8 +334,8 @@
       "sitePath": "03-Agentic入门宝典.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 6172,
-      "sha256": "da3d0d16e3f205fe21b13c4734c8803357367dd2fa1d06c034dbadfbea14177d",
+      "bytes": 6081,
+      "sha256": "95f0888fe0195c1867e170a09d5521ed30f1dddee03e856ef61f622de91e855c",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"
@@ -935,46 +921,6 @@
       "referenceCount": 1,
       "referencedBy": [
         "02-使用问题速查.md"
-      ]
-    },
-    {
-      "sitePath": "images/【最新】hermes配置教程-image-1.png",
-      "bytes": 46010,
-      "sha256": "b5eb5d9fee1d50756c99799d9db551ef5e63d8e3b9ff314d8fab47d9c5130d3d",
-      "backupPath": "images/【最新】hermes配置教程-image-1.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-二合一计划-Hermes配置-AI自动版.md"
-      ]
-    },
-    {
-      "sitePath": "images/【最新】hermes配置教程-image-2.png",
-      "bytes": 54416,
-      "sha256": "8e512b83689e6d45d090a37c0dcee0dd72a35091c0a082de0a5f0fe52b9f9e5a",
-      "backupPath": "images/【最新】hermes配置教程-image-2.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-二合一计划-Hermes配置-AI自动版.md"
-      ]
-    },
-    {
-      "sitePath": "images/【最新】hermes配置教程-image-3.png",
-      "bytes": 258369,
-      "sha256": "80dbefbe08cb209350bc3e264fac845512222f449c68e25c94112f5bf6773c55",
-      "backupPath": "images/【最新】hermes配置教程-image-3.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-二合一计划-Hermes配置-AI自动版.md"
-      ]
-    },
-    {
-      "sitePath": "images/【最新】hermes配置教程-image.png",
-      "bytes": 57443,
-      "sha256": "ad0affa6eda03d8d270a09f410a8fd5a404631171a81fad16bdb5b4ad04734ca",
-      "backupPath": "images/【最新】hermes配置教程-image.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "01-二合一计划-Hermes配置-AI自动版.md"
       ]
     },
     {
