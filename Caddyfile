@@ -6,6 +6,11 @@
 doc.codesome.ai {
 	encode gzip zstd
 
+	@cs_workbench_auth path /cs-workbench /cs-workbench/*
+	basicauth @cs_workbench_auth {
+		boss $2a$14$YEPJxz3EE6dNf/cf7x6v1OlliBXdr0v0R/Qudb5IhW7vSoHiOgoaW
+	}
+
 	@cs_workbench_root path /cs-workbench
 	redir @cs_workbench_root /cs-workbench/ 308
 
