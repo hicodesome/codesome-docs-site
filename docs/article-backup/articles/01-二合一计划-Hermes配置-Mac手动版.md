@@ -2,6 +2,143 @@
 
 这是一篇 Hermes 客户端配置文章，V3 和 V5（二合一）都在这里配置。先判断你手里的 Key 属于哪套产品，再只使用对应的一组地址、provider 和环境变量。
 
+## 配置方式
+
+Hermes 有两种配置路径。普通电脑优先使用 CC Switch 图形界面；没有图形桌面的服务器、远程 SSH 环境和只使用终端的场景，使用后面的“无头配置”。两种方式最终配置的是同一个 Hermes provider，不要同时把两套配置拼在一起。
+
+### 方式 A：CC Switch 图形界面（推荐）
+
+CC Switch 适合在有桌面的 macOS、Windows 或 Linux 电脑上配置 Hermes。它把供应商标识、供应商名称、API 模式、API 端点、API Key 和模型列表集中在一个页面中，不需要手动编辑 `config.yaml`。
+
+开始前请准备：
+
+- 已安装 Hermes；安装命令见下方[安装 Hermes](#一安装-hermes)。
+- 已安装最新版 CC Switch；如果还没有安装，请先看 [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md) 中的下载说明。
+- 已准备对应产品线的 API Key：V3 使用 `sk-...`，V5（二合一）使用 `cr-...`。
+
+#### 1. 打开 Hermes 配置页面
+
+打开 CC Switch，在应用列表中选择 Hermes 配置页面：
+
+![CC Switch Hermes 配置页面](<images/Hermes 客户端配置教程-CC Switch-首页.png>)
+
+#### 2. 新建自定义配置
+
+点击右上角的加号，选择自定义配置：
+
+![CC Switch 新建 Hermes 自定义配置](<images/Hermes 客户端配置教程-CC Switch-新建自定义配置.png>)
+
+新建配置时，至少需要填写或选择这五项：
+
+1. 供应商标识
+2. 供应商名称
+3. API 模式
+4. API 端点
+5. API Key
+
+供应商标识和供应商名称可以自定义。为了便于以后区分，下面沿用截图中的建议命名。API 模式不能随意选择：Claude 使用 `Anthropic Messages`，GPT / Codex 使用 `OpenAI Responses`。
+
+#### 3. 四套配置直接对照填写
+
+| 产品路径 | 供应商标识 / 名称（建议） | API 模式 | API 端点 | API Key |
+|---|---|---|---|---|
+| V3 Claude | `codesome` | `Anthropic Messages` | `https://cc.codesome.ai` | `sk-...` |
+| V3 Codex | `codesome-codex` | `OpenAI Responses` | `https://cc.codesome.ai/v1` | `sk-...` |
+| V5 Claude | `v5claude` | `Anthropic Messages` | `https://v5.codesome.cn/api` | `cr-...` |
+| V5 Codex | `v5codex` | `OpenAI Responses` | `https://v5.codesome.cn/openai` | `cr-...` |
+
+> V3 的 `sk-...` Key 只能配 `cc.codesome.ai` 地址；V5 的 `cr-...` Key 只能配 `v5.codesome.cn` 地址。不要交叉使用。
+
+#### 4. V3 Claude
+
+V3 Claude 使用 `Anthropic Messages`，API 端点填写 `https://cc.codesome.ai`，Key 使用 V3 的 `sk-...`：
+
+![CC Switch V3 Claude 配置](<images/Hermes 客户端配置教程-CC Switch-V3 Claude.png>)
+
+模型列表可以填写：
+
+```text
+claude-sonnet-5
+claude-opus-5
+claude-fable-5
+```
+
+填入模型列表后，Hermes 的模型选择中才会显示这些模型：
+
+![CC Switch V3 Claude 模型列表](<images/Hermes 客户端配置教程-CC Switch-V3 Claude模型.png>)
+
+如果后台当前没有开放某个模型，不要只因为模型出现在列表中就继续使用；以当天 Codesome 后台可用模型为准。
+
+#### 5. V3 Codex
+
+V3 Codex 使用 `OpenAI Responses`，API 端点填写 `https://cc.codesome.ai/v1`，Key 仍然是 V3 的 `sk-...`：
+
+![CC Switch V3 Codex 配置](<images/Hermes 客户端配置教程-CC Switch-V3 Codex.png>)
+
+模型列表填写以下三个 ID，默认模型使用 `gpt-5.6-sol`：
+
+```text
+gpt-5.6-sol
+gpt-5.6-luna
+gpt-5.6-terra
+```
+
+![CC Switch V3 Codex 模型列表](<images/Hermes 客户端配置教程-CC Switch-V3 Codex模型.png>)
+
+#### 6. V5（二合一）Claude
+
+V5 Claude 使用 `Anthropic Messages`，API 端点填写 `https://v5.codesome.cn/api`，Key 使用 V5 的 `cr-...`：
+
+![CC Switch V5 Claude 配置](<images/Hermes 客户端配置教程-CC Switch-V5 Claude.png>)
+
+模型列表可以填写：
+
+```text
+claude-sonnet-5
+claude-opus-5
+claude-fable-5
+```
+
+![CC Switch V5 Claude 模型列表](<images/Hermes 客户端配置教程-CC Switch-V5 Claude模型.png>)
+
+#### 7. V5（二合一）Codex
+
+V5 Codex 使用 `OpenAI Responses`，API 端点填写 `https://v5.codesome.cn/openai`，Key 使用 V5 的 `cr-...`：
+
+![CC Switch V5 Codex 配置](<images/Hermes 客户端配置教程-CC Switch-V5 Codex.png>)
+
+模型列表填写以下三个 ID，默认模型使用 `gpt-5.6-sol`：
+
+```text
+gpt-5.6-sol
+gpt-5.6-luna
+gpt-5.6-terra
+```
+
+![CC Switch V5 Codex 模型列表](<images/Hermes 客户端配置教程-CC Switch-V5 Codex模型.png>)
+
+#### 8. 保存并验证
+
+所有字段填好后，点击右下角蓝色的“添加”按钮。GPT 配置如果有 `model.default` 字段，填写 `gpt-5.6-sol`；Claude 配置建议填写 `claude-sonnet-5`。
+
+然后打开终端运行：
+
+```bash
+hermes
+```
+
+输入：
+
+```text
+hi
+```
+
+Hermes 能正常返回内容，说明 CC Switch 配置已经生效。模型列表能显示但测试失败时，先检查 API 模式、端点和 Key 前缀是否来自同一套 V3 或 V5 配置。
+
+### 方式 B：无头配置（服务器 / 终端）
+
+无头配置适用于服务器、远程 SSH、Linux 终端或没有图形桌面的环境。这个方式不打开 CC Switch，而是直接在终端编辑 Hermes 的 `config.yaml` 和 `.env` 文件；本文后面的配置示例都属于无头配置。
+
 ## 先判断你使用的是 V3 还是 V5
 
 | 产品 | Key 特征 | 管理 / 使用入口 | Hermes 请求地址 |
@@ -49,9 +186,9 @@ hermes version
 iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 ```
 
-## 二、打开 Hermes 配置文件
+## 二、无头配置：打开 Hermes 配置文件
 
-创建配置目录并打开主配置文件：
+如果你使用的是服务器、远程 SSH 或没有图形桌面的终端环境，这一节就是你的配置路径。直接编辑 `config.yaml` 的方式属于无头配置，不需要打开 CC Switch。
 
 ```bash
 mkdir -p ~/.hermes
@@ -128,6 +265,8 @@ providers:
       claude-sonnet-5:
         context_length: 1000000
       claude-opus-5:
+        context_length: 1000000
+      claude-fable-5:
         context_length: 1000000
 
 terminal:
@@ -208,6 +347,8 @@ providers:
       claude-sonnet-5:
         context_length: 1000000
       claude-opus-5:
+        context_length: 1000000
+      claude-fable-5:
         context_length: 1000000
 
 terminal:

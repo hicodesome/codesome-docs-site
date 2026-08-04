@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "ff91e500c807c2a3c6629b440ca2b8cfd934d8b75df5e8fd8c4cdbfe752d17ae"
+      "contentFingerprint": "33282d57e6373d069dd882245e5a3fb56cf32e5952d094d1b3a25bb52bb1c582"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -17,8 +17,8 @@
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
     "articleCount": 31,
-    "uniqueImageCount": 102,
-    "imageReferenceCount": 114
+    "uniqueImageCount": 112,
+    "imageReferenceCount": 124
   },
   "articles": [
     {
@@ -170,10 +170,21 @@
       "sitePath": "01-二合一计划-Hermes配置-Mac手动版.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "【最新】Hermes 二合一配置教程 - Feishu Docs.md",
-      "bytes": 8373,
-      "sha256": "316f4a14d7caa18a7a71d626cc1f74a9d07db34e50a63c1c679c4bd18835f79f",
+      "bytes": 13858,
+      "sha256": "4dade3c68c7a3448992ce82a2b1ac5aad2f81fdceae944eb6e0e182b99965738",
       "backupPath": "articles/01-二合一计划-Hermes配置-Mac手动版.md",
-      "imageReferences": []
+      "imageReferences": [
+        "images/Hermes 客户端配置教程-CC Switch-V3 Claude.png",
+        "images/Hermes 客户端配置教程-CC Switch-V3 Claude模型.png",
+        "images/Hermes 客户端配置教程-CC Switch-V3 Codex.png",
+        "images/Hermes 客户端配置教程-CC Switch-V3 Codex模型.png",
+        "images/Hermes 客户端配置教程-CC Switch-V5 Claude.png",
+        "images/Hermes 客户端配置教程-CC Switch-V5 Claude模型.png",
+        "images/Hermes 客户端配置教程-CC Switch-V5 Codex.png",
+        "images/Hermes 客户端配置教程-CC Switch-V5 Codex模型.png",
+        "images/Hermes 客户端配置教程-CC Switch-新建自定义配置.png",
+        "images/Hermes 客户端配置教程-CC Switch-首页.png"
+      ]
     },
     {
       "sitePath": "01-二合一计划-OpenCode配置.md",
@@ -521,6 +532,106 @@
       "referenceCount": 1,
       "referencedBy": [
         "02-Codex桌面版断连和502排查.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V3 Claude.png",
+      "bytes": 145835,
+      "sha256": "2c8cdaa11666c4aa74a7cadb294455f67533fdba305884a9711f06099e800f12",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V3 Claude.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V3 Claude模型.png",
+      "bytes": 104426,
+      "sha256": "5f72cf66e0c4041e4bfae56cfe5a9ca4b540c01a5d6588b223423d66bf1cfcb4",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V3 Claude模型.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V3 Codex.png",
+      "bytes": 131952,
+      "sha256": "2300df36c83077f69a1a4b72fe7bd85c07ef1154bb0616e5d3165dcb6afeba87",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V3 Codex.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V3 Codex模型.png",
+      "bytes": 121716,
+      "sha256": "14b4ee67d0079d9ed1b0805a4938840cea9a1648d40ab4744b4a3f076558e926",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V3 Codex模型.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V5 Claude.png",
+      "bytes": 137720,
+      "sha256": "48adcf9b0b15cf61ae355d5780f011f7decdae578669603672e12fe9ffa86a29",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V5 Claude.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V5 Claude模型.png",
+      "bytes": 124421,
+      "sha256": "918fdcae19d81bcd28331bbe59a75b56ed26c654194751f98729f42d58ae99eb",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V5 Claude模型.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V5 Codex.png",
+      "bytes": 132769,
+      "sha256": "e97c01f5f571dbebfc9c4add2e6fbde6452931411274f1c693067a2ce5a77c45",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V5 Codex.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-V5 Codex模型.png",
+      "bytes": 119984,
+      "sha256": "6cdfadd957cf00a12e46515073c78f169d8ba69563d93e59897d79f59835de3e",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-V5 Codex模型.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-新建自定义配置.png",
+      "bytes": 331488,
+      "sha256": "4ebb93ecb8db2efdfddff2d057b23dcdcd5cc054c89e19b7a5f3edc665da7066",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-新建自定义配置.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
+      ]
+    },
+    {
+      "sitePath": "images/Hermes 客户端配置教程-CC Switch-首页.png",
+      "bytes": 102247,
+      "sha256": "63dec768162b6f5941327a2d7fdd13a9906eae3ebffb7d9e0946d4b061199e32",
+      "backupPath": "images/Hermes 客户端配置教程-CC Switch-首页.png",
+      "referenceCount": 1,
+      "referencedBy": [
+        "01-二合一计划-Hermes配置-Mac手动版.md"
       ]
     },
     {
