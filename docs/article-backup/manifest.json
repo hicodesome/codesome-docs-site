@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "02d2befe1cb662e584fc3c51c8c7445624c487eeed8cad94812a1dad83ee2926"
+      "contentFingerprint": "06007b89b90e99d60392b081b09145d88335b5c01da826ed4dc8af4e06117627"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -17,8 +17,8 @@
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
     "articleCount": 32,
-    "uniqueImageCount": 107,
-    "imageReferenceCount": 119
+    "uniqueImageCount": 106,
+    "imageReferenceCount": 118
   },
   "articles": [
     {
@@ -303,8 +303,8 @@
       "sitePath": "02-使用问题速查.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜使用问题速查 - Feishu Docs.md",
-      "bytes": 19289,
-      "sha256": "4b047c99937c15a7968b231ae258851dd489d7ef0a0a073818132d23aa063955",
+      "bytes": 17633,
+      "sha256": "d50137cf1f4dfe2942234be7f0a68a57d1096b360f124b7eac8c818e4df0d38e",
       "backupPath": "articles/02-使用问题速查.md",
       "imageReferences": [
         "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
@@ -312,7 +312,6 @@
         "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
         "images/codesome｜使用问题速查-econnreset-example.png",
         "images/codesome｜使用问题速查-skip-claude-login.jpg",
-        "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
         "images/codesome｜使用问题速查-重连-大部分情况是您开启了vpn.png"
       ]
     },
@@ -923,16 +922,6 @@
       "bytes": 125823,
       "sha256": "d9a7363cf5ca35983e5cc6abaad18ecf848e999bc5b10f0c945c673a961d110c",
       "backupPath": "images/codesome｜使用问题速查-skip-claude-login.jpg",
-      "referenceCount": 1,
-      "referencedBy": [
-        "02-使用问题速查.md"
-      ]
-    },
-    {
-      "sitePath": "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
-      "bytes": 58959,
-      "sha256": "79ece3485d4a9a92976079c5e7cd813f8813800f6c80fc7b4da42004c3289a3b",
-      "backupPath": "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
       "referenceCount": 1,
       "referencedBy": [
         "02-使用问题速查.md"
