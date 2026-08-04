@@ -134,7 +134,7 @@ collections:
               - image
               - code-block
       - name: "article-10"
-        label: "【最新】Hermes 二合一配置教程"
+        label: "【最新】Hermes 客户端配置教程（V3 / V5）"
         file: "01-二合一计划-Hermes配置-Mac手动版.md"
         fields:
           - label: 正文

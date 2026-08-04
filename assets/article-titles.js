@@ -11,7 +11,7 @@
   "01-V3计划-OpenCode配置.md": "V3 OpenCode 配置指南",
   "01-二合一计划-ClaudeCode安装配置.md": "二合一 Claude Code 安装与配置指南",
   "01-二合一计划-Codex安装配置.md": "二合一 Codex 安装与配置指南",
-  "01-二合一计划-Hermes配置-Mac手动版.md": "【最新】Hermes 二合一配置教程",
+  "01-二合一计划-Hermes配置-Mac手动版.md": "【最新】Hermes 客户端配置教程（V3 / V5）",
   "01-二合一计划-OpenCode配置.md": "二合一 OpenCode 配置指南",
   "01-如何创建API并选择分组.md": "如何创建 API 以及选择对应的分组",
   "01-官方地址.md": "官方地址是多少",
@@ -34,5 +34,5 @@
   "05-AI编程课红包福利.md": "AI 编程课红包福利",
   "05-兑换码兑换指南.md": "cc兑换码兑换指南"
 });
-  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-3f49e67e673939d8";
+  root.CODESOME_ARTICLE_TITLES_VERSION = "title-map-98f71c8a90f7a323";
 }(window));

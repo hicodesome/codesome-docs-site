@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "8d86d70d0a71527d973bff1dd519bf4275e65eeffbd21bf5d15674fb176d28af"
+      "contentFingerprint": "8b2065f552e06cb35d5fb4abb5b05e9bcbbd516a98cc5b3995bb07806541e2c6"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -170,8 +170,8 @@
       "sitePath": "01-二合一计划-Hermes配置-Mac手动版.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "【最新】Hermes 二合一配置教程 - Feishu Docs.md",
-      "bytes": 5234,
-      "sha256": "96f34f53ba6a4a67290c67fa5e3d91df6d22683a9a76dba97cc0bd33b94ca80a",
+      "bytes": 7522,
+      "sha256": "d6979631fe6ecd04bb0bd7624da42f6038f510a8e47b1ced9eae945cab4ccb6b",
       "backupPath": "articles/01-二合一计划-Hermes配置-Mac手动版.md",
       "imageReferences": []
     },
@@ -334,8 +334,8 @@
       "sitePath": "03-Agentic入门宝典.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜Agentic 入门宝典 - Feishu Docs.md",
-      "bytes": 6081,
-      "sha256": "95f0888fe0195c1867e170a09d5521ed30f1dddee03e856ef61f622de91e855c",
+      "bytes": 6092,
+      "sha256": "8c06a994ac54ad19cc1ddf1b8b695ec391d5790ce0f9ed17f2227df9b7bb4764",
       "backupPath": "articles/03-Agentic入门宝典.md",
       "imageReferences": [
         "images/codesome｜Agentic 入门宝典-image-001.png"

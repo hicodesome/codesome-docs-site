@@ -39,7 +39,7 @@
 
 | 你的情况 | 教程 |
 |---|---|
-| Hermes（二合一） | [Hermes 二合一配置教程](01-二合一计划-Hermes配置-Mac手动版.md) |
+| Hermes（V3 / V5） | [Hermes 客户端配置教程（V3 / V5）](01-二合一计划-Hermes配置-Mac手动版.md) |
 | OpenClaw | [OpenClaw 最新配置教程](01-OpenClaw配置教程.md) |
 | PIAgent | [PIAgent 模型配置示例](01-PIAgent模型配置示例.md) |
 | 牛马 AI（NewMax） | [牛马 AI（NewMax）配置教程](01-牛马AI配置教程.md) |
