@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "8b2065f552e06cb35d5fb4abb5b05e9bcbbd516a98cc5b3995bb07806541e2c6"
+      "contentFingerprint": "dbdc872dc19b512f346baaf2fb8f67c15c9b6d5b482ef72c90f1e4e04890d108"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -170,8 +170,8 @@
       "sitePath": "01-二合一计划-Hermes配置-Mac手动版.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "【最新】Hermes 二合一配置教程 - Feishu Docs.md",
-      "bytes": 7522,
-      "sha256": "d6979631fe6ecd04bb0bd7624da42f6038f510a8e47b1ced9eae945cab4ccb6b",
+      "bytes": 8362,
+      "sha256": "dacbc34889399de37ec8dd88c7023eaba95b403714f653bf8701be16ace58d28",
       "backupPath": "articles/01-二合一计划-Hermes配置-Mac手动版.md",
       "imageReferences": []
     },

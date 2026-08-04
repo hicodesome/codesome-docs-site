@@ -56,25 +56,37 @@ nano ~/.hermes/config.yaml
 
 下面只选择 V3 或 V5 中的一组配置写入 `config.yaml`，不要把两套配置拼在一起。
 
+> Hermes 官方当前推荐使用 `providers:` 命名 provider 配置。一个 provider 可以在 `models:` 下同时登记多个模型 ID；本文按这个新格式写，不使用旧的 `custom_providers:` 列表格式。
+
 ## 三、V3 配置（`sk-...` Key）
 
 ### V3 + GPT / Codex
 
-适用于 V3 的 GPT 月卡、按量或 Codex 分组。将下面内容写入 `~/.hermes/config.yaml`：
+适用于 V3 的 GPT 月卡、按量或 Codex 分组。GPT provider 同时登记三个 GPT-5.6 模型 ID，但默认使用 Sol：
+
+- `gpt-5.6-luna`
+- `gpt-5.6-terra`
+- `gpt-5.6-sol`（默认）
+
+将下面内容写入 `~/.hermes/config.yaml`：
 
 ```yaml
 model:
-  default: "gpt-5.6-terra"
   provider: "codesome-v3-codex"
+  default: "gpt-5.6-sol"
   context_length: 1050000
 
-custom_providers:
-  - name: "codesome-v3-codex"
-    base_url: "https://cc.codesome.ai/v1"
+providers:
+  codesome-v3-codex:
+    api: "https://cc.codesome.ai/v1"
     key_env: "OPENAI_API_KEY"
-    api_mode: "codex_responses"
+    transport: "codex_responses"
     models:
+      gpt-5.6-luna:
+        context_length: 1050000
       gpt-5.6-terra:
+        context_length: 1050000
+      gpt-5.6-sol:
         context_length: 1050000
 
 terminal:
@@ -99,15 +111,15 @@ OPENAI_API_KEY=sk-替换成你的V3-Key
 
 ```yaml
 model:
-  default: "claude-sonnet-5"
   provider: "codesome-v3-claude"
+  default: "claude-sonnet-5"
   context_length: 1000000
 
-custom_providers:
-  - name: "codesome-v3-claude"
-    base_url: "https://cc.codesome.ai"
+providers:
+  codesome-v3-claude:
+    api: "https://cc.codesome.ai"
     key_env: "CODESOME_CLAUDE_API_KEY"
-    api_mode: "anthropic_messages"
+    transport: "anthropic_messages"
     models:
       claude-sonnet-5:
         context_length: 1000000
@@ -134,21 +146,31 @@ V5 没有 V3 的分组选择，Claude 和 GPT 使用同一个二合一 `cr-...` 
 
 ### V5 + GPT / Codex
 
+GPT provider 同样登记三个 GPT-5.6 模型 ID，默认使用 Sol：
+
+- `gpt-5.6-luna`
+- `gpt-5.6-terra`
+- `gpt-5.6-sol`（默认）
+
 将下面内容写入 `~/.hermes/config.yaml`：
 
 ```yaml
 model:
-  default: "gpt-5.6-terra"
   provider: "codesome-unified-codex"
+  default: "gpt-5.6-sol"
   context_length: 1050000
 
-custom_providers:
-  - name: "codesome-unified-codex"
-    base_url: "https://v5.codesome.cn/openai"
+providers:
+  codesome-unified-codex:
+    api: "https://v5.codesome.cn/openai"
     key_env: "OPENAI_API_KEY"
-    api_mode: "codex_responses"
+    transport: "codex_responses"
     models:
+      gpt-5.6-luna:
+        context_length: 1050000
       gpt-5.6-terra:
+        context_length: 1050000
+      gpt-5.6-sol:
         context_length: 1050000
 
 terminal:
@@ -169,15 +191,15 @@ OPENAI_API_KEY=cr-替换成你的二合一-Key
 
 ```yaml
 model:
-  default: "claude-sonnet-5"
   provider: "codesome-unified-claude"
+  default: "claude-sonnet-5"
   context_length: 1000000
 
-custom_providers:
-  - name: "codesome-unified-claude"
-    base_url: "https://v5.codesome.cn/api"
+providers:
+  codesome-unified-claude:
+    api: "https://v5.codesome.cn/api"
     key_env: "ANTHROPIC_API_KEY"
-    api_mode: "anthropic_messages"
+    transport: "anthropic_messages"
     models:
       claude-sonnet-5:
         context_length: 1000000
@@ -239,7 +261,7 @@ hermes gateway setup
 - Codex 是否使用 `OPENAI_API_KEY`。
 - V3 Claude 是否使用 `CODESOME_CLAUDE_API_KEY`。
 - V5 Claude 是否使用 `ANTHROPIC_API_KEY`。
-- `provider`、`base_url`、`api_mode` 是否来自同一套 V3 或 V5 配置。
+- `provider`、`api`、`transport` 是否来自同一套 V3 或 V5 配置。
 
 ## 七、常用命令
 
@@ -291,14 +313,16 @@ hermes -c
 
 ### 连接超时
 
-先确认网络可以访问当前产品对应的地址，再运行 `hermes doctor`。不要用 V5 地址测试 V3 Key，也不要用 V3 地址测试 V5 Key。
+先完全关闭 VPN，然后再重试 Hermes。不要用 V5 地址测试 V3 Key，也不要用 V3 地址测试 V5 Key。
 
 ### 模型找不到
 
-确认 `model.default` 和 `custom_providers.models` 中的模型名称一致。当前示例使用 `gpt-5.6-terra`、`claude-sonnet-5` 和 `claude-opus-5`。
+确认 `model.default` 和 `providers.<name>.models` 中的模型名称一致。GPT 默认使用 `gpt-5.6-sol`，同一 provider 同时登记 `gpt-5.6-luna`、`gpt-5.6-terra` 和 `gpt-5.6-sol`。
 
 ## 官方资料
 
+- Hermes 官方配置文档：https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+- Hermes 官方 provider 文档：https://hermes-agent.nousresearch.com/docs/integrations/providers
+- OpenAI GPT-5.6 模型文档：https://developers.openai.com/api/docs/guides/latest-model
 - Hermes 官方网站：https://hermes-agent.nousresearch.com/
-- Hermes 官方文档：https://hermes-agent.nousresearch.com/docs/
 - Hermes 官方仓库：https://github.com/NousResearch/hermes-agent
