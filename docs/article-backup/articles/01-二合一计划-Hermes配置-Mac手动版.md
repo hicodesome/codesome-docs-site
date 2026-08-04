@@ -79,7 +79,7 @@ claude-fable-5
 
 ![CC Switch V3 Claude 模型列表](<images/Hermes 客户端配置教程-CC Switch-V3 Claude模型.png>)
 
-如果后台当前没有开放某个模型，不要只因为模型出现在列表中就继续使用；以当天 Codesome 后台可用模型为准。
+> `claude-fable-5` 只有 V3 按量 Claude 的 `Max CC`（Max 2.2）和 `Max 3.5` 分组可调用。其他分组不要只因为模型出现在列表中就继续使用，以当天后台可用模型为准。
 
 #### 5. V3 Codex
 
@@ -103,13 +103,14 @@ V5 Claude 使用 `Anthropic Messages`，API 端点填写 `https://v5.codesome.cn
 
 ![CC Switch V5 Claude 配置](<images/Hermes 客户端配置教程-CC Switch-V5 Claude.png>)
 
-模型列表可以填写：
+模型列表填写以下两个 ID：
 
 ```text
 claude-sonnet-5
 claude-opus-5
-claude-fable-5
 ```
+
+> V5（二合一）没有分组选择，也没有 `claude-fable-5`。只有 V3 按量 Claude 的指定 Max 分组可以调用 Fable，不要把 Fable 加入 V5 Claude 配置。
 
 ![CC Switch V5 Claude 模型列表](<images/Hermes 客户端配置教程-CC Switch-V5 Claude模型.png>)
 
@@ -360,14 +361,14 @@ providers:
         context_length: 1000000
       claude-opus-5:
         context_length: 1000000
-      claude-fable-5:
-        context_length: 1000000
 
 terminal:
   backend: "local"
   cwd: "."
   timeout: 180
 ```
+
+V5 Claude 不提供 `claude-fable-5`。根据分组口径，只有 V3 按量 Claude 的指定 Max 分组可以调用 Fable。
 
 V5 Claude 的 Key 写入 `~/.hermes/.env`：
 
