@@ -15,7 +15,9 @@ V3 的 API Key 需要在 V3 后台创建，并在后台选择对应分组。V5 �
 
 ## 一、安装 Hermes
 
-macOS、Linux 或 WSL 运行官方安装命令：
+### macOS、Linux 或 WSL
+
+运行官方安装命令：
 
 ```bash
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
@@ -39,7 +41,9 @@ source ~/.bashrc
 hermes version
 ```
 
-Windows 原生环境请使用 Hermes 官方 PowerShell 安装命令：
+### Windows 原生环境
+
+请使用 Hermes 官方 PowerShell 安装命令：
 
 ```powershell
 iex (irm https://hermes-agent.nousresearch.com/install.ps1)
