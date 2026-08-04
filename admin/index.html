@@ -55,7 +55,8 @@
       margin: 0 0 20px;
     }
 
-    #admin-token-login {
+    #admin-token-login,
+    #admin-token-access {
       background: #168a58;
       border: 0;
       border-radius: 4px;
@@ -67,7 +68,19 @@
       padding: 11px 16px;
     }
 
-    #admin-token-login:focus-visible {
+    #admin-token-access {
+      position: fixed;
+      right: 16px;
+      top: 16px;
+      z-index: 1001;
+    }
+
+    #admin-token-access[hidden] {
+      display: none;
+    }
+
+    #admin-token-login:focus-visible,
+    #admin-token-access:focus-visible {
       outline: 3px solid rgba(22, 138, 88, .35);
       outline-offset: 2px;
     }
@@ -93,11 +106,14 @@
       <p id="admin-fallback-error" role="alert" hidden></p>
     </section>
   </main>
+  <button id="admin-token-access" type="button" hidden>输入编辑 Token</button>
   <script>
     (() => {
       const fallback = document.getElementById('admin-fallback');
       const loginLink = document.getElementById('admin-token-login');
+      const tokenAccess = document.getElementById('admin-token-access');
       const loginError = document.getElementById('admin-fallback-error');
+      const loginTriggers = [loginLink, tokenAccess];
       const LOGIN_TIMEOUT_MS = 15_000;
       const LOGIN_POLL_MS = 100;
       const AUTH_WINDOW_NAME = 'Netlify Authorization';
@@ -117,51 +133,61 @@
         check();
       });
 
-      const resetLogin = () => {
-        loginAttempt = null;
-        loginLink.disabled = false;
-        loginLink.removeAttribute('aria-busy');
+      const setLoginBusy = busy => loginTriggers.forEach(trigger => {
+        trigger.disabled = busy;
+        trigger.toggleAttribute('aria-busy', busy);
+      });
+
+      const showReadyUi = () => {
+        fallback.hidden = true;
+        tokenAccess.hidden = false;
       };
 
-      loginLink.addEventListener('click', () => {
+      const showLoadingUi = () => {
+        fallback.hidden = false;
+        tokenAccess.hidden = true;
+      };
+
+      const resetLogin = () => {
+        loginAttempt = null;
+        setLoginBusy(false);
+      };
+
+      const startTokenLogin = () => {
         if (loginAttempt) return;
         loginError.hidden = true;
-        const nativeLogin = findNativeLogin();
-        if (nativeLogin) {
-          fallback.hidden = true;
-          nativeLogin.click();
-          return;
-        }
-
-        // Keep the user gesture alive while Decap finishes loading. Decap opens
-        // its OAuth window with the same name, so it will reuse this window.
         const authWindow = window.open('', AUTH_WINDOW_NAME, 'popup,width=960,height=600,resizable=yes,scrollbars=yes');
         if (!authWindow) {
+          showLoadingUi();
           loginError.textContent = '登录窗口被浏览器拦截，请允许此站点打开弹窗后重试。';
           loginError.hidden = false;
           return;
         }
         authWindow.focus();
-        loginLink.disabled = true;
-        loginLink.setAttribute('aria-busy', 'true');
+        // Keep the user gesture alive, then let Decap open the local Token
+        // form through its existing postMessage handshake. No GitHub redirect
+        // is needed until the authenticated proxy request is made.
         loginAttempt = waitForNativeLogin()
           .then(readyLogin => {
-            fallback.hidden = true;
+            showReadyUi();
             readyLogin.click();
           })
           .catch(() => {
             if (!authWindow.closed) authWindow.close();
+            showLoadingUi();
             loginError.textContent = '编辑器仍在加载，请稍后重试。';
             loginError.hidden = false;
           })
           .finally(resetLogin);
-      });
+      };
+
+      loginTriggers.forEach(trigger => trigger.addEventListener('click', startTokenLogin));
       const ready = () => {
         if (!document.getElementById('nc-root')) return false;
         return Boolean(findNativeLogin());
       };
       const hideWhenReady = () => {
-        if (ready()) fallback.hidden = true;
+        if (ready()) showReadyUi();
       };
       const observer = new MutationObserver(hideWhenReady);
       observer.observe(document.body, { childList: true, subtree: true });

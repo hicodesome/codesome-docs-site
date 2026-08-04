@@ -109,6 +109,8 @@ test('the fallback Token entry completes Decap authentication', { timeout: 30_00
     releaseConfig();
     await popup.waitForURL('**/admin-api/auth**', { timeout: TIMEOUT_MS });
     await nativeLogin.waitFor({ state: 'visible', timeout: TIMEOUT_MS });
+    await page.locator('#admin-token-access').waitFor({ state: 'visible', timeout: TIMEOUT_MS });
+    assert.equal(await page.locator('#admin-fallback').isHidden(), true);
     await popup.locator('#editor-token').fill(EDITOR_TOKEN);
 
     const tokenResponsePromise = popup.waitForResponse(response => (
@@ -118,6 +120,54 @@ test('the fallback Token entry completes Decap authentication', { timeout: 30_00
       request.url().includes('/admin-api/github/')
     ), { timeout: TIMEOUT_MS });
 
+    await popup.locator('#submit').click();
+    const tokenResponse = await tokenResponsePromise;
+    assert.equal(tokenResponse.status(), 200);
+
+    const proxyRequest = await proxyRequestPromise;
+    assert.match(proxyRequest.headers().authorization || '', /^(?:Bearer|token)\s+\S+$/i);
+  } finally {
+    if (browser) await browser.close();
+    await stopSite(site.child);
+  }
+});
+
+test('the ready editor keeps a direct Token entry', { timeout: 30_000 }, async () => {
+  const site = await startSite();
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    await page.route('**/admin/config.yml', async route => {
+      const response = await route.fetch();
+      const config = (await response.text()).replace(
+        'base_url: https://doc.codesome.ai',
+        `base_url: ${site.baseUrl}`
+      );
+      await route.fulfill({ response, body: config });
+    });
+    await page.route('**/admin-api/github/**', route => route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      body: JSON.stringify({ message: 'local browser test fixture' })
+    }));
+
+    await page.goto(`${site.baseUrl}/admin/`, { waitUntil: 'networkidle', timeout: TIMEOUT_MS });
+    await page.locator('#admin-token-access').waitFor({ state: 'visible', timeout: TIMEOUT_MS });
+    const popupPromise = context.waitForEvent('page', { timeout: TIMEOUT_MS });
+    const proxyRequestPromise = page.waitForRequest(request => (
+      request.url().includes('/admin-api/github/')
+    ), { timeout: TIMEOUT_MS });
+    await page.locator('#admin-token-access').click();
+    const popup = await popupPromise;
+    await popup.waitForURL('**/admin-api/auth**', { timeout: TIMEOUT_MS });
+    await popup.locator('#editor-token').fill(EDITOR_TOKEN);
+
+    const tokenResponsePromise = popup.waitForResponse(response => (
+      response.url().endsWith('/admin-api/token') && response.request().method() === 'POST'
+    ), { timeout: TIMEOUT_MS });
     await popup.locator('#submit').click();
     const tokenResponse = await tokenResponsePromise;
     assert.equal(tokenResponse.status(), 200);
