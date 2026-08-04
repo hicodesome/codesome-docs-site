@@ -6,7 +6,10 @@
 doc.codesome.ai {
 	encode gzip zstd
 
-	@cs_workbench path /cs-workbench /cs-workbench/*
+	@cs_workbench_root path /cs-workbench
+	redir @cs_workbench_root /cs-workbench/ 308
+
+	@cs_workbench path /cs-workbench/*
 	handle @cs_workbench {
 		uri strip_prefix /cs-workbench
 		reverse_proxy 127.0.0.1:3010
