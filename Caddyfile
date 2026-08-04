@@ -5,7 +5,16 @@
 # 方式一：用域名访问（推荐，把 docs.example.com 换成你的域名，自动 HTTPS）
 doc.codesome.ai {
 	encode gzip zstd
-	reverse_proxy 127.0.0.1:3009
+
+	@cs_workbench path /cs-workbench /cs-workbench/*
+	handle @cs_workbench {
+		uri strip_prefix /cs-workbench
+		reverse_proxy 127.0.0.1:3010
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:3009
+	}
 }
 
 # 方式二：没有域名，用现有域名的子路径访问（放进那个域名的站点块里）
