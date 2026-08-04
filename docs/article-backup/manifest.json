@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "397bcec3d5eba5146303123502ad5a4848873370381145ac7ae5f03c31d7b9f4"
+      "contentFingerprint": "02d2befe1cb662e584fc3c51c8c7445624c487eeed8cad94812a1dad83ee2926"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -17,8 +17,8 @@
   "scope": {
     "articlePattern": "^\\d{2}-.+\\.md$ at the site repository root",
     "articleCount": 32,
-    "uniqueImageCount": 108,
-    "imageReferenceCount": 120
+    "uniqueImageCount": 107,
+    "imageReferenceCount": 119
   },
   "articles": [
     {
@@ -303,15 +303,14 @@
       "sitePath": "02-使用问题速查.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "codesome｜使用问题速查 - Feishu Docs.md",
-      "bytes": 21674,
-      "sha256": "cd75ee8639432b3cf3d335015fc94ca9ce6a70d26625d8225abdecf8c6898997",
+      "bytes": 19289,
+      "sha256": "4b047c99937c15a7968b231ae258851dd489d7ef0a0a073818132d23aa063955",
       "backupPath": "articles/02-使用问题速查.md",
       "imageReferences": [
         "images/codesome｜使用问题速查-anthropic-err-bad-request.png",
         "images/codesome｜使用问题速查-codesome-502.png",
         "images/codesome｜使用问题速查-codesome-503-model-name.jpeg",
         "images/codesome｜使用问题速查-econnreset-example.png",
-        "images/codesome｜使用问题速查-opus-46-model-mapping.png",
         "images/codesome｜使用问题速查-skip-claude-login.jpg",
         "images/codesome｜使用问题速查-windows-rollback-command-paths.png",
         "images/codesome｜使用问题速查-重连-大部分情况是您开启了vpn.png"
@@ -914,16 +913,6 @@
       "bytes": 8240,
       "sha256": "0c8a1f844c3125ecb304430b8548cafc131ae814a468e1d3d338155775d7ac8b",
       "backupPath": "images/codesome｜使用问题速查-econnreset-example.png",
-      "referenceCount": 1,
-      "referencedBy": [
-        "02-使用问题速查.md"
-      ]
-    },
-    {
-      "sitePath": "images/codesome｜使用问题速查-opus-46-model-mapping.png",
-      "bytes": 68408,
-      "sha256": "5c49a465656c6d6d6c049140062230d6f2671d7debf32188c34241f5c60c976d",
-      "backupPath": "images/codesome｜使用问题速查-opus-46-model-mapping.png",
       "referenceCount": 1,
       "referencedBy": [
         "02-使用问题速查.md"
