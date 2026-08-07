@@ -143,8 +143,11 @@
         reportDomViolation(title, 'extra DOM H1 headings violate the article contract', extraHeadings.length);
         return;
       }
-      if (matchingHeading !== article.firstElementChild) {
-        reportDomViolation(title, 'registered DOM H1 is not the first article element');
+      var contentChildren = Array.from(article.children).filter(function (node) {
+        return !node.classList.contains('article-copy-toolbar');
+      });
+      if (contentChildren[0] !== matchingHeading) {
+        reportDomViolation(title, 'registered DOM H1 is not the first article content element');
         return;
       }
       matchingHeading.classList.add('page-title');
