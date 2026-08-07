@@ -326,7 +326,12 @@ def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | No
               return {
                 groups: Array.from(grid.querySelectorAll('.home-tutorial-group')).map(group => ({
                   label: group.querySelector('h3')?.textContent?.trim() || '',
-                  links: Array.from(group.querySelectorAll('a')).map(link => link.getAttribute('href'))
+                  links: Array.from(group.querySelectorAll('a')).map(link => link.getAttribute('href')),
+                  rows: Array.from(group.querySelectorAll('.home-tutorial-group__row')).map(row => {
+                    const link = row.querySelector('a');
+                    const rect = link?.getBoundingClientRect();
+                    return { linkWidth: rect ? Math.round(rect.width) : 0 };
+                  })
                 }))
               };
             })(),

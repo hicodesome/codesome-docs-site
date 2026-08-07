@@ -27,10 +27,10 @@ function passingProbe() {
       consoleErrors: [],
       homeTutorialGrid: {
         groups: [
-          { label: 'Claude Code', links: ['#/v3-claude', '#/combined-claude', '#/ccswitch-claude'] },
-          { label: 'Codex', links: ['#/v3-codex', '#/combined-codex'] },
-          { label: 'OpenCode', links: ['#/v3-opencode', '#/combined-opencode'] },
-          { label: '其他 Agent', links: ['#/hermes', '#/openclaw', '#/piagent', '#/newmax', '#/v3-grok', '#/third-party-clients'] }
+          { label: 'Claude Code', links: ['#/v3-claude', '#/combined-claude', '#/ccswitch-claude'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }] },
+          { label: 'Codex', links: ['#/v3-codex', '#/combined-codex'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }] },
+          { label: 'OpenCode', links: ['#/v3-opencode', '#/combined-opencode'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }] },
+          { label: '其他 Agent', links: ['#/hermes', '#/openclaw', '#/piagent', '#/newmax', '#/v3-grok', '#/third-party-clients'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }] }
         ]
       }
     },
