@@ -7,9 +7,9 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { headings } from './markdown-headings.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
+import { HOME_ARTICLE, routeSlugFor } from './route-slugs.mjs';
 
 const ROOT = new URL('../', import.meta.url);
-const HOME_ARTICLE = '03-Agentic入门宝典.md';
 const TIMEOUT_MS = Number(process.env.DOC_SITE_BROWSER_TIMEOUT || 20000);
 
 function assertTimeout() {
@@ -75,6 +75,12 @@ async function stopSite(child) {
 
 function routeFor(article) {
   if (article === HOME_ARTICLE) return '#/';
+  const slug = routeSlugFor(article);
+  if (!slug) throw new Error(`missing short slug for article: ${article}`);
+  return `#/${slug}`;
+}
+
+function legacyRouteFor(article) {
   return `#/${encodeURIComponent(article.replace(/\.md$/i, ''))}`;
 }
 
@@ -86,8 +92,7 @@ function decodedPath(value) {
   }
 }
 
-async function waitForReady(page, article, title) {
-  const expectedRoute = article === HOME_ARTICLE ? '' : article.replace(/\.md$/i, '');
+async function waitForReady(page, article, title, expectedRoute) {
   await page.waitForFunction(({ articleName, expectedTitle, expectedRouteName }) => {
     const isVisible = node => {
       if (!node || node.getClientRects().length === 0) return false;
@@ -128,7 +133,8 @@ async function waitForReady(page, article, title) {
 }
 
 async function inspectPage(page, article, title, responses, consoleErrors, networkFailures, baseUrl) {
-  const state = await page.evaluate(({ articleName, expectedTitle, homeArticle }) => {
+  const slug = routeSlugFor(article);
+  const state = await page.evaluate(({ articleName, expectedTitle, homeArticle, articleSlug }) => {
     const isVisible = node => {
       if (!node || node.getClientRects().length === 0) return false;
       for (let current = node; current; current = current.parentElement) {
@@ -148,7 +154,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
       return link.textContent.trim() === expectedTitle && (
         articleName === homeArticle
           ? /^#\/?$/.test(href)
-          : href.endsWith(articleName) || href.endsWith(articleName.replace(/\.md$/i, ''))
+          : href.endsWith(articleSlug) || href.endsWith(articleName) || href.endsWith(articleName.replace(/\.md$/i, ''))
       );
     });
     return {
@@ -170,7 +176,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
         naturalWidth: image.naturalWidth
       }))
     };
-  }, { articleName: article, expectedTitle: title, homeArticle: HOME_ARTICLE });
+  }, { articleName: article, expectedTitle: title, homeArticle: HOME_ARTICLE, articleSlug: slug });
 
   const articleResponses = responses.filter(response => decodedPath(response.url()) === article);
   const statuses = articleResponses.map(response => response.status());
@@ -185,7 +191,7 @@ async function inspectPage(page, article, title, responses, consoleErrors, netwo
   const checks = {
     route: article === HOME_ARTICLE
       ? state.href.endsWith('/#/')
-      : decodeURIComponent(state.href).includes(article.replace(/\.md$/i, '')),
+      : decodeURIComponent(state.href).includes(routeSlugFor(article)),
     sidebar: Boolean(state.sidebarLink),
     markdown200: directResponse.status === 200 && observedStatuses.every(status => status === 200),
     markdownTitle: directH1s.length === 1 && directH1s[0].text === title,
@@ -261,7 +267,7 @@ async function main() {
             waitUntil: 'domcontentloaded',
             timeout: TIMEOUT_MS
           });
-          await waitForReady(page, entry.site, entry.title);
+          await waitForReady(page, entry.site, entry.title, entry.site === HOME_ARTICLE ? '' : routeSlugFor(entry.site));
           results.push({
             ...(await inspectPage(page, entry.site, entry.title, responses, consoleErrors, networkFailures, site.baseUrl)),
             viewport: viewport.name
@@ -289,11 +295,64 @@ async function main() {
       await page.close();
     }
 
+    // Legacy-route regression: every old Chinese filename route must still render
+    // the same article through the Docsify alias map.
+    const legacyPage = await context.newPage();
+    await legacyPage.setViewportSize({ width: 1280, height: 900 });
+    for (const entry of entries) {
+      if (entry.site === HOME_ARTICLE) continue;
+      const consoleErrors = [];
+      const onConsole = message => {
+        if (message.type() === 'error') consoleErrors.push(message.text());
+      };
+      legacyPage.on('console', onConsole);
+      try {
+        await legacyPage.goto(`${site.baseUrl}/${legacyRouteFor(entry.site)}`, {
+          waitUntil: 'domcontentloaded',
+          timeout: TIMEOUT_MS
+        });
+        await waitForReady(legacyPage, entry.site, entry.title, entry.site.replace(/\.md$/i, ''));
+        const state = await legacyPage.evaluate(({ articleName, expectedTitle }) => {
+          const h1s = Array.from(document.querySelectorAll('.markdown-section h1'));
+          const pipeline = window.CODESOME_TITLE_PIPELINE || {};
+          return {
+            h1: h1s.map(node => node.textContent.trim()),
+            h1Source: h1s[0]?.getAttribute('data-codesome-title-source') || '',
+            failures: pipeline.failures || []
+          };
+        }, { articleName: entry.site, expectedTitle: entry.title });
+        const pass = state.h1.length === 1 && state.h1[0] === entry.title &&
+          state.h1Source === 'manifest-injector' && state.failures.length === 0;
+        results.push({
+          article: entry.site,
+          title: entry.title,
+          viewport: 'legacy-desktop',
+          failures: pass ? [] : [JSON.stringify(state)],
+          checks: { legacyRoute: pass }
+        });
+        console.log(`${pass ? 'PASS' : 'FAIL'}: ${entry.site} [legacy route] (${entry.title})`);
+        if (!pass) console.log(`  ${formatFailure(results.at(-1))}`);
+      } catch (error) {
+        results.push({
+          article: entry.site,
+          title: entry.title,
+          viewport: 'legacy-desktop',
+          failures: [error.message],
+          checks: { pageReady: false }
+        });
+        console.log(`FAIL: ${entry.site} [legacy route] (${entry.title})`);
+        console.log(`  ${formatFailure(results.at(-1))}`);
+      } finally {
+        legacyPage.off('console', onConsole);
+      }
+    }
+    await legacyPage.close();
+
     const failed = results.filter(result => !Object.values(result.checks).every(Boolean));
     if (failed.length) {
-      throw new Error(`Rendered title browser check failed: ${failed.length}/${results.length} article-viewport checks\n${failed.map(formatFailure).join('\n')}`);
+      throw new Error(`Rendered title browser check failed: ${failed.length}/${results.length} checks\n${failed.map(formatFailure).join('\n')}`);
     }
-    console.log(`Rendered title browser check passed: ${results.length}/${articleTitleEntries.length * 2} desktop/mobile article checks through local Docsify`);
+    console.log(`Rendered title browser check passed: ${results.length} checks (${articleTitleEntries.length} slug routes x desktop/mobile + ${articleTitleEntries.length - 1} legacy routes) through local Docsify`);
   } finally {
     if (browser) await browser.close();
     await stopSite(site.child);

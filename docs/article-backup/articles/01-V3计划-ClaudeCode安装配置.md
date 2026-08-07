@@ -16,10 +16,10 @@
 
 | 你的情况                   | 应该看                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------- |
-| 要配置 V3 Codex           | [V3 Codex 安装与配置指南](01-V3计划-Codex安装配置.md)        |
-| 使用二合一月卡，key 是 `cr-...` | [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md) |
-| 要配置二合一 Codex           | [二合一 Codex 安装与配置指南](01-二合一计划-Codex安装配置.md)       |
-| 已经报错                   | [使用问题速查](02-使用问题速查.md)                  |
+| 要配置 V3 Codex           | [V3 Codex 安装与配置指南](v3-codex)        |
+| 使用二合一月卡，key 是 `cr-...` | [二合一 Claude Code 安装与配置指南](combined-claude) |
+| 要配置二合一 Codex           | [二合一 Codex 安装与配置指南](combined-codex)       |
+| 已经报错                   | [使用问题速查](usage-faq)                  |
 
 ## 配置前确认
 
@@ -262,7 +262,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要在 npm 安装命令前加 `sudo`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。
+不要在 npm 安装命令前加 `sudo`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](usage-faq)里的「npm 全局安装权限与路径修复」。
 
 验证：
 
@@ -300,7 +300,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要使用 `sudo npm install -g`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。安装完成后验证：
+不要使用 `sudo npm install -g`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](usage-faq)里的「npm 全局安装权限与路径修复」。安装完成后验证：
 
 ```bash
 claude --version
@@ -408,7 +408,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要在 npm 安装命令前加 `sudo`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。
+不要在 npm 安装命令前加 `sudo`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](usage-faq)里的「npm 全局安装权限与路径修复」。
 
 验证：
 
@@ -472,7 +472,7 @@ npm install -g @anthropic-ai/claude-code
 npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 ```
 
-不要使用 `sudo npm install -g`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](02-使用问题速查.md)里的「npm 全局安装权限与路径修复」。
+不要使用 `sudo npm install -g`。遇到权限或路径问题（无法写入 `/usr/local`）时，先看[使用问题速查](usage-faq)里的「npm 全局安装权限与路径修复」。
 
 #### 3. 写入 V3 配置
 
@@ -529,7 +529,7 @@ claude
 
 遇到报错，去看：
 
-[使用问题速查：报错、账单与配置排查](02-使用问题速查.md)
+[使用问题速查：报错、账单与配置排查](usage-faq)
 
 ## 在 Claude Code 里使用 gpt-5.6-terra
 

@@ -156,10 +156,11 @@ def console_errors(events):
     return [str(error) for error in errors if str(error).strip()]
 
 
-def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline: float, require_article: bool = False):
+def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline: float, require_article: bool = False, slug: str | None = None):
     article_json = json.dumps(article, ensure_ascii=False)
     title_json = json.dumps(title, ensure_ascii=False)
     article_base_json = json.dumps(article[:-3] if article.lower().endswith('.md') else article, ensure_ascii=False)
+    slug_json = json.dumps(slug or '', ensure_ascii=False)
     while time.monotonic() < deadline:
         state = evaluate(
             cdp,
@@ -167,6 +168,7 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
               const article = %s;
               const title = %s;
               const articleBase = %s;
+              const slug = %s;
               const isVisible = node => {
                 if (!node || node.getClientRects().length === 0) return false;
                 for (let current = node; current; current = current.parentElement) {
@@ -187,7 +189,7 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
                 sidebar: Boolean(document.querySelector('.sidebar-nav a')),
                 markdown: Boolean(section),
                 route: hash,
-                article: hash.includes(article) || hash.includes(articleBase),
+                article: hash.includes(article) || hash.includes(articleBase) || (slug && hash.includes(slug)),
                 h1: h1s[0]?.textContent?.trim() || '',
                 h1Count: h1s.length,
                 h1Visible: h1s.length === 1 && isVisible(h1s[0]),
@@ -200,7 +202,7 @@ def wait_for_page(cdp: CDP, session_id: str, article: str, title: str, deadline:
                   domFallbacks: pipeline.domFallbacks || 0
                 }
               };
-            })()""" % (article_json, title_json, article_base_json),
+            })()""" % (article_json, title_json, article_base_json, slug_json),
             session_id,
         ) or {}
         if state.get("ready") and state.get("sidebar") and state.get("markdown") and state.get("h1Visible"):
@@ -270,18 +272,20 @@ def prepare_and_wait_for_images(cdp: CDP, session_id: str, deadline: float):
     raise RuntimeError("timed out waiting for article images")
 
 
-def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | None = None):
+def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | None = None, slug: str | None = None):
     article_json = json.dumps(article, ensure_ascii=False)
     pipeline_article_json = json.dumps(pipeline_article or article, ensure_ascii=False)
+    slug_json = json.dumps(slug or '', ensure_ascii=False)
     return evaluate(
         cdp,
         """(() => {
           const article = %s;
           const pipelineArticle = %s;
+          const slug = %s;
           const links = Array.from(document.querySelectorAll('.sidebar-nav a'));
           const target = links.find(link => {
             const href = decodeURIComponent(link.getAttribute('href') || '');
-            return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
+            return href.endsWith(slug) || href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
           });
           const section = document.querySelector('.markdown-section');
           const h1s = Array.from(section?.querySelectorAll('h1') || []);
@@ -318,7 +322,7 @@ def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | No
             })),
             href: location.href
           };
-        })()""" % (article_json, pipeline_article_json),
+        })()""" % (article_json, pipeline_article_json, slug_json),
         session_id,
     ) or {}
 
@@ -335,9 +339,9 @@ def run_viewport(cdp: CDP, session_id: str, config, viewport):
     base_url = config["url"].rstrip("/")
     timeout_s = max(10, config["timeout_ms"] / 1000)
     cdp.call("Page.navigate", {"url": base_url + "/#/"}, session_id=session_id)
-    wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s)
+    wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, slug=config.get("slug"))
     home_events = cdp.drain_events()
-    home = snapshot(cdp, session_id, config["article"], "03-Agentic入门宝典.md")
+    home = snapshot(cdp, session_id, config["article"], "03-Agentic入门宝典.md", slug=config.get("slug"))
     home_events += cdp.drain_events()
     home["consoleErrors"] = console_errors(home_events)
     home["articleResource"] = resource_observation(home_events, "03-Agentic入门宝典.md")
@@ -348,25 +352,26 @@ def run_viewport(cdp: CDP, session_id: str, config, viewport):
         cdp,
         """(() => {
           const article = %s;
+          const slug = %s;
           const links = Array.from(document.querySelectorAll('.sidebar-nav a'));
           const target = links.find(link => {
             const href = decodeURIComponent(link.getAttribute('href') || '');
-            return href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
+            return href.endsWith(slug) || href.endsWith(article) || href.endsWith(article.replace(/\\.md$/, ''));
           });
           if (!target) return {clicked: false, href: location.href};
           target.click();
           return {clicked: true, href: target.href};
-        })()""" % json.dumps(config["article"], ensure_ascii=False),
+        })()""" % (json.dumps(config["article"], ensure_ascii=False), json.dumps(config.get("slug") or '', ensure_ascii=False)),
         session_id,
     ) or {"clicked": False, "href": ""}
     is_homepage = config["article"] == "03-Agentic入门宝典.md"
     if navigation.get("clicked"):
-        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
+        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True, config.get("slug"))
     elif not is_homepage:
-        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True)
+        wait_for_page(cdp, session_id, config["article"], config["title"], time.monotonic() + timeout_s, True, config.get("slug"))
     prepare_and_wait_for_images(cdp, session_id, time.monotonic() + timeout_s)
     article_events = cdp.drain_events()
-    article = snapshot(cdp, session_id, config["article"])
+    article = snapshot(cdp, session_id, config["article"], slug=config.get("slug"))
     article_events += cdp.drain_events()
     article["consoleErrors"] = console_errors(article_events)
     article["articleResource"] = resource_observation(home_events + article_events, config["article"])

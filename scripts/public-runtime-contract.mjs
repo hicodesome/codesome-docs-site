@@ -4,6 +4,7 @@ import { basename, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articleTitleEntries as defaultArticleTitleEntries } from './title-metadata.mjs';
 import { assertCanonicalArticleMarkdown } from './markdown-headings.mjs';
+import { HOME_ARTICLE, resolveRouteTarget } from './route-slugs.mjs';
 
 const MODULE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TITLE_ASSET_PREFIX =
@@ -13,8 +14,6 @@ const TITLE_ASSET_PREFIX =
   '  root.CODESOME_ARTICLE_TITLES = Object.freeze(';
 const TITLE_ASSET_VERSION_MARKER = ');\n  root.CODESOME_ARTICLE_TITLES_VERSION = ';
 const TITLE_ASSET_SUFFIX = ';\n}(window));\n';
-const HOME_ARTICLE = '03-Agentic入门宝典.md';
-
 export const REQUIRED_TITLE_PIPELINE_SCRIPTS = [
   'assets/page-title.js',
   'assets/vendor/docsify.min.js',
@@ -149,14 +148,14 @@ function assertSidebar(sidebar, entries) {
     .map(([, title, href]) => ({ title: title.trim(), href: href.trim() }));
   const articleLinks = links.filter(({ href }) => {
     const path = href.split(/[?#]/)[0];
-    return path === '/' || /^\d{2}-.*\.md$/i.test(basename(path));
+    return path === '/' || resolveRouteTarget(basename(path)) !== null;
   });
   const errors = [];
 
   for (const { site, title } of entries) {
     const matching = articleLinks.filter(({ href }) => {
       const path = href.split(/[?#]/)[0];
-      return site === HOME_ARTICLE ? path === '/' : basename(path) === site;
+      return site === HOME_ARTICLE ? path === '/' : resolveRouteTarget(basename(path)) === site;
     });
     if (matching.length !== 1) {
       errors.push(`${site}: sidebar must contain exactly one article link (found ${matching.length})`);

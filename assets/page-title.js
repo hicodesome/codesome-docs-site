@@ -7,20 +7,13 @@
     return !window.location.hash || window.location.hash === '#/';
   }
 
-  function articleFileFromRoute() {
-    var hash = String(window.location && window.location.hash || '');
-    var route = hash.replace(/^#\/?/, '').split(/[?#]/)[0];
-
-    if (!route) {
-      return window.$docsify && window.$docsify.homepage || '';
-    }
-
-    route = '/' + route;
+  function canonicalFileForRoute(route) {
+    var resolved = '/' + route;
     var aliases = window.$docsify && window.$docsify.alias || {};
     var previousRoute = '';
     var aliasKeys = Object.keys(aliases);
-    while (route && route !== previousRoute && aliasKeys.length) {
-      previousRoute = route;
+    while (resolved && resolved !== previousRoute && aliasKeys.length) {
+      previousRoute = resolved;
       for (var index = 0; index < aliasKeys.length; index += 1) {
         var aliasKey = aliasKeys[index];
         var aliasPattern;
@@ -29,18 +22,29 @@
         } catch (e) {
           continue;
         }
-        if (aliasPattern.test(route)) {
-          route = route.replace(aliasPattern, aliases[aliasKey]);
+        if (aliasPattern.test(resolved)) {
+          resolved = resolved.replace(aliasPattern, aliases[aliasKey]);
           break;
         }
       }
     }
 
-    route = route.replace(/^\/+/, '');
+    resolved = resolved.replace(/^\/+/, '');
     try {
-      route = decodeURIComponent(route);
+      resolved = decodeURIComponent(resolved);
     } catch (e) { /* Keep the encoded route when decoding fails. */ }
-    return /\.md$/i.test(route) ? route : route + '.md';
+    return /\.md$/i.test(resolved) ? resolved : resolved + '.md';
+  }
+
+  function articleFileFromRoute() {
+    var hash = String(window.location && window.location.hash || '');
+    var route = hash.replace(/^#\/?/, '').split(/[?#]/)[0];
+
+    if (!route) {
+      return window.$docsify && window.$docsify.homepage || '';
+    }
+
+    return canonicalFileForRoute(route);
   }
 
   function fileNameFromHref(href) {
@@ -50,10 +54,10 @@
       route = route.slice(hashIndex + 1);
     }
     route = route.split(/[?#]/)[0].replace(/^\/+/, '');
-    try {
-      route = decodeURIComponent(route);
-    } catch (e) { /* Keep the encoded route when decoding fails. */ }
-    return /\.md$/i.test(route) ? route : route + '.md';
+    if (!route) {
+      return '';
+    }
+    return canonicalFileForRoute(route);
   }
 
   function sidebarTitle() {
@@ -62,16 +66,20 @@
       return homeLink ? homeLink.textContent.trim() : homeTitle;
     }
 
-    var activeLink = document.querySelector('.sidebar-nav li.active > a');
-    if (activeLink) {
-      return activeLink.textContent.trim();
-    }
-
     var articleFile = articleFileFromRoute();
     var canonicalLink = Array.from(document.querySelectorAll('.sidebar-nav a')).find(function (link) {
-      return fileNameFromHref(link.getAttribute('href')) === articleFile;
+      var href = link.getAttribute('href') || '';
+      if (href.indexOf('?id=') !== -1) {
+        return false;
+      }
+      return fileNameFromHref(href) === articleFile;
     });
-    return canonicalLink ? canonicalLink.textContent.trim() : null;
+    if (canonicalLink) {
+      return canonicalLink.textContent.trim();
+    }
+
+    var activeLink = document.querySelector('.sidebar-nav li.active > a');
+    return activeLink ? activeLink.textContent.trim() : null;
   }
 
   function articleHeadings(article) {

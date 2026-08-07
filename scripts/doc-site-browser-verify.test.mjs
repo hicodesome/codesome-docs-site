@@ -26,7 +26,7 @@ function passingProbe() {
       },
       consoleErrors: []
     },
-    navigation: { clicked: true, href: `https://doc.codesome.ai/#/${encodeURIComponent(config.article.replace(/\.md$/, ''))}` },
+    navigation: { clicked: true, href: 'https://doc.codesome.ai/#/v3-grok' },
     article: {
       h1: config.title,
       h1Count: 1,

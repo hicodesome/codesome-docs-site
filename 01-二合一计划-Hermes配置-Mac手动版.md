@@ -25,7 +25,7 @@ CC Switch 适合在有桌面的 macOS、Windows 或 Linux 电脑上配置 Hermes
   ```powershell
   iex (irm https://hermes-agent.nousresearch.com/install.ps1)
   ```
-- 已安装最新版 CC Switch；如果还没有安装，请先看 [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md) 中的下载说明。
+- 已安装最新版 CC Switch；如果还没有安装，请先看 [CC Switch 配置 Claude 桌面端教程](ccswitch-claude) 中的下载说明。
 - 已准备对应产品线的 API Key：V3 使用 `sk-...`，V5（二合一）使用 `cr-...`。
 
 #### 1. 打开 Hermes 配置页面

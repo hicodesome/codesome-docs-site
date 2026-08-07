@@ -290,7 +290,8 @@ test('the direct server entrypoint refuses to start with a broken public article
       'cdc-manifest.mjs',
       'content-baseline.mjs',
       'public-articles.mjs',
-      'public-runtime-contract.mjs'
+      'public-runtime-contract.mjs',
+      'route-slugs.mjs'
     ]) {
       cpSync(join(sourceRoot, 'scripts', script), join(temporaryRoot, 'scripts', script));
     }

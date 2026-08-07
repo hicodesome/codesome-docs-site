@@ -12,9 +12,9 @@
 
 CC switch 只负责管理 Claude Code 配置，不负责安装 Claude Code CLI。如果还没有安装 CLI，请先按对应产品线教程中的 CLI 方法完成安装，再回到本节设置自动压缩。
 
-* [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md)
+* [V3 Claude Code 安装与配置指南](v3-claude)
 
-* [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md)
+* [二合一 Claude Code 安装与配置指南](combined-claude)
 
 如果您按照配置教程使用 ccswitch 配置 Claude Code：
 

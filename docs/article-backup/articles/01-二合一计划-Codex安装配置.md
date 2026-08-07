@@ -16,10 +16,10 @@
 
 | 你的情况                         | 应该看                                                                                       |
 | ---------------------------- | ----------------------------------------------------------------------------------------- |
-| 使用 V3 配 Codex，key 是 `sk-...` | [V3 Codex 安装与配置指南](01-V3计划-Codex安装配置.md)        |
-| 使用 V3 配 Claude Code          | [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md)  |
-| 使用二合一配 Claude Code           | [二合一 Claude Code 安装与配置指南](01-二合一计划-ClaudeCode安装配置.md) |
-| 已经报错                         | [使用问题速查](02-使用问题速查.md)                  |
+| 使用 V3 配 Codex，key 是 `sk-...` | [V3 Codex 安装与配置指南](v3-codex)        |
+| 使用 V3 配 Claude Code          | [V3 Claude Code 安装与配置指南](v3-claude)  |
+| 使用二合一配 Claude Code           | [二合一 Claude Code 安装与配置指南](combined-claude) |
+| 已经报错                         | [使用问题速查](usage-faq)                  |
 
 ## Codex 和 Claude Code 的关键区别
 
@@ -275,4 +275,4 @@ CC switch 配置和 CLI 安装完成后，打开 Codex 桌面客户端会看到�
 
 遇到报错，去看：
 
-[使用问题速查：报错、账单与配置排查](02-使用问题速查.md)
+[使用问题速查：报错、账单与配置排查](usage-faq)

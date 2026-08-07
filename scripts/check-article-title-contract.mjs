@@ -8,15 +8,17 @@ import {
   normalizeArticleMarkdown
 } from './markdown-headings.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
+import { HOME_ARTICLE, resolveRouteTarget } from './route-slugs.mjs';
 
 const root = resolve(fileURLToPath(new URL('../', import.meta.url)));
-const homeArticle = '03-Agentic入门宝典.md';
+const homeArticle = HOME_ARTICLE;
 const sidebar = readFileSync(resolve(root, '_sidebar.md'), 'utf8');
 const sidebarLinks = [...sidebar.matchAll(/^\s*-\s*\[([^\]]+)\]\(([^)]+)\)/gm)]
   .map(([, title, href]) => ({ title: title.trim(), href: href.trim() }));
-const articleSidebarLinks = sidebarLinks.filter(({ href }) =>
-  href === '/' || /^\d{2}-.*\.md$/i.test(basename(href.split(/[?#]/)[0]))
-);
+const articleSidebarLinks = sidebarLinks.filter(({ href }) => {
+  if (href === '/') return true;
+  return resolveRouteTarget(basename(href.split(/[?#]/)[0])) !== null;
+});
 const errors = [];
 
 for (const { site, title } of articleTitleEntries) {
@@ -48,10 +50,10 @@ for (const { site, title } of articleTitleEntries) {
     errors.push(error.message);
   }
 
-  const matchingLinks = articleSidebarLinks.filter(({ href }) => site === homeArticle
-    ? href === '/'
-    : basename(href.split(/[?#]/)[0]) === site
-  );
+  const matchingLinks = articleSidebarLinks.filter(({ href }) => {
+    if (site === homeArticle) return href === '/';
+    return resolveRouteTarget(basename(href.split(/[?#]/)[0])) === site;
+  });
   if (matchingLinks.length !== 1) {
     errors.push(`${site}: sidebar must contain exactly one article link (found ${matchingLinks.length})`);
   } else if (matchingLinks[0].title !== title) {

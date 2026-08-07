@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { internalDocumentTargets } from './cdc-manifest.mjs';
 import { articleTitleEntries } from './title-metadata.mjs';
+import { HOME_ARTICLE, resolveRouteTarget, routeSlugFor } from './route-slugs.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const articleNames = new Set(articleTitleEntries.map(article => article.site));
@@ -45,22 +46,33 @@ for (const file of files) {
     }
   }
 
-  for (const match of content.matchAll(/(?<!!)\[[^\]]*\]\(([^)]+\.md(?:#[^)]+)?)\)/g)) {
-    const target = decodeURIComponent(match[1].split('#')[0]).replace(/^\.\//, '').replace(/^\//, '');
+  for (const match of content.matchAll(/(?<!!)\[[^\]]*\]\(([^)]+)\)/g)) {
+    const raw = match[1];
+    if (/^(?:https?:|mailto:)/i.test(raw)) continue;
+    const target = decodeURIComponent(raw.split('#')[0]).replace(/^\.\//, '').replace(/^\//, '');
+    if (!target || /^images\//i.test(target)) continue;
     localLinks++;
-    if (!knownFiles.has(target)) {
-      errors.push(`${file}: Markdown 断链 -> ${match[1]}`);
+    if (/\.md$/i.test(target)) {
+      if (!knownFiles.has(target)) {
+        errors.push(`${file}: Markdown 断链 -> ${raw}`);
+      }
+      continue;
+    }
+    const site = resolveRouteTarget(target);
+    if (!site || !knownFiles.has(site)) {
+      errors.push(`${file}: 站内链接无效 -> ${raw}`);
     }
   }
 }
 
 const sidebar = readFileSync(resolve(root, '_sidebar.md'), 'utf8');
-const homepageSite = '03-Agentic入门宝典.md';
+const homepageSite = HOME_ARTICLE;
 const sidebarArticleTargets = [...sidebar.matchAll(/(?<!!)\[[^\]]*\]\(([^)]+)\)/g)]
-  .map(match => decodeURIComponent(match[1].split('#')[0]).replace(/^\.\//, '').replace(/^\//, ''))
-  .filter(target => target.endsWith('.md'));
+  .map(match => decodeURIComponent(match[1].split('#')[0]).replace(/^\.\//, '').replace(/^\//, ''));
 const expectedArticleSet = new Set(expectedArticles);
-const sidebarArticleSet = new Set(sidebarArticleTargets);
+const sidebarArticleSet = new Set(
+  sidebarArticleTargets.map(target => resolveRouteTarget(target)).filter(Boolean)
+);
 if ((sidebar.match(/\]\(\/\)/g) || []).length > 0) {
   sidebarArticleSet.add(homepageSite);
 }
@@ -77,7 +89,9 @@ for (const target of expectedArticles) {
 }
 
 for (const article of articleTitleEntries) {
-  const articleOccurrences = sidebar.split(`(${article.site})`).length - 1;
+  const articleOccurrences = sidebarArticleTargets
+    .filter(target => resolveRouteTarget(target) === article.site)
+    .length;
   const homepageOccurrences = article.site === homepageSite
     ? (sidebar.match(/\]\(\/\)/g) || []).length
     : 0;
@@ -85,8 +99,11 @@ for (const article of articleTitleEntries) {
   if (occurrences !== 1) {
     errors.push(`_sidebar.md: ${article.site} should appear once, found ${occurrences}`);
   }
-  const titleLink = sidebar.includes(`[${article.title}](${article.site})`) ||
-    (article.site === homepageSite && sidebar.includes(`[${article.title}](/)`));
+  const slug = routeSlugFor(article.site);
+  const escapedTitle = article.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const titleLink = (slug && sidebar.includes(`[${article.title}](${slug})`)) ||
+    sidebar.includes(`[${article.title}](${article.site})`) ||
+    (article.site === homepageSite && new RegExp(`\\[${escapedTitle}\\]\\(/\\)`).test(sidebar));
   if (!titleLink) {
     errors.push(`_sidebar.md: 侧边栏标题与登记标题不一致 (${article.title})`);
   }

@@ -106,7 +106,7 @@ grok --version
 * 如果 GitHub 打不开，在 Codesome 用户群 / 客服群里说明需要 CC Switch 安装包，让客服或管理员发最新版；
 * 不要从第三方网盘或来路不明的页面下载，CC Switch 会接触 API Key。
 
-> 更详细的 CC Switch 下载与安装说明见 [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md)。
+> 更详细的 CC Switch 下载与安装说明见 [CC Switch 配置 Claude 桌面端教程](ccswitch-claude)。
 
 **2. 打开 CC Switch，选择 Grok**
 
@@ -299,8 +299,8 @@ API Key 不对或已过期。检查填写的 Key 是否正确、前后没有多�
 
 ## 相关文档
 
-* [CC Switch 配置 Claude 桌面端教程](01-CCSwitch配置Claude桌面端.md)
-* [V3 Claude Code 安装与配置指南](01-V3计划-ClaudeCode安装配置.md)
-* [V3 Codex 安装与配置指南](01-V3计划-Codex安装配置.md)
-* [V3 OpenCode 配置指南](01-V3计划-OpenCode配置.md)
-* [第三方客户端接入 Codesome 配置指南](01-第三方客户端接入配置.md)
+* [CC Switch 配置 Claude 桌面端教程](ccswitch-claude)
+* [V3 Claude Code 安装与配置指南](v3-claude)
+* [V3 Codex 安装与配置指南](v3-codex)
+* [V3 OpenCode 配置指南](v3-opencode)
+* [第三方客户端接入 Codesome 配置指南](third-party-clients)

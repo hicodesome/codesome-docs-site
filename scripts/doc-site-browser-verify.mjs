@@ -5,6 +5,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { articleTitleEntries } from './title-metadata.mjs';
+import { routeSlugFor } from './route-slugs.mjs';
 
 export const EXIT_CODES = Object.freeze({ PASS: 0, FAIL: 1, USAGE: 2, SKIP: 3 });
 
@@ -120,6 +121,7 @@ export function evaluateBrowserAssertions(probe, config) {
   const homeResource = home.articleResource || {};
   const articleResource = article.articleResource || {};
   const isHomepage = config.article === '03-Agentic入门宝典.md';
+  const slug = routeSlugFor(config.article);
   const routeFile = encodeURIComponent(config.article).replaceAll('%2F', '/');
   const routeWithoutExtension = encodeURIComponent(config.article.replace(/\.md$/i, '')).replaceAll('%2F', '/');
   const checks = [
@@ -163,7 +165,8 @@ export function evaluateBrowserAssertions(probe, config) {
         : navigation.clicked === true && (
           articleRoute.includes(config.article) ||
           articleRoute.includes(routeFile) ||
-          articleRoute.includes(routeWithoutExtension)
+          articleRoute.includes(routeWithoutExtension) ||
+          Boolean(slug && articleRoute.includes(slug))
         ),
       detail: isHomepage
         ? (navigation.clicked === false ? '首页文章保持首页路由，无需侧栏跳转' : `首页文章被错误导航到：${navigation.href || '(空)'}`)
@@ -262,6 +265,7 @@ function runRemoteProbe(config, container) {
   const payload = encodeConfig({
     url: config.url.replace(/\/$/, ''),
     article: config.article,
+    slug: routeSlugFor(config.article),
     title: config.title,
     timeout_ms: config.timeoutMs
   });
