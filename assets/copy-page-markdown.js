@@ -20,6 +20,30 @@
     }
   }
 
+  function resolveAlias(route) {
+    route = '/' + route;
+    var aliases = window.$docsify && window.$docsify.alias || {};
+    var previousRoute = '';
+    var aliasKeys = Object.keys(aliases);
+    while (route && route !== previousRoute && aliasKeys.length) {
+      previousRoute = route;
+      for (var index = 0; index < aliasKeys.length; index += 1) {
+        var aliasKey = aliasKeys[index];
+        var aliasPattern;
+        try {
+          aliasPattern = new RegExp('^' + aliasKey + '$');
+        } catch (error) {
+          continue;
+        }
+        if (aliasPattern.test(route)) {
+          route = route.replace(aliasPattern, aliases[aliasKey]);
+          break;
+        }
+      }
+    }
+    return route.replace(/^\/+/, '');
+  }
+
   function normalizeRoute(value) {
     var route = value || '';
     var hashIndex = route.indexOf('#');
@@ -39,6 +63,7 @@
       return '';
     }
 
+    route = resolveAlias(route);
     if (!/\.md$/i.test(route)) {
       route = route + '.md';
     }

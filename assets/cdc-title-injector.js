@@ -187,8 +187,31 @@
 
     if (!route) {
       route = window.$docsify && window.$docsify.homepage || '';
+    } else {
+      route = '/' + route;
     }
 
+    var aliases = window.$docsify && window.$docsify.alias || {};
+    var previousRoute = '';
+    var aliasKeys = Object.keys(aliases);
+    while (route && route !== previousRoute && aliasKeys.length) {
+      previousRoute = route;
+      for (var index = 0; index < aliasKeys.length; index += 1) {
+        var aliasKey = aliasKeys[index];
+        var aliasPattern;
+        try {
+          aliasPattern = new RegExp('^' + aliasKey + '$');
+        } catch (e) {
+          continue;
+        }
+        if (aliasPattern.test(route)) {
+          route = route.replace(aliasPattern, aliases[aliasKey]);
+          break;
+        }
+      }
+    }
+
+    route = route.replace(/^\/+/, '');
     try {
       route = decodeURIComponent(route);
     } catch (e) { /* fileNameForUrl performs the same safe decode below. */ }

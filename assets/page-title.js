@@ -7,6 +7,55 @@
     return !window.location.hash || window.location.hash === '#/';
   }
 
+  function articleFileFromRoute() {
+    var hash = String(window.location && window.location.hash || '');
+    var route = hash.replace(/^#\/?/, '').split(/[?#]/)[0];
+
+    if (!route) {
+      return window.$docsify && window.$docsify.homepage || '';
+    }
+
+    route = '/' + route;
+    var aliases = window.$docsify && window.$docsify.alias || {};
+    var previousRoute = '';
+    var aliasKeys = Object.keys(aliases);
+    while (route && route !== previousRoute && aliasKeys.length) {
+      previousRoute = route;
+      for (var index = 0; index < aliasKeys.length; index += 1) {
+        var aliasKey = aliasKeys[index];
+        var aliasPattern;
+        try {
+          aliasPattern = new RegExp('^' + aliasKey + '$');
+        } catch (e) {
+          continue;
+        }
+        if (aliasPattern.test(route)) {
+          route = route.replace(aliasPattern, aliases[aliasKey]);
+          break;
+        }
+      }
+    }
+
+    route = route.replace(/^\/+/, '');
+    try {
+      route = decodeURIComponent(route);
+    } catch (e) { /* Keep the encoded route when decoding fails. */ }
+    return /\.md$/i.test(route) ? route : route + '.md';
+  }
+
+  function fileNameFromHref(href) {
+    var route = String(href || '');
+    var hashIndex = route.indexOf('#');
+    if (hashIndex !== -1) {
+      route = route.slice(hashIndex + 1);
+    }
+    route = route.split(/[?#]/)[0].replace(/^\/+/, '');
+    try {
+      route = decodeURIComponent(route);
+    } catch (e) { /* Keep the encoded route when decoding fails. */ }
+    return /\.md$/i.test(route) ? route : route + '.md';
+  }
+
   function sidebarTitle() {
     if (isHomeRoute()) {
       var homeLink = document.querySelector('.sidebar-nav a[href="#/"]');
@@ -14,7 +63,15 @@
     }
 
     var activeLink = document.querySelector('.sidebar-nav li.active > a');
-    return activeLink ? activeLink.textContent.trim() : null;
+    if (activeLink) {
+      return activeLink.textContent.trim();
+    }
+
+    var articleFile = articleFileFromRoute();
+    var canonicalLink = Array.from(document.querySelectorAll('.sidebar-nav a')).find(function (link) {
+      return fileNameFromHref(link.getAttribute('href')) === articleFile;
+    });
+    return canonicalLink ? canonicalLink.textContent.trim() : null;
   }
 
   function articleHeadings(article) {

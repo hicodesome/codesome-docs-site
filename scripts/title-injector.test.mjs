@@ -9,7 +9,7 @@ import { headings } from './markdown-headings.mjs';
 const root = resolve(fileURLToPath(new URL('../', import.meta.url)));
 const injector = readFileSync(resolve(root, 'assets/cdc-title-injector.js'), 'utf8');
 
-function run(source) {
+function run(source, hash = '#/fixture.md', alias = {}) {
   const context = {
     console,
     Promise,
@@ -18,8 +18,8 @@ function run(source) {
       setItem() {},
       removeItem() {}
     },
-    location: { hash: '#/fixture.md' },
-    $docsify: { homepage: 'fixture.md', plugins: [] },
+    location: { hash },
+    $docsify: { homepage: 'fixture.md', alias, plugins: [] },
     CODESOME_ARTICLE_TITLES: { 'fixture.md': 'Fixture title' },
     CODESOME_ARTICLE_TITLES_VERSION: 'test-version',
     Docsify: { get() { return source; } }
@@ -53,6 +53,18 @@ test('title injector accepts a canonical article source unchanged', () => {
     { level: 1, text: 'Fixture title' }
   ]);
   assert.equal(context.CODESOME_TITLE_PIPELINE.status, 'ready');
+  assert.equal(context.CODESOME_TITLE_PIPELINE.failures.length, 0);
+});
+
+test('title injector resolves a Docsify route alias to the canonical article', () => {
+  const source = '# Fixture title\n\n正文\n';
+  const { context, output } = run(source, '#/fixture', {
+    '/fixture(?:\\.md)?': '/fixture.md'
+  });
+
+  assert.equal(output, source);
+  assert.equal(context.CODESOME_TITLE_PIPELINE.status, 'ready');
+  assert.equal(context.CODESOME_TITLE_PIPELINE.processed['fixture.md'].title, 'Fixture title');
   assert.equal(context.CODESOME_TITLE_PIPELINE.failures.length, 0);
 });
 
