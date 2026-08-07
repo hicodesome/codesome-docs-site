@@ -134,9 +134,21 @@
 
   function applyPageTitle() {
     var article = document.querySelector('.markdown-section');
-    var title = sidebarTitle();
+    if (!article) {
+      return;
+    }
 
-    if (!article || !title) {
+    var sidebarReady = Boolean(document.querySelector('.sidebar-nav a'));
+    var title = sidebarReady ? sidebarTitle() : null;
+    if (!title) {
+      if (!sidebarReady && (window.__codesomePageTitleRetries || 0) < 100) {
+        window.__codesomePageTitleRetries = (window.__codesomePageTitleRetries || 0) + 1;
+        window.setTimeout(applyPageTitle, 100);
+        return;
+      }
+      if (sidebarReady) {
+        reportFallback('unknown');
+      }
       return;
     }
 
@@ -169,6 +181,7 @@
 
   function pageTitlePlugin(hook) {
     hook.doneEach(function () {
+      window.__codesomePageTitleRetries = 0;
       applyPageTitle();
       window.setTimeout(applyPageTitle, 0);
     });
