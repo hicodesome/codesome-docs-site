@@ -216,6 +216,13 @@ export function evaluateBrowserAssertions(probe, config) {
       id: 'article-console',
       pass: articleErrors.length === 0,
       detail: articleErrors.length ? `文章 console error ${articleErrors.length} 条` : '文章无 console error'
+    },
+    {
+      id: 'home-tutorial-grid',
+      pass: Array.isArray(home.homeTutorialGrid?.groups) &&
+        home.homeTutorialGrid.groups.length === 4 &&
+        home.homeTutorialGrid.groups.every(group => (group.links || []).length > 0),
+      detail: `首页教程网格：${Array.isArray(home.homeTutorialGrid?.groups) ? home.homeTutorialGrid.groups.map(group => `${group.label}=${(group.links || []).length}`).join(', ') : '缺失'}`
     }
   ];
 

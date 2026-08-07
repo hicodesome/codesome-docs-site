@@ -320,6 +320,16 @@ def snapshot(cdp: CDP, session_id: str, article: str, pipeline_article: str | No
               complete: image.complete,
               naturalWidth: image.naturalWidth
             })),
+            homeTutorialGrid: (() => {
+              const grid = document.querySelector('.markdown-section .home-tutorial-grid');
+              if (!grid) return null;
+              return {
+                groups: Array.from(grid.querySelectorAll('.home-tutorial-group')).map(group => ({
+                  label: group.querySelector('h3')?.textContent?.trim() || '',
+                  links: Array.from(group.querySelectorAll('a')).map(link => link.getAttribute('href'))
+                }))
+              };
+            })(),
             href: location.href
           };
         })()""" % (article_json, pipeline_article_json, slug_json),

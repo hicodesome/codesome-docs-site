@@ -1,77 +1,62 @@
 (function () {
   'use strict';
 
-  var categoryLabels = {
-    claude: 'claude code 配置教程👇',
-    codex: 'codex 配置教程👇',
-    opencode: 'open code 配置教程👇',
-    agents: '常见 Agent 配置教程👇',
-    clients: '第三方客户端接入👇',
-    usage: '实用玩法👇',
-    learning: 'AI 学习资源👇'
-  };
-
-  function normalizeText(value) {
-    return value
-      .replace(/👇/g, '')
-      .replace(/\uFE0F/g, '')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .toLowerCase();
-  }
-
-  function directChildren(article) {
-    return Array.from(article.children);
-  }
-
-  function strongLabel(node) {
-    if (!node || node.tagName !== 'P') {
-      return null;
-    }
-
-    var meaningfulNodes = Array.from(node.childNodes).filter(function (child) {
-      return child.nodeType === Node.ELEMENT_NODE ||
-        (child.nodeType === Node.TEXT_NODE && child.textContent.trim());
-    });
-
-    if (meaningfulNodes.length !== 1 ||
-        meaningfulNodes[0].nodeType !== Node.ELEMENT_NODE ||
-        meaningfulNodes[0].tagName !== 'STRONG') {
-      return null;
-    }
-
-    return meaningfulNodes[0].textContent.trim();
-  }
+  var HOME_GRID_HEADING = '配置教程（第 4 步）';
 
   function findHeading(article, title) {
-    return directChildren(article).find(function (node) {
+    return Array.from(article.children).find(function (node) {
       return node.tagName === 'H2' && node.textContent.trim() === title;
     });
   }
 
-  function findStrongMarker(article, title) {
-    return directChildren(article).find(function (node) {
-      var label = strongLabel(node);
-      return label && normalizeText(label) === normalizeText(title);
-    });
-  }
+  function collectGroups(article, heading) {
+    var groups = [];
+    var node = heading.nextElementSibling;
 
-  function findParagraph(article, predicate) {
-    return directChildren(article).find(function (node) {
-      return node.tagName === 'P' && predicate(normalizeText(node.textContent));
-    });
-  }
+    while (node && node.tagName !== 'H2') {
+      if (node.tagName === 'H3') {
+        var label = node.textContent.trim();
+        var items = [];
+        var cursor = node.nextElementSibling;
 
-  function nodesBetween(start, end, includeStart) {
-    var nodes = [];
-    var node = includeStart ? start : start.nextElementSibling;
+        while (cursor && cursor.tagName !== 'H3' && cursor.tagName !== 'H2') {
+          items.push(cursor);
+          cursor = cursor.nextElementSibling;
+        }
 
-    while (node && node !== end) {
-      nodes.push(node);
+        if (!label || items.length === 0) {
+          return null;
+        }
+
+        groups.push({ label: label, marker: node, items: items });
+        node = cursor;
+        continue;
+      }
+
       node = node.nextElementSibling;
     }
 
-    return node === end ? nodes : [];
+    return groups;
+  }
+
+  function createLinkRow(cells) {
+    var condition = cells[0].textContent.trim();
+    var link = cells[1].querySelector('a');
+
+    if (!condition || !link) {
+      return null;
+    }
+
+    var row = document.createElement('p');
+    row.className = 'home-tutorial-group__row';
+
+    var conditionEl = document.createElement('span');
+    conditionEl.className = 'home-tutorial-group__cond';
+    conditionEl.textContent = condition;
+
+    row.appendChild(conditionEl);
+    row.appendChild(link);
+    return row;
   }
 
   function createGroup(group, index) {
@@ -87,7 +72,17 @@
     items.className = 'home-tutorial-group__items';
 
     group.items.forEach(function (node) {
-      items.appendChild(node);
+      if (node.tagName === 'TABLE') {
+        Array.from(node.querySelectorAll('tr')).forEach(function (row) {
+          var rowEl = createLinkRow(Array.from(row.children));
+          if (rowEl) {
+            items.appendChild(rowEl);
+          }
+        });
+        node.remove();
+      } else {
+        items.appendChild(node);
+      }
     });
 
     section.appendChild(title);
@@ -95,92 +90,19 @@
     return section;
   }
 
-  function collectGroups(article) {
-    var claude = findStrongMarker(article, categoryLabels.claude);
-    var codex = findStrongMarker(article, categoryLabels.codex);
-    var opencode = findStrongMarker(article, categoryLabels.opencode);
-    var agents = findStrongMarker(article, categoryLabels.agents);
-    var manager = findStrongMarker(article, '扣桑AI管家服务👇');
-    var usage = findStrongMarker(article, categoryLabels.usage);
-    var thirdParty = findParagraph(article, function (text) {
-      return text.indexOf('cherry studio') === 0;
-    });
-    var learning = findParagraph(article, function (text) {
-      return text.indexOf('ai 编程课学习') === 0;
-    });
-    var learningEnd = learning && Array.from(article.children)
-      .slice(Array.from(article.children).indexOf(learning) + 1)
-      .find(function (node) {
-        return node.tagName === 'H2';
-      });
-
-    if (!claude || !codex || !opencode || !agents || !thirdParty ||
-        !usage || !manager || !learning || !learningEnd) {
-      return null;
-    }
-
-    var groups = [
-      {
-        label: categoryLabels.claude,
-        marker: claude,
-        items: nodesBetween(claude, codex, false)
-      },
-      {
-        label: categoryLabels.codex,
-        marker: codex,
-        items: nodesBetween(codex, opencode, false)
-      },
-      {
-        label: categoryLabels.opencode,
-        marker: opencode,
-        items: nodesBetween(opencode, agents, false)
-      },
-      {
-        label: categoryLabels.agents,
-        marker: agents,
-        items: nodesBetween(agents, thirdParty, false)
-      },
-      {
-        label: categoryLabels.clients,
-        items: nodesBetween(thirdParty, usage, true)
-      },
-      {
-        label: categoryLabels.usage,
-        marker: usage,
-        items: nodesBetween(usage, manager, false)
-      },
-      {
-        label: categoryLabels.learning,
-        items: nodesBetween(learning, learningEnd, true)
-      }
-    ];
-
-    if (groups.some(function (group) {
-      return group.items.length === 0;
-    })) {
-      return null;
-    }
-
-    return groups;
-  }
-
   function applyTutorialGrid() {
     var article = document.querySelector('.markdown-section');
 
-    if (!article) {
-      return;
-    }
-
-    if (article.querySelector('.home-tutorial-grid')) {
+    if (!article || article.querySelector('.home-tutorial-grid')) {
       return;
     }
 
     article.classList.remove('has-home-tutorial-grid');
 
-    var heading = findHeading(article, '扣桑 AI 工作坊 常用教程');
-    var groups = heading && collectGroups(article);
+    var heading = findHeading(article, HOME_GRID_HEADING);
+    var groups = heading && collectGroups(article, heading);
 
-    if (!heading || !groups || groups.length !== 7) {
+    if (!groups || groups.length < 2) {
       return;
     }
 
@@ -189,9 +111,7 @@
 
     groups.forEach(function (group, index) {
       grid.appendChild(createGroup(group, index + 1));
-      if (group.marker) {
-        group.marker.remove();
-      }
+      group.marker.remove();
     });
 
     article.classList.add('has-home-tutorial-grid');

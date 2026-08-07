@@ -24,7 +24,15 @@ function passingProbe() {
         failures: [],
         domFallbacks: 0
       },
-      consoleErrors: []
+      consoleErrors: [],
+      homeTutorialGrid: {
+        groups: [
+          { label: 'Claude Code', links: ['#/v3-claude', '#/combined-claude', '#/ccswitch-claude'] },
+          { label: 'Codex', links: ['#/v3-codex', '#/combined-codex'] },
+          { label: 'OpenCode', links: ['#/v3-opencode', '#/combined-opencode'] },
+          { label: '其他 Agent', links: ['#/hermes', '#/openclaw', '#/piagent', '#/newmax', '#/v3-grok', '#/third-party-clients'] }
+        ]
+      }
     },
     navigation: { clicked: true, href: 'https://doc.codesome.ai/#/v3-grok' },
     article: {

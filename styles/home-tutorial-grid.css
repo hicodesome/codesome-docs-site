@@ -4,7 +4,7 @@
 
 .home-tutorial-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   margin: 18px 0 32px;
 }
@@ -47,6 +47,35 @@
 .home-tutorial-group__items > p > a {
   display: block;
   overflow-wrap: anywhere;
+}
+
+.home-tutorial-group__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid #edf0f2;
+  color: #59636e;
+  line-height: 1.55;
+}
+
+.home-tutorial-group__row:last-child {
+  border-bottom: 0;
+}
+
+.home-tutorial-group__row > .home-tutorial-group__cond {
+  flex: 0 0 auto;
+  font-size: 12.5px;
+  color: #8a939d;
+}
+
+.home-tutorial-group__row > a {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .home-tutorial-group__items > ol {
