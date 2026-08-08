@@ -220,12 +220,13 @@ export function evaluateBrowserAssertions(probe, config) {
     {
       id: 'home-tutorial-grid',
       pass: Array.isArray(home.homeTutorialGrid?.groups) &&
-        home.homeTutorialGrid.groups.length === 4 &&
+        home.homeTutorialGrid.groups.length === 3 &&
         home.homeTutorialGrid.groups.every(group => (group.links || []).length > 0) &&
         home.homeTutorialGrid.groups.every(group =>
           (group.rows || []).every(row => row.linkWidth >= 80)
-        ),
-      detail: `首页教程网格：${Array.isArray(home.homeTutorialGrid?.groups) ? home.homeTutorialGrid.groups.map(group => `${group.label}=${(group.links || []).length}组${(group.rows || []).map(row => row.linkWidth).join('/')}px`).join(', ') : '缺失'}`
+        ) &&
+        (home.bodyText || '').includes('其他 Agent'),
+      detail: `首页教程网格：${Array.isArray(home.homeTutorialGrid?.groups) ? home.homeTutorialGrid.groups.map(group => `${group.label}=${(group.links || []).length}组${(group.rows || []).map(row => row.linkWidth).join('/')}px`).join(', ') : '缺失'}；其他 Agent 保留原文列表：${(home.bodyText || '').includes('其他 Agent') ? '是' : '否'}`
     }
   ];
 

@@ -2,6 +2,7 @@
   'use strict';
 
   var HOME_GRID_HEADING = '配置教程（第 4 步）';
+  var SKIP_GROUPS = ['其他 Agent'];
 
   function findHeading(article, title) {
     return Array.from(article.children).find(function (node) {
@@ -26,6 +27,12 @@
 
         if (!label || items.length === 0) {
           return null;
+        }
+
+        if (SKIP_GROUPS.indexOf(label) !== -1) {
+          // 分组内容较多时保留原文列表（表格），不进网格卡片
+          node = cursor;
+          continue;
         }
 
         groups.push({ label: label, marker: node, items: items });

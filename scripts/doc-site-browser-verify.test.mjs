@@ -29,10 +29,10 @@ function passingProbe() {
         groups: [
           { label: 'Claude Code', links: ['#/v3-claude', '#/combined-claude', '#/ccswitch-claude'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }] },
           { label: 'Codex', links: ['#/v3-codex', '#/combined-codex'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }] },
-          { label: 'OpenCode', links: ['#/v3-opencode', '#/combined-opencode'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }] },
-          { label: '其他 Agent', links: ['#/hermes', '#/openclaw', '#/piagent', '#/newmax', '#/v3-grok', '#/third-party-clients'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }, { linkWidth: 300 }] }
+          { label: 'OpenCode', links: ['#/v3-opencode', '#/combined-opencode'], rows: [{ linkWidth: 300 }, { linkWidth: 300 }] }
         ]
-      }
+      },
+      bodyText: '正文 其他 Agent Hermes OpenClaw PIAgent 牛马 AI（NewMax） Grok Build（V3） Cherry Studio',
     },
     navigation: { clicked: true, href: 'https://doc.codesome.ai/#/v3-grok' },
     article: {
