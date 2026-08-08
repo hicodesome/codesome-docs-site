@@ -4,7 +4,7 @@
   "generatedFrom": {
     "site": {
       "repository": "hicodesome/codesome-docs-site",
-      "contentFingerprint": "eee854b4399939b8d265bdacfb37dc14c08d094b2c1299a9363b5fcb4e88bb07"
+      "contentFingerprint": "0f663e0d7bd5aa28009d34e65165a6619046e2826b5c1f156173b337128f4e80"
     },
     "cdc": {
       "repository": "hicodesome/hicodesome-docs-source",
@@ -25,8 +25,8 @@
       "sitePath": "01-CCSwitch配置Claude桌面端.md",
       "kind": "cdc-provenance",
       "cdcSourcePath": "CC Switch 配置 Claude 桌面端教程 - Feishu Docs.md",
-      "bytes": 6898,
-      "sha256": "d43d575f220b2062a3ca846f06d989d4900bd872fb71dd5a83716f803a1ec6b8",
+      "bytes": 7958,
+      "sha256": "b9e2ba6352a1d8b5279042705dac4b237e00128714ff94a67e82af0835ca3edd",
       "backupPath": "articles/01-CCSwitch配置Claude桌面端.md",
       "imageReferences": [
         "images/CC Switch 配置 Claude 桌面端教程-ccswitch-macos-download.png",

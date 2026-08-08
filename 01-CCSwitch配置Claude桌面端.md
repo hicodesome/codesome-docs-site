@@ -14,7 +14,7 @@ CC Switch 是用来管理 Claude Code 和 Claude 桌面端接入地址、API Key
 
 1. 已安装 Claude 桌面端（从 https://claude.com/download 下载）
 
-2. 已下载最新版 CC Switch
+2. 已下载**最新版** CC Switch（**旧版右上角没有桌面端图标，看不到就配不了，务必先更新**）
 
 3. 已获取可用的 API Key   - V3 产品线：`sk-...` 开头   - 二合一月卡：`cr-...` 开头
 
@@ -54,11 +54,20 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 
 ## 四、使用 CC Switch 配置 Claude 桌面端
 
+> **⚠️ 重要：先更新 CC Switch 到最新版，再开始配置！**
+>
+> 打开 CC Switch 时，右上角必须能看到**两个图标**：
+>
+> 1. **第一个图标是配置 Claude Code（CLI）的**；
+> 2. **第二个图标才是配置 Claude 桌面端的**（Claude 图标，右下角带电脑符号）。
+>
+> 如果看到的图标和下图不一样、或者只有一个图标，**就是 CC Switch 版本太旧了，该更新了**——先更新到最新版，否则下面怎么配都不会生效。
+
+![CC Switch 右上角图标](<images/CC Switch 配置 Claude 桌面端教程-ccswitch右上角图标.png?v=28115791687214451786d10dce0614d623d76f4765033d33d3003c2d6fb4f9f0>)
+
+进入桌面端配置：先点击右上角**第二个图标**（Claude 图标，右下角带电脑符号），再在右上角点**加号**添加配置。V3 和二合一的操作都一样，区别只在下面的配置参数。
+
 ## 4.1 V3 产品线配置
-
-**先点击右上角第二个图标，可以看到是claude 的图标，右下角带了一个电脑的符号。接着再在右上角的加号添加配置。**
-
-![](<images/CC Switch 配置 Claude 桌面端教程-ccswitch右上角图标.png?v=28115791687214451786d10dce0614d623d76f4765033d33d3003c2d6fb4f9f0>)
 
 如果您使用的是 **V3 / 普通 Codesome API / V3 月卡或按量**，API Key 形态是 `sk-...`，请按以下方式配置：
 
@@ -172,6 +181,12 @@ macOS 首次打开如果遇到安全提示，需要在系统设置里允许打�
 ![](<images/CC Switch 配置 Claude 桌面端教程-ddac61b0-0a8a-4685-aef1-05bf9662c660.png?v=01a7a181eaf67b7275119ad931559bd7888bc3ca134591e3266adbf4f204ef39>)
 
 如果出现上图这样的错误，您可以点击 Go back 然后重新请求一次。
+
+## 6.6 打开 CC Switch 看不到两个图标 / 找不到桌面端配置入口
+
+**原因**：CC Switch 版本太旧，旧版没有配置 Claude 桌面端的图标。
+
+**解决**：打开 ccswitch 下载页 <https://github.com/farion1231/cc-switch/releases> 下载**最新版**安装包重新安装，升级后右上角才会显示第二个（桌面端）图标。
 
 ***
 
